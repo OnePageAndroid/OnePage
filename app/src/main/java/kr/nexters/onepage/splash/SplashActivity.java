@@ -20,5 +20,9 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(SplashActivity.this, IntroActivity.class));
             finish();
         }, 2000);
+
+        new Handler().post(() -> {
+
+        });
     }
 }
