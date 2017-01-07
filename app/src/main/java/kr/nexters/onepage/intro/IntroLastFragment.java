@@ -6,13 +6,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import kr.nexters.onepage.R;
 
 /**
@@ -24,9 +24,6 @@ public class IntroLastFragment extends Fragment {
     //버터나이프 사용
     @BindView(R.id.ivIntro)
     ImageView ivIntro;
-
-    @BindView(R.id.btnMain)
-    Button btnMain;
 
     //프래그먼트 생성 팩토리 메서드
     public static IntroLastFragment newInstance() {
@@ -48,13 +45,11 @@ public class IntroLastFragment extends Fragment {
                 .load(android.R.drawable.ic_dialog_info)
                 .into(ivIntro);
 
-        btnMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().finish();
-            }
-        });
-
         return view;
+    }
+
+    @OnClick(R.id.btnMain)
+    public void navigateToMain() {
+        getActivity().finish();
     }
 }
