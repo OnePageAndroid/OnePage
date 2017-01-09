@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.butterknife'
 //apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -56,16 +55,4 @@ dependencies {
 
     //ViewPager Indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
-
-//    //FCM
-//    compile "com.google.firebase:firebase-core:$firebase_version"
-//    compile "com.google.firebase:firebase-messaging:$firebase_version"
-//    compile "com.google.android.gms:play-services:$firebase_version"
-
-
-//    //Rx
-//    compile 'io.reactivex:rxandroid:1.2.1'
-//    compile 'io.reactivex:rxjava:1.1.6'
-//    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
-
 }
