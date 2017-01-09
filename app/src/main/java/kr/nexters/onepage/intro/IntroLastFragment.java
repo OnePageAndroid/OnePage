@@ -1,5 +1,6 @@
 package kr.nexters.onepage.intro;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.main.MainActivity;
 
 /**
  * Created by ohjaehwan on 2017. 1. 5..
@@ -50,6 +52,8 @@ public class IntroLastFragment extends Fragment {
 
     @OnClick(R.id.btnMain)
     public void navigateToMain() {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
         getActivity().finish();
     }
 }
