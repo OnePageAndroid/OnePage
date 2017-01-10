@@ -20,7 +20,7 @@ public class IntroImageFragment extends Fragment {
     private static String IMAGE_RESOURCE = "image_resource";
 
     //버터나이프 사용
-    @BindView(R.id.ivIntro)
+    @BindView(R.id.iv_intro)
     ImageView ivIntro;
 
     //프래그먼트 생성 팩토리 메서드

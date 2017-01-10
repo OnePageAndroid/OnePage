@@ -5,7 +5,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <ImageView
-        android:id="@+id/ivIntro"
+        android:id="@+id/iv_intro_last"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

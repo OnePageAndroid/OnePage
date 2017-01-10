@@ -12,8 +12,8 @@ import me.relex.circleindicator.CircleIndicator;
 public class IntroActivity extends AppCompatActivity {
 
     //버터나이프 사용
-    @BindView(R.id.pager)
-    ViewPager pager;
+    @BindView(R.id.pager_intro)
+    ViewPager introPager;
 
     //인디케이터
     @BindView(R.id.indicator)
@@ -38,7 +38,7 @@ public class IntroActivity extends AppCompatActivity {
         introAdapter.add(IntroImageFragment.newInstance(android.R.drawable.ic_dialog_alert));
         introAdapter.add(IntroLastFragment.newInstance());
 
-        pager.setAdapter(introAdapter);
-        indicator.setViewPager(pager);
+        introPager.setAdapter(introAdapter);
+        indicator.setViewPager(introPager);
     }
 }

@@ -9,7 +9,7 @@
 
         <!-- TODO: Update blank fragment layout -->
         <ImageView
-            android:id="@+id/ivIntro"
+            android:id="@+id/iv_intro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
