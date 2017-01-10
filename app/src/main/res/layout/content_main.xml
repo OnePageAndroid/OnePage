@@ -45,21 +45,21 @@
 
 
                 <Button
-                    android:text="지도"
                     android:id="@+id/btn_map"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:text="지도" />
 
                 <Button
-                    android:text="글쓰기"
                     android:id="@+id/btn_write"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:text="글쓰기" />
 
             </RelativeLayout>
 
@@ -71,6 +71,12 @@
         android:id="@+id/pager_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingEnd="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="20dp"
+        android:paddingStart="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
