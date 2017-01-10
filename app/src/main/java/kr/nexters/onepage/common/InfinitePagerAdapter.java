@@ -1,4 +1,4 @@
-package kr.nexters.onepage.common.infinitepager;
+package kr.nexters.onepage.common;
 
 import android.database.DataSetObserver;
 import android.os.Parcelable;

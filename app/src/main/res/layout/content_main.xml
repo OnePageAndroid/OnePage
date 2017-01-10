@@ -67,7 +67,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <kr.nexters.onepage.common.InfiniteViewPager
         android:id="@+id/pager_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
