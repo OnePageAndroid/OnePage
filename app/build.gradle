@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
         jackOptions {
             enabled = false
         }
@@ -34,6 +35,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services:8.3.0'
 
     //Support Lib
     compile "com.android.support:appcompat-v7:$support_lib_version"
