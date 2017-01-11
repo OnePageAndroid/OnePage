@@ -3,4 +3,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- action bar title -->
+    <string name="action_title_write">Writing Guestbook</string>
+
+    <!-- action bar button -->
+    <string name="action_menu_current_loc">Current Location</string>
 </resources>

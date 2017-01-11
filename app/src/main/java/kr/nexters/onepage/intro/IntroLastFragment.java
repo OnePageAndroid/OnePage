@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.main.MainActivity;
 
@@ -26,6 +27,8 @@ public class IntroLastFragment extends Fragment {
     //버터나이프 사용
     @BindView(R.id.iv_intro_last)
     ImageView ivIntro;
+
+    Unbinder unbinder;
 
     //프래그먼트 생성 팩토리 메서드
     public static IntroLastFragment newInstance() {
@@ -41,7 +44,7 @@ public class IntroLastFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_intro_last, container, false);
 
         //프래그먼트에서 버터나이프를 사용하려면 onCreateView에서 이렇게 사용해야함
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         Glide.with(this)
                 .load(android.R.drawable.ic_dialog_info)
@@ -56,4 +59,11 @@ public class IntroLastFragment extends Fragment {
         startActivity(intent);
         getActivity().finish();
     }
+
+    @Override
+    public void onDestroyView() {
+        unbinder.unbind();
+        super.onDestroyView();
+    }
 }
+

@@ -1,4 +1,4 @@
-package kr.nexters.onepage.network;
+package kr.nexters.onepage.common;
 
 /**
  * Created by ohjaehwan on 2017. 1. 5..

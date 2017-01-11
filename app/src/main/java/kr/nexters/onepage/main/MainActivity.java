@@ -1,26 +1,38 @@
 package kr.nexters.onepage.main;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
-import kr.nexters.onepage.intro.MainFragment;
+import kr.nexters.onepage.common.InfinitePagerAdapter;
+import kr.nexters.onepage.common.InfiniteViewPager;
+import kr.nexters.onepage.common.TimeLineAdapter;
+import kr.nexters.onepage.common.model.TimeLine;
+import kr.nexters.onepage.map.MapActivity;
+import kr.nexters.onepage.mypage.MyPageActivity;
+import kr.nexters.onepage.write.WriteActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_MAP = 1000;
+
     @BindView(R.id.pager_main)
-    ViewPager mainPager;
+    InfiniteViewPager mainPager;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    TimeLineAdapter mainAdapter;
 
-    MainAdapter mainAdapter;
+    InfinitePagerAdapter wrappedAdapter;
+
+    int resIds[] = {R.mipmap.ic_launcher, android.R.drawable.ic_dialog_alert,
+            android.R.drawable.ic_delete, android.R.drawable.ic_input_add,
+            android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,32 +40,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        //툴바 설정
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mainAdapter = new TimeLineAdapter(getSupportFragmentManager());
 
-        mainAdapter = new MainAdapter(getSupportFragmentManager());
+        List<TimeLine> items = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            //어댑터에 프래그먼트들을 추가
+            items.add(new TimeLine(resIds[i % resIds.length], "" + i));
+        }
 
-        //어댑터에 프래그먼트들을 추가
-        mainAdapter.add(MainFragment.newInstance(R.mipmap.ic_launcher));
-        mainAdapter.add(MainFragment.newInstance(android.R.drawable.ic_dialog_alert));
-        mainAdapter.add(MainFragment.newInstance(android.R.drawable.ic_delete));
-        mainAdapter.add(MainFragment.newInstance(android.R.drawable.ic_input_add));
-        mainAdapter.add(MainFragment.newInstance(android.R.drawable.ic_dialog_dialer));
-        mainAdapter.add(MainFragment.newInstance(android.R.drawable.ic_dialog_email));
+        mainAdapter.add(items);
 
-        mainPager.setAdapter(mainAdapter);
+        wrappedAdapter = new InfinitePagerAdapter(mainAdapter);
+        mainPager.setAdapter(wrappedAdapter);
+
+    }
+
+    @OnClick(R.id.btn_my)
+    public void navigateToMyPage() {
+        Intent intent = new Intent(this, MyPageActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.btn_map)
     public void navigateToMap() {
         //TODO 여기다 지도 액티비티로 가면됨
-        Log.d("ojh102", "map");
+        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        startActivityForResult(intent, REQUEST_MAP);
     }
 
     @OnClick(R.id.btn_write)
     public void navigasteToWrite() {
         //TODO 여기다 글쓰기 액티비티로 가면됨
-        Log.d("ojh102", "write");
+        Intent intent = new Intent(MainActivity.this, WriteActivity.class);
+        startActivity(intent);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK) {
+
+        }
+
+    }
+
 }

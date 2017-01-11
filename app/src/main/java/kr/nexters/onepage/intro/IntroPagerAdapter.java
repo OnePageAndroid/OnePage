@@ -1,4 +1,4 @@
-package kr.nexters.onepage.main;
+package kr.nexters.onepage.intro;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,12 +11,12 @@ import java.util.List;
  * Created by ohjaehwan on 2017. 1. 5..
  */
 
-public class MainAdapter extends FragmentPagerAdapter {
+public class IntroPagerAdapter extends FragmentPagerAdapter {
 
     //프래그먼트들을 저장할 리스트
     private List<Fragment> fragmentList = new ArrayList<>();
 
-    public MainAdapter(FragmentManager fm) {
+    public IntroPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -29,11 +29,6 @@ public class MainAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);
-    }
-
-    @Override
-    public float getPageWidth(int position) {
-        return 0.9f;
     }
 
     @Override

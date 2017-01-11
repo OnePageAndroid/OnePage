@@ -20,7 +20,7 @@ public class IntroActivity extends AppCompatActivity {
     CircleIndicator indicator;
 
     //뷰페이저 어댑터
-    MyFragmentAdapter introAdapter;
+    IntroPagerAdapter introAdapter;
 
 
     @Override
@@ -30,7 +30,7 @@ public class IntroActivity extends AppCompatActivity {
         //액티비티에서 버터나이프를 사용하려면 onCreate에서 이렇게 사용해야함
         ButterKnife.bind(this);
 
-        introAdapter = new MyFragmentAdapter(getSupportFragmentManager());
+        introAdapter = new IntroPagerAdapter(getSupportFragmentManager());
 
         //어댑터에 프래그먼트들을 추가
         introAdapter.add(IntroImageFragment.newInstance(R.mipmap.ic_launcher));

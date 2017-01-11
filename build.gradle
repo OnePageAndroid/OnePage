@@ -3,7 +3,6 @@
 buildscript {
     ext {
         support_lib_version = '25.1.0'
-        firebase_version = '10.0.1'
         retrofit_version = '2.1.0'
         okhttp_version = '3.5.0'
         glide_version = '3.7.0'
