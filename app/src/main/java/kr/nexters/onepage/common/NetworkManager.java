@@ -1,4 +1,4 @@
-package kr.nexters.onepage.network;
+package kr.nexters.onepage.common;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

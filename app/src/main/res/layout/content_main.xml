@@ -26,8 +26,20 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:contentInsetLeft="4dp"
+                android:contentInsetStart="4dp"
+                app:contentInsetLeft="4dp"
+                app:contentInsetStart="4dp"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <Button
+                    android:id="@+id/btn_my"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MY" />
+
+            </android.support.v7.widget.Toolbar>
 
             <RelativeLayout
                 android:id="@+id/backdrop"
