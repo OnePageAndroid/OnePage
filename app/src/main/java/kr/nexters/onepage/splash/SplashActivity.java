@@ -5,10 +5,10 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,10 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.nexters.onepage.R;
-import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.main.MainActivity;
-import retrofit2.Retrofit;
 
 public class SplashActivity extends AppCompatActivity {
 

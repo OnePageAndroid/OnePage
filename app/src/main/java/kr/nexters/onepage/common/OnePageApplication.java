@@ -1,13 +1,13 @@
 package kr.nexters.onepage.common;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 
 /**
  * Created by OhJaeHwan on 2017-01-12.
  */
 
-public class OnePageApplication extends Application {
+public class OnePageApplication extends MultiDexApplication {
 
     private static Context mContext;
 
