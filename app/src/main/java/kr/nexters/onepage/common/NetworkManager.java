@@ -5,13 +5,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkManager {
     // where my server lives.
-    private static final String SERVER ="http://";
+    private static final String SERVER = "http://apis.skplanetx.com";
+    private static final String SERVER_WEATHER ="http://apis.skplanetx.com";
     Retrofit client;
+    Retrofit weatherClient;
 
     private NetworkManager(){
         //Retrofit Enviroment setting.
         client = new Retrofit.Builder()
                 .baseUrl(SERVER) // where your server lives
+                .addConverterFactory(GsonConverterFactory.create()) // with what data format you want to transmit, in my case JSON
+                .build();
+
+        weatherClient =  new Retrofit.Builder()
+                .baseUrl(SERVER_WEATHER) // where your server lives
                 .addConverterFactory(GsonConverterFactory.create()) // with what data format you want to transmit, in my case JSON
                 .build();
     }
