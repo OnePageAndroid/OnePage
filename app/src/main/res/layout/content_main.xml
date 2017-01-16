@@ -8,38 +8,20 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
+        android:layout_height="200dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="wrap_content"
+            android:contentInsetLeft="4dp"
+            android:contentInsetStart="4dp"
+            app:contentInsetLeft="4dp"
+            app:contentInsetStart="4dp"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:contentInsetLeft="4dp"
-                android:contentInsetStart="4dp"
-                app:contentInsetLeft="4dp"
-                app:contentInsetStart="4dp"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-                <Button
-                    android:id="@+id/btn_my"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MY" />
-
-            </android.support.v7.widget.Toolbar>
 
             <RelativeLayout
                 android:id="@+id/backdrop"
@@ -54,6 +36,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@mipmap/ic_launcher" />
+
+                <Button
+                    android:id="@+id/btn_my"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MY" />
 
 
                 <Button
@@ -75,9 +63,17 @@
 
             </RelativeLayout>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/iv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@android:drawable/ic_delete"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <kr.nexters.onepage.common.InfiniteViewPager
         android:id="@+id/pager_main"

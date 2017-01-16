@@ -5,8 +5,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkManager {
     // where my server lives.
-    private static final String SERVER = "http://apis.skplanetx.com";
-    private static final String SERVER_WEATHER ="http://apis.skplanetx.com";
+    private static final String SERVER = "http://138.197.194.138:8089/OnePage/api/v1/";
+    private static final String SERVER_WEATHER ="http://apis.skplanetx.com/";
     Retrofit client;
     Retrofit weatherClient;
 
@@ -25,17 +25,15 @@ public class NetworkManager {
 
     // singleton holder pattern : thread safe, lazy class initialization, memory saving.
     public static class InstanceHolder{ public static final NetworkManager INSTANCE = new NetworkManager();}
+
     public static NetworkManager getInstance(){ return InstanceHolder.INSTANCE; }
 
-    //API Return
-    public <T> T getApiFromClass(Class<T> serviceClass){
-        // connecting my API and my Retrofit environment and return.
-        // then I'm able to call my API and make use of it
-        return client.create(serviceClass);
+    public WeatherAPI getWeatherApi() {
+        return weatherClient.create(WeatherAPI.class);
     }
 
     public APIService getApi() {
-        return getApiFromClass(APIService.class);
+        return client.create(APIService.class);
     }
 
 }
