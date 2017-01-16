@@ -19,8 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
+import kr.nexters.onepage.common.model.ServerResponse;
 import kr.nexters.onepage.main.MainActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -94,8 +99,26 @@ public class SplashActivity extends AppCompatActivity {
         //네트워크 처리 성공일시 메인으로 넘김
         Log.d(SplashActivity.class.getSimpleName(), "login id = " + id);
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        NetworkManager.getInstance().getApi()
+                .login(id)
+                .enqueue(new Callback<ServerResponse>() {
+                    @Override
+                    public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                        if (response.isSuccessful() && response.body() != null &&response.body().isSuccess()) {
+                            Log.d(SplashActivity.class.getSimpleName(), response.body().message);
+
+                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else  {
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ServerResponse> call, Throwable t) {
+                        Toast.makeText(SplashActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
     }
 }
