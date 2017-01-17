@@ -7,9 +7,10 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,11 +25,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Map;
+
 import kr.nexters.onepage.R;
 
 public class MapActivity extends AppCompatActivity {
 
-    private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
+    private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     public final static int ZOOM_LEVEL = 15;
 
     private LocationManager locationManager;
@@ -50,7 +53,6 @@ public class MapActivity extends AppCompatActivity {
 
         //google map 준비
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-
         mapFragment.getMapAsync(mapReadyCallBack);
 
         //marker 준비
@@ -121,30 +123,6 @@ public class MapActivity extends AppCompatActivity {
         }
     };
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_ACCESS_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MapActivity.this, "Permission was granted", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(MapActivity.this, "Permission denied", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
-    }
-
-    //Permission Check
-    private void checkPermission() {
-        if(ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
-            return;
-        }
-    }
-
     //Action button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,5 +160,14 @@ public class MapActivity extends AppCompatActivity {
         checkPermission();
         //위치 정보 수신 종료
         locationManager.removeUpdates(locationListener);
+    }
+
+    //Permission Check
+    private void checkPermission() {
+        //퍼미션이 거절됐을 경우 request
+        if(ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED
+                && ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_DENIED ) {
+            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+        }
     }
 }
