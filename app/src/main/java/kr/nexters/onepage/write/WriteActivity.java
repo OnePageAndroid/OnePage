@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.PropertyManager;
-import kr.nexters.onepage.common.model.Post;
+import kr.nexters.onepage.common.model.Page;
 
 public class WriteActivity extends AppCompatActivity {
 
@@ -107,17 +107,22 @@ public class WriteActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnWriteSave)
     public void onClickBtn() {
-        Toast.makeText(this, "save", Toast.LENGTH_LONG).show();
+        //blank check
+        if(etWriteContent.getText().length() == 0) {
+            Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
+        }
+        else {
+            Page page = new Page();
 
-        Post post = new Post();
+            page.setLocation("");
+            //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
+            page.setEmail(PropertyManager.getInstance().getId());
+            page.setImage(image);
+            page.setContent(etWriteContent.getText().toString());
 
-        post.setLocation("");
-        //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
-
-        post.setEmail(PropertyManager.getInstance().getId());
-        post.setImage(image);
-        post.setContent(etWriteContent.getText().toString());
-        Log.i("WriteActivityLog", post.toString());
+            Toast.makeText(this, "save", Toast.LENGTH_LONG).show();
+            Log.i("WriteActivityLog", page.toString());
+        }
     }
 
     //Action button

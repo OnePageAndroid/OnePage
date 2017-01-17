@@ -1,22 +1,28 @@
 package kr.nexters.onepage.common.model;
 
+import com.google.android.gms.maps.model.Marker;
+
 /**
  * Created by hoody on 2017-01-17.
  */
 
-public class Location {
+public class Poi {
     private double latitude;
     private double longitude;
     private String name;
     private String address;
 
-    public Location() {
+    private Marker marker;
+
+
+    public Poi() {
     }
 
-    public Location(String address, double latitude, double longitude, String name) {
+    public Poi(String address, double latitude, double longitude, String name, Marker marke) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.marker = marker;
         this.name = name;
     }
 
@@ -50,5 +56,24 @@ public class Location {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Marker getMarker() {
+        return marker;
+    }
+
+    public void setMarker(Marker marker) {
+        this.marker = marker;
+    }
+
+    @Override
+    public String toString() {
+        return "Poi{" +
+                "address='" + address + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", name='" + name + '\'' +
+                ", marker=" + marker +
+                '}';
     }
 }

@@ -25,20 +25,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.model.Poi;
 
 public class MapActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
-    public final static int ZOOM_LEVEL = 15;
+    public final static int ZOOM_LEVEL = 13;
 
     private LocationManager locationManager;
     private GoogleMap mGoogleMap;
     private MapFragment mapFragment;
-    private MarkerOptions markerOptions;
-    private Marker marker;
+    private MarkerOptions currentOptions;
+    private MarkerOptions poiOptions;
+    private Marker currentMarker;
+
+    private LatLng currentLatLng;
+    private LatLng lastLatLng;
+
+    private ArrayList<Poi> poiList;
+    private Poi poi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +65,8 @@ public class MapActivity extends AppCompatActivity {
         mapFragment.getMapAsync(mapReadyCallBack);
 
         //marker 준비
-        markerOptions = new MarkerOptions();
+        currentOptions = new MarkerOptions();
+        poiOptions = new MarkerOptions();
     }
 
     OnMapReadyCallback mapReadyCallBack = new OnMapReadyCallback() {
@@ -78,18 +88,56 @@ public class MapActivity extends AppCompatActivity {
 //            locationManager.requestLocationUpdates(bestProvider, 10000, 3, locationListener);
 
             //5초 간격, 3미터 이상 이동시 update
-            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 5000, 3, locationListener);
+            //use fake gps for testing
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
+
+            //last location
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+            lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
+
+            //setting marker
+            currentOptions.position(lastLatLng);
+            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
+            currentOptions.title("current loc");
+            currentOptions.snippet("fake");
+
+            currentMarker = googleMap.addMarker(currentOptions);
+            currentMarker.showInfoWindow();
+
+            currentOptions.visible(false); //hide last location marker
 
             //디비에서 받아올 위도, 경도로 Marker 표시 해주기
 
-            LatLng loc = new LatLng(37.5545168, 126.9706483);
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, ZOOM_LEVEL));
+            //LatLng loc = new LatLng(37.5545168, 126.9706483);
+            //mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, ZOOM_LEVEL));
 
-            markerOptions.position(new LatLng(37.5545168, 126.9706483)); //test
-            markerOptions.title("서울역");
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
-            marker = googleMap.addMarker(markerOptions);
-            marker.showInfoWindow();
+
+            //set marker from location list
+            //sample data
+            getLocation();
+            for (Poi poi : poiList) {
+                //change db location
+                poiOptions.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
+                poiOptions.title(poi.getName());
+                poiOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
+
+                poi.setMarker(googleMap.addMarker(poiOptions));
+                poi.getMarker().showInfoWindow();
+
+                Log.i("MapActivityLog", poi.toString());
+            }
+
+            mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    //click event
+                    finish();
+                    return true;
+                }
+            });
         }
     };
 
@@ -98,12 +146,13 @@ public class MapActivity extends AppCompatActivity {
         @Override
         public void onLocationChanged(Location location) {
 
-            LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
+            currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, ZOOM_LEVEL));
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
 
-            //현재 위치에 마커
-            marker.setPosition(currentLoc);
+
+            //marker
+            currentMarker.setPosition(currentLatLng);
 
             Log.i("Current Loc", String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
         }
@@ -138,6 +187,9 @@ public class MapActivity extends AppCompatActivity {
         switch(id) {
             case R.id.action_current_loc :
                 Toast.makeText(MapActivity.this, "현재위치로", Toast.LENGTH_LONG).show();
+
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
+
                 return true;
             case android.R.id.home :
                 finish();
@@ -159,7 +211,7 @@ public class MapActivity extends AppCompatActivity {
         super.onPause();
         //Check location permission
         checkPermission();
-        //위치 정보 수신 종료
+        //Quit location listener
         locationManager.removeUpdates(locationListener);
     }
 
@@ -171,4 +223,15 @@ public class MapActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
         }
     }
+
+    private void getLocation() {
+        poiList = new ArrayList();
+
+        //sample data
+        poiList.add(new Poi(null, 37.5759879,126.97692289999998, "광화문", null));
+        poiList.add(new Poi(null, 37.5545168,126.9706483, "서울역", null));
+        poiList.add(new Poi(null, 37.60193, 127.04153, "월곡역", null));
+
+    }
+
 }

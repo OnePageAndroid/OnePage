@@ -10,4 +10,7 @@
     <!-- chooser -->
     <string name="chooser_gallery">Choose an image</string>
 
+    <!-- toast message -->
+    <string name="toast_write_check_blank">Enter content.</string>
+
 </resources>

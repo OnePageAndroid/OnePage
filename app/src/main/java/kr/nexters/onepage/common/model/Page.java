@@ -3,19 +3,21 @@ package kr.nexters.onepage.common.model;
 import java.io.File;
 
 /**
- * Created by hoody on 2017-01-17.
+ * Created by hoody on 2017-01-18.
  */
 
-public class Post {
+public class Page {
+
+    //private long pageId;
     private String location = null;
     private String email = null;
     private File image = null;
     private String content = null;
 
-    public Post() {
+    public Page() {
     }
 
-    public Post(String content, String email, File image, String location) {
+    public Page(String content, String email, File image, String location) {
         this.content = content;
         this.email = email;
         this.image = image;
@@ -52,15 +54,5 @@ public class Post {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "content='" + content + '\'' +
-                ", location='" + location + '\'' +
-                ", email='" + email + '\'' +
-                ", image=" + image +
-                '}';
     }
 }
