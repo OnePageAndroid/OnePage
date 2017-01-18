@@ -150,7 +150,6 @@ public class MapActivity extends AppCompatActivity {
 
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
 
-
             //marker
             currentMarker.setPosition(currentLatLng);
 
