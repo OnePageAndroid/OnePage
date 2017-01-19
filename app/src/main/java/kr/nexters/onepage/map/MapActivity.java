@@ -39,15 +39,23 @@ public class MapActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private GoogleMap mGoogleMap;
     private MapFragment mapFragment;
-    private MarkerOptions currentOptions;
-    private MarkerOptions poiOptions;
     private Marker currentMarker;
 
     private LatLng currentLatLng;
     private LatLng lastLatLng;
-
-    private ArrayList<Poi> poiList;
     private Poi poi;
+
+    private ArrayList<Poi> getLocationList() {
+        ArrayList<Poi> poiList = new ArrayList();
+
+        //sample data
+        poiList.add(new Poi(null, 37.5759879,126.97692289999998, "광화문", null));
+        poiList.add(new Poi(null, 37.5545168,126.9706483, "서울역", null));
+        poiList.add(new Poi(null, 37.60193, 127.04153, "월곡역", null));
+
+        return poiList;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +72,6 @@ public class MapActivity extends AppCompatActivity {
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(mapReadyCallBack);
 
-        //marker 준비
-        currentOptions = new MarkerOptions();
-        poiOptions = new MarkerOptions();
     }
 
     OnMapReadyCallback mapReadyCallBack = new OnMapReadyCallback() {
@@ -99,30 +104,25 @@ public class MapActivity extends AppCompatActivity {
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
 
             //setting marker
-            currentOptions.position(lastLatLng);
-            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
-            currentOptions.title("current loc");
-            currentOptions.snippet("fake");
+            MarkerOptions markerOptions
+                    = createMarkerOptions(lastLatLng, "current loc", "fake", R.drawable.green_marker);
 
-            currentMarker = googleMap.addMarker(currentOptions);
+            currentMarker = googleMap.addMarker(markerOptions);
             currentMarker.showInfoWindow();
 
-            currentOptions.visible(false); //hide last location marker
-
-            //디비에서 받아올 위도, 경도로 Marker 표시 해주기
-
-            //LatLng loc = new LatLng(37.5545168, 126.9706483);
-            //mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, ZOOM_LEVEL));
+            markerOptions.visible(false); //hide last location marker
 
 
             //set marker from location list
             //sample data
-            getLocation();
-            for (Poi poi : poiList) {
+            ArrayList<Poi> locationList = getLocationList(); //get location from db
+
+            MarkerOptions poiOptions;
+
+            for (Poi poi : locationList) {
                 //change db location
-                poiOptions.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
-                poiOptions.title(poi.getName());
-                poiOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
+                poiOptions
+                        = createMarkerOptions(new LatLng(poi.getLatitude(), poi.getLongitude()), poi.getName(), null, R.drawable.red_marker);
 
                 poi.setMarker(googleMap.addMarker(poiOptions));
                 poi.getMarker().showInfoWindow();
@@ -134,7 +134,8 @@ public class MapActivity extends AppCompatActivity {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
                     //click event
-                    finish();
+                    //new activity
+                    marker.showInfoWindow();
                     return true;
                 }
             });
@@ -171,6 +172,27 @@ public class MapActivity extends AppCompatActivity {
 
         }
     };
+
+    private MarkerOptions createMarkerOptions(LatLng latLng, String title, String content, int resource) {
+
+        MarkerOptions newOptions = new MarkerOptions();
+
+        newOptions.position(latLng);
+        newOptions.title(title);
+        newOptions.snippet(content);
+        newOptions.icon(BitmapDescriptorFactory.fromResource(resource));
+
+        return newOptions;
+    }
+
+    //Permission Check
+    private void checkPermission() {
+        //If permission is denied, request
+        if(ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED
+                && ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_DENIED ) {
+            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+        }
+    }
 
     //Action button
     @Override
@@ -212,25 +234,6 @@ public class MapActivity extends AppCompatActivity {
         checkPermission();
         //Quit location listener
         locationManager.removeUpdates(locationListener);
-    }
-
-    //Permission Check
-    private void checkPermission() {
-        //If permission is denied, request
-        if(ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED
-                && ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_DENIED ) {
-            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
-        }
-    }
-
-    private void getLocation() {
-        poiList = new ArrayList();
-
-        //sample data
-        poiList.add(new Poi(null, 37.5759879,126.97692289999998, "광화문", null));
-        poiList.add(new Poi(null, 37.5545168,126.9706483, "서울역", null));
-        poiList.add(new Poi(null, 37.60193, 127.04153, "월곡역", null));
-
     }
 
 }

@@ -57,6 +57,9 @@ public class WriteActivity extends AppCompatActivity {
 
     Intent intent;
 
+    //TODO update alertDialog design
+    //TODO Camera에서 찍은 사진이 save 눌렀을때만 저장되게!
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +72,7 @@ public class WriteActivity extends AppCompatActivity {
 
         //Image save path
         savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/OnePage/media";
-        new File(savePath).mkdir();
+        new File(savePath).mkdirs();
     }
 
 
@@ -88,7 +91,7 @@ public class WriteActivity extends AppCompatActivity {
 
                 //camera permission check
                 if(ContextCompat.checkSelfPermission(WriteActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    getImgFromCamera();
+                    navigateToCamera();
                 }
                 else {
                     ActivityCompat.requestPermissions(WriteActivity.this, new String[] {Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
@@ -99,7 +102,7 @@ public class WriteActivity extends AppCompatActivity {
 
         dialog.setNegativeButton("Gallery",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                getImgFromGallery();
+                navigateToGallery();
             }
         });
         dialog.show();
@@ -176,12 +179,12 @@ public class WriteActivity extends AppCompatActivity {
         switch(requestCode) {
             case PERMISSION_REQUEST_CAMERA :
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getImgFromCamera();
+                    navigateToCamera();
                 }
         }
     }
 
-    private void getImgFromCamera() {
+    private void navigateToCamera() {
         fileName = createFileName();
 
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -190,7 +193,7 @@ public class WriteActivity extends AppCompatActivity {
         startActivityForResult(intent, CALL_CAMERA);
     }
 
-    private void getImgFromGallery() {
+    private void navigateToGallery() {
         intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, CALL_GALLERY);
 
