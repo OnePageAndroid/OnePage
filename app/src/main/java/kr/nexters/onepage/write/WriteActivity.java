@@ -37,7 +37,6 @@ import butterknife.OnClick;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
-import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.common.model.ServerResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -45,6 +44,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import kr.nexters.onepage.common.model.PostPage;
 
 public class WriteActivity extends AppCompatActivity {
 
@@ -128,23 +128,21 @@ public class WriteActivity extends AppCompatActivity {
             Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
         }
         else {
-            Page page = new Page();
+            PostPage postPage = new PostPage();
 
-            page.setLocationId("");
+            postPage.setLocationId("");
             //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
-            page.setEmail(PropertyManager.getInstance().getId());
-            page.setImage(image);
-            page.setContent(etWriteContent.getText().toString());
+            postPage.setEmail(PropertyManager.getInstance().getId());
+            postPage.setImage(image);
+            postPage.setContent(etWriteContent.getText().toString());
 
             Toast.makeText(this, "save", Toast.LENGTH_LONG).show();
-            Log.i("WriteActivityLog", page.toString());
-
-            savePage(page);
-
+            savePage(postPage);
+            Log.i("WriteActivityLog", postPage.toString());
         }
     }
 
-    private void savePage(Page page) {
+    private void savePage(PostPage page) {
 
         Call<ServerResponse> saveCall = NetworkManager.getInstance().getApi().savePage(
                 1,
@@ -172,7 +170,7 @@ public class WriteActivity extends AppCompatActivity {
         });
     }
 
-    private void saveImage(Page page) {
+    private void saveImage(PostPage page) {
         // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
         // use the FileUtils to get the actual file by uri
         File file = page.getImage();
