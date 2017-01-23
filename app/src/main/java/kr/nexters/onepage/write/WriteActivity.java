@@ -33,10 +33,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
 
-public class WriteActivity extends AppCompatActivity {
+public class WriteActivity extends BaseActivity {
 
     static final int PERMISSION_REQUEST_CAMERA = 1000;
     static final int CALL_GALLERY = 100;

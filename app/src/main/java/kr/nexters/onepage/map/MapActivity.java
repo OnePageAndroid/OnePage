@@ -29,9 +29,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.model.Poi;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends BaseActivity {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     public final static int ZOOM_LEVEL = 13;
@@ -83,24 +84,27 @@ public class MapActivity extends AppCompatActivity {
             checkPermission();
 
             //적절한 위치제공자 선택
-//            Criteria criteria = new Criteria();
-//            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-//            criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-//            criteria.setAltitudeRequired(false);
-//
-//            String bestProvider = locationManager.getBestProvider(criteria, true);
-//            Log.i("bestProvider", bestProvider);
-//            locationManager.requestLocationUpdates(bestProvider, 10000, 3, locationListener);
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+            criteria.setAltitudeRequired(false);
+
+            String bestProvider = locationManager.getBestProvider(criteria, true);
+            Log.i("bestProvider", bestProvider);
+            //locationManager.requestLocationUpdates(bestProvider, 10000, 3, locationListener);
 
             //5초 간격, 3미터 이상 이동시 update
             //use fake gps for testing
-            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
+            locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
 
             //last location
-            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
+            if(lastLocation == null) {
+                lastLatLng = new LatLng(37.5759870,126.97692289999998);
 
-            lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-
+            } else {
+                lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+            }
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
 
             //setting marker
@@ -184,6 +188,17 @@ public class MapActivity extends AppCompatActivity {
 
         return newOptions;
     }
+
+    //Check GPS on / off
+//    private void checkGps(View v){
+//        //GPS가 켜져있는지 체크
+//        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+//            //GPS 설정화면으로 이동
+//            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            intent.addCategory(Intent.CATEGORY_DEFAULT);
+//            startActivity(intent);
+//        }
+//    }
 
     //Permission Check
     private void checkPermission() {

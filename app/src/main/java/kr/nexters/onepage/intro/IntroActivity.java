@@ -7,9 +7,10 @@ import android.os.Bundle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BaseActivity;
 import me.relex.circleindicator.CircleIndicator;
 
-public class IntroActivity extends AppCompatActivity {
+public class IntroActivity extends BaseActivity {
 
     //버터나이프 사용
     @BindView(R.id.pager_intro)

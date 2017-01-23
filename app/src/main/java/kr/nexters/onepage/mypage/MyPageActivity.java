@@ -12,12 +12,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.InfinitePagerAdapter;
 import kr.nexters.onepage.common.InfiniteViewPager;
 import kr.nexters.onepage.common.TimeLineAdapter;
 import kr.nexters.onepage.common.model.TimeLine;
 
-public class MyPageActivity extends AppCompatActivity {
+public class MyPageActivity extends BaseActivity {
 
     @BindView(R.id.pager_mypage)
     InfiniteViewPager myPagePager;
