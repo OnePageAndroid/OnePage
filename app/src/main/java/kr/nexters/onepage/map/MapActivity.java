@@ -2,11 +2,13 @@ package kr.nexters.onepage.map;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,6 +44,7 @@ public class MapActivity extends BaseActivity {
     private GoogleMap mGoogleMap;
     private MapFragment mapFragment;
     private Marker currentMarker;
+    private MarkerOptions currentOptions;
 
     private LatLng currentLatLng;
     private LatLng lastLatLng;
@@ -73,6 +77,8 @@ public class MapActivity extends BaseActivity {
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(mapReadyCallBack);
 
+        currentOptions = new MarkerOptions();
+
     }
 
     OnMapReadyCallback mapReadyCallBack = new OnMapReadyCallback() {
@@ -95,12 +101,14 @@ public class MapActivity extends BaseActivity {
 
             //5초 간격, 3미터 이상 이동시 update
             //use fake gps for testing
-            locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
+            //locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
 
             //last location
-            Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
+            //Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             if(lastLocation == null) {
-                lastLatLng = new LatLng(37.5759870,126.97692289999998);
+                lastLatLng = new LatLng(37.5759879,126.97692289999998); //광화문
 
             } else {
                 lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
@@ -108,13 +116,18 @@ public class MapActivity extends BaseActivity {
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
 
             //setting marker
-            MarkerOptions markerOptions
-                    = createMarkerOptions(lastLatLng, "current loc", "fake", R.drawable.green_marker);
+//            currentOptions
+//                    = createMarkerOptions(lastLatLng, "current loc", "fake", R.drawable.green_marker);
 
-            currentMarker = googleMap.addMarker(markerOptions);
+            currentOptions.position(lastLatLng);
+            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
+            currentOptions.title("current loc");
+            currentOptions.snippet("fake");
+
+            currentMarker = googleMap.addMarker(currentOptions);
             currentMarker.showInfoWindow();
 
-            markerOptions.visible(false); //hide last location marker
+            currentOptions.visible(false); //hide last location marker
 
 
             //set marker from location list
@@ -148,12 +161,17 @@ public class MapActivity extends BaseActivity {
 
     //위치정보 수신, 현재 위치 파악
     LocationListener locationListener = new LocationListener() {
+        int flg = 0; //for check first received location
+
         @Override
         public void onLocationChanged(Location location) {
 
             currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
+            if(flg == 0) {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
+                flg = 1;
+            }
 
             //marker
             currentMarker.setPosition(currentLatLng);
@@ -189,17 +207,6 @@ public class MapActivity extends BaseActivity {
         return newOptions;
     }
 
-    //Check GPS on / off
-//    private void checkGps(View v){
-//        //GPS가 켜져있는지 체크
-//        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-//            //GPS 설정화면으로 이동
-//            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//            intent.addCategory(Intent.CATEGORY_DEFAULT);
-//            startActivity(intent);
-//        }
-//    }
-
     //Permission Check
     private void checkPermission() {
         //If permission is denied, request
@@ -222,9 +229,13 @@ public class MapActivity extends BaseActivity {
 
         switch(id) {
             case R.id.action_current_loc :
-                Toast.makeText(MapActivity.this, "현재위치로", Toast.LENGTH_LONG).show();
 
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
+                if(currentLatLng == null) {
+                    Toast.makeText(MapActivity.this, getString(R.string.toast_gps_error), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
+                }
 
                 return true;
             case android.R.id.home :
@@ -238,6 +249,7 @@ public class MapActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         //callBack 메소드와 연결, 준비가 다 끝난 후 map을 불러옴
         mapFragment.getMapAsync(mapReadyCallBack);
     }

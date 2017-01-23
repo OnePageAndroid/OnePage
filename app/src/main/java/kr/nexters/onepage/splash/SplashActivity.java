@@ -3,13 +3,20 @@ package kr.nexters.onepage.splash;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -30,13 +37,12 @@ import retrofit2.Response;
 
 public class SplashActivity extends BaseActivity {
 
+    private LocationManager locationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        //1초후 퍼미션 체크로 넘기는 핸들러
-        new Handler().postDelayed(this::initPermission, 1000);
     }
 
     //퍼미션 체크(주소록, 위치)
@@ -120,5 +126,62 @@ public class SplashActivity extends BaseActivity {
 //                        finish();
                     }
                 });
+    }
+
+    //Check GPS on / off
+    private void checkGps(){
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            showGpsDialog(getString(R.string.alert_gps));
+        }
+    }
+
+    private void showGpsDialog(String message) {
+
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(SplashActivity.this);
+        alertBuilder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.retry), null)
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishAffinity();
+                    }
+                });
+
+        Dialog dialog = alertBuilder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                     @Override
+                                     public void onShow(DialogInterface dialog) {
+                                         Button positiveBtn = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                                         positiveBtn.setOnClickListener(new View.OnClickListener() {
+                                             @Override
+                                             public void onClick(View v) {
+                                                 if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                                                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                                     intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                                     startActivity(intent);
+                                                 } else {
+                                                     dialog.dismiss();
+                                                 }
+                                             }
+                                         });
+                                     }
+                                 });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkGps();
+
+        //1초후 퍼미션 체크로 넘기는 핸들러
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            new Handler().postDelayed(this::initPermission, 1000);
+        }
     }
 }
