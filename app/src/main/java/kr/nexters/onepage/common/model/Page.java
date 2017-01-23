@@ -8,23 +8,19 @@ import java.io.File;
 
 public class Page {
 
-    private long pageId;
-    private String location = null;
-    private String email = null;
-    private File image = null;
-    private String content = null;
+    private String locationId;
+    private String email;
+    private File image;
+    private String content;
 
     public Page() {
-
     }
 
-    public Page(String content, String email, File image, String location, long pageId) {
-
+    public Page(String content, String email, File image, String locationId) {
         this.content = content;
         this.email = email;
         this.image = image;
-        this.location = location;
-        this.pageId = pageId;
+        this.locationId = locationId;
     }
 
     public String getContent() {
@@ -51,19 +47,21 @@ public class Page {
         this.image = image;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationId() {
+        return locationId;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 
-    public long getPageId() {
-        return pageId;
-    }
-
-    public void setPageId(long pageId) {
-        this.pageId = pageId;
+    @Override
+    public String toString() {
+        return "Page{" +
+                "content='" + content + '\'' +
+                ", locationId='" + locationId + '\'' +
+                ", email='" + email + '\'' +
+                ", image=" + image +
+                '}';
     }
 }

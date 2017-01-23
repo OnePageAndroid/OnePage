@@ -23,7 +23,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,16 +35,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
-import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
 
-public class WriteActivity extends BaseActivity {
+public class WriteActivity extends AppCompatActivity {
 
     static final int PERMISSION_REQUEST_CAMERA = 1000;
     static final int CALL_GALLERY = 100;
     static final int CALL_CAMERA = 200;
-
+    static final int CALL_CROP = 300;
 
     private File image;
     private String savePath;
@@ -105,6 +106,7 @@ public class WriteActivity extends BaseActivity {
         dialog.setNegativeButton("Gallery",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 navigateToGallery();
+
             }
         });
         dialog.show();
@@ -113,13 +115,14 @@ public class WriteActivity extends BaseActivity {
     @OnClick(R.id.btnWriteSave)
     public void onClickBtn() {
         //blank check
+
         if(etWriteContent.getText().length() == 0) {
             Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
         }
         else {
             Page page = new Page();
 
-            page.setLocation("");
+            page.setLocationId("");
             //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
             page.setEmail(PropertyManager.getInstance().getId());
             page.setImage(image);
@@ -156,17 +159,28 @@ public class WriteActivity extends BaseActivity {
 
                     image = new File(savePath+ "/" + fileName); //file to pass db
 
+                    cropImage(Uri.fromFile(image));
+
                     Log.i("fileName", fileName);
                     break;
                 case CALL_GALLERY :
-                    try {
+                    //Bitmap getImgFromGallery = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                    //ivWriteImage.setImageBitmap(getImgFromGallery);
 
-                        Bitmap getImgFromGallery = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                        ivWriteImage.setImageBitmap(getImgFromGallery);
+                    image = new File(getImgPath(data.getData())); //temp file to pass crop
 
-                        image = new File(getImgPath(data.getData())); //file to pass db
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    cropImage(Uri.fromFile(image));
+                    break;
+                case CALL_CROP :
+                    if(data.getExtras() != null) {
+                        final Bundle extras = data.getExtras();
+                        if(extras != null) {
+                            Bitmap cropBmp = (Bitmap)extras.get("data");
+
+                            ivWriteImage.setImageBitmap(cropBmp);
+
+                            image = getCropImg(cropBmp);
+                        }
                     }
                     break;
             }
@@ -219,6 +233,43 @@ public class WriteActivity extends BaseActivity {
         cursor.moveToFirst();
 
         return cursor.getString(column_index);
+    }
+
+    private void cropImage(Uri uri) {
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        //indicate image type and Uri of image
+        cropIntent.setDataAndType(uri, "image/*");
+        //set crop properties
+        cropIntent.putExtra("crop", "true");
+        //indicate aspect of desired crop
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        //indicate output X and Y
+        cropIntent.putExtra("outputX", ivWriteImage.getWidth());
+        cropIntent.putExtra("outputY", ivWriteImage.getHeight());
+        //retrieve data on return
+        cropIntent.putExtra("return-data", true);
+        startActivityForResult(cropIntent, CALL_CROP);
+    }
+
+    private File getCropImg(Bitmap bitmap) {
+
+        File cropImg = new File(savePath + "/" + createFileName());
+
+        BufferedOutputStream out;
+
+        try {
+            cropImg.createNewFile();
+            out = new BufferedOutputStream(new FileOutputStream(cropImg));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(cropImg)));
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cropImg;
     }
 
 }
