@@ -29,9 +29,7 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     @BindView(R.id.tab_mypage)
     TabLayout myPageTabLayout;
 
-    List<TabLayout.Tab> tabs = ImmutableList.of(
-            myPageTabLayout.newTab().setTag("").setText("마이페이지"),
-            myPageTabLayout.newTab().setTag("").setText("북마크"));
+    List<TabLayout.Tab> tabs;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -51,7 +49,10 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
 
         initActionBar();
         initTab();
+        initPager();
+    }
 
+    private void initPager() {
         myPageAdapter = new TimeLineAdapter(getSupportFragmentManager());
         List<TimeLine> items = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -65,6 +66,9 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     }
 
     private void initTab() {
+        tabs = ImmutableList.of(
+                myPageTabLayout.newTab().setTag("").setText("마이페이지"),
+                myPageTabLayout.newTab().setTag("").setText("북마크"));
         for(TabLayout.Tab tab : tabs) {
             myPageTabLayout.addTab(tab);
         }
