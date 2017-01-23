@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,11 +39,23 @@ import retrofit2.Response;
 public class SplashActivity extends BaseActivity {
 
     private LocationManager locationManager;
+    private boolean isOnGps = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if(isOnGps()) {
+            //1초후 퍼미션 체크로 넘기는 핸들러
+            new Handler().postDelayed(this::initPermission, 1000);
+        }
+        else {
+            showGpsDialog(getString(R.string.alert_gps));
+        }
+
     }
 
     //퍼미션 체크(주소록, 위치)
@@ -111,7 +124,7 @@ public class SplashActivity extends BaseActivity {
                 .enqueue(new Callback<ServerResponse>() {
                     @Override
                     public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-                        if (response.isSuccessful() && response.body() != null &&response.body().isSuccess()) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && isOnGps()) {
                             Log.d(SplashActivity.class.getSimpleName(), response.body().message);
 
                             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
@@ -126,14 +139,6 @@ public class SplashActivity extends BaseActivity {
 //                        finish();
                     }
                 });
-    }
-
-    //Check GPS on / off
-    private void checkGps(){
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-            showGpsDialog(getString(R.string.alert_gps));
-        }
     }
 
     private void showGpsDialog(String message) {
@@ -152,36 +157,42 @@ public class SplashActivity extends BaseActivity {
         Dialog dialog = alertBuilder.create();
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                                     @Override
-                                     public void onShow(DialogInterface dialog) {
-                                         Button positiveBtn = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                                         positiveBtn.setOnClickListener(new View.OnClickListener() {
-                                             @Override
-                                             public void onClick(View v) {
-                                                 if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                                                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                                     intent.addCategory(Intent.CATEGORY_DEFAULT);
-                                                     startActivity(intent);
-                                                 } else {
-                                                     dialog.dismiss();
-                                                 }
-                                             }
-                                         });
-                                     }
-                                 });
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button positiveBtn = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+                            startActivity(intent);
+                        } else {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
     }
 
+    private boolean isOnGps() {
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        checkGps();
+    }
 
-        //1초후 퍼미션 체크로 넘기는 핸들러
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            new Handler().postDelayed(this::initPermission, 1000);
-        }
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }

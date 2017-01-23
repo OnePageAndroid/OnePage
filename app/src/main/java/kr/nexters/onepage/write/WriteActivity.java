@@ -153,7 +153,6 @@ public class WriteActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CALL_CAMERA :
-                    //이미지 처리는 라이브러리써서.....
 
                     ivWriteImage.setImageBitmap(BitmapFactory.decodeFile(savePath+ "/" + fileName));
 
@@ -163,6 +162,7 @@ public class WriteActivity extends AppCompatActivity {
 
                     Log.i("fileName", fileName);
                     break;
+
                 case CALL_GALLERY :
                     //Bitmap getImgFromGallery = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
                     //ivWriteImage.setImageBitmap(getImgFromGallery);
@@ -170,8 +170,10 @@ public class WriteActivity extends AppCompatActivity {
                     image = new File(getImgPath(data.getData())); //temp file to pass crop
 
                     cropImage(Uri.fromFile(image));
+
                     break;
                 case CALL_CROP :
+
                     if(data.getExtras() != null) {
                         final Bundle extras = data.getExtras();
                         if(extras != null) {
