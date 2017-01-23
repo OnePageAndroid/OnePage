@@ -26,12 +26,13 @@
             <RelativeLayout
                 android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="300dp"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax">
 
                 <ImageView
                     android:src="@drawable/main_test_img2"
+                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
