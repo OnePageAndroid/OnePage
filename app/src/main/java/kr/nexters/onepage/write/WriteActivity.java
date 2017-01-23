@@ -43,6 +43,7 @@ public class WriteActivity extends BaseActivity {
     static final int CALL_GALLERY = 100;
     static final int CALL_CAMERA = 200;
 
+
     private File image;
     private String savePath;
     private String fileName;

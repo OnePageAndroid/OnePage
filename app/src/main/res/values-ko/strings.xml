@@ -13,8 +13,12 @@
     <!-- toast message -->
     <string name="toast_write_check_blank">Enter content.</string>
 
+    <string name="toast_gps_error">GPS 수신이 원활하지 않습니다.</string>
+
     <!-- alert message -->
     <string name="alert_network">네트워크 연결 상태 확인 후\n다시 시도해 주세요.</string>
+
+    <string name="alert_gps">GPS 연결 상태 확인 후\n다시 시도해 주세요.</string>
 
     <string name="cancel">취소</string>
     <string name="retry">재시도</string>

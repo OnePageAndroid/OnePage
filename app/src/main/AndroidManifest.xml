@@ -63,12 +63,6 @@
             android:value="AIzaSyDzU2-_jmDsO0O65uznKJfaKeTb1ofa3xg" />
 
         <!-- Check Network Connection-->
-        <receiver android:name=".common.NetworkCheckReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" >
-                </action>
-            </intent-filter>
-        </receiver>
 
 
     </application>

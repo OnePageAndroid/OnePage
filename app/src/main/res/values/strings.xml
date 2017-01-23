@@ -17,8 +17,12 @@
     <!-- toast message -->
     <string name="toast_write_check_blank">Enter content.</string>
 
+    <string name="toast_gps_error">GPS Received error.</string>
+
     <!-- alert message -->
     <string name="alert_network">Check your network connection.</string>
+
+    <string name="alert_gps">Check your gps.</string>
 
     <string name="cancel">cancel</string>
     <string name="retry">retry</string>
