@@ -65,4 +65,7 @@ dependencies {
 
     //Permission Check
     compile 'gun0912.ted:tedpermission:1.0.2'
+
+    // Guava
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
