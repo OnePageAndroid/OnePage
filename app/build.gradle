@@ -16,10 +16,16 @@ android {
             enabled = false
         }
     }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -68,4 +74,7 @@ dependencies {
 
     // Guava
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
+    // lombok
+    compile 'org.projectlombok:lombok:1.16.4'
 }

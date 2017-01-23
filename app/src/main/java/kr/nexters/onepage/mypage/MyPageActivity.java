@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +17,14 @@ import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.InfinitePagerAdapter;
 import kr.nexters.onepage.common.InfiniteViewPager;
-import kr.nexters.onepage.common.TimeLineAdapter;
-import kr.nexters.onepage.common.model.TimeLine;
+import kr.nexters.onepage.common.PropertyManager;
+import kr.nexters.onepage.common.PageAdapter;
+import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.util.Pageable;
 
 public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelectedListener {
+    private final static int MY_PAGE = 1;
+    private final static int BOOK_MARK = 2;
 
     @BindView(R.id.pager_mypage)
     InfiniteViewPager myPagePager;
@@ -34,8 +37,10 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    TimeLineAdapter myPageAdapter;
+    PageAdapter myPageAdapter;
     InfinitePagerAdapter wrappedAdapter;
+
+    Pageable pageable;
 
     int resIds[] = {R.mipmap.ic_launcher, android.R.drawable.ic_dialog_alert,
             android.R.drawable.ic_delete, android.R.drawable.ic_input_add,
@@ -53,13 +58,9 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     }
 
     private void initPager() {
-        myPageAdapter = new TimeLineAdapter(getSupportFragmentManager());
-        List<TimeLine> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            //어댑터에 프래그먼트들을 추가
-            items.add(new TimeLine(resIds[i % resIds.length], "" + i));
-        }
-
+        pageable = Pageable.of();
+        myPageAdapter = new PageAdapter(getSupportFragmentManager());
+        List<Page> items = new ArrayList<>();
         myPageAdapter.add(items);
         wrappedAdapter = new InfinitePagerAdapter(myPageAdapter);
         myPagePager.setAdapter(wrappedAdapter);
@@ -67,8 +68,8 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
 
     private void initTab() {
         tabs = ImmutableList.of(
-                myPageTabLayout.newTab().setTag("").setText("마이페이지"),
-                myPageTabLayout.newTab().setTag("").setText("북마크"));
+                myPageTabLayout.newTab().setTag(MY_PAGE).setText("마이페이지"),
+                myPageTabLayout.newTab().setTag(BOOK_MARK).setText("북마크"));
         for(TabLayout.Tab tab : tabs) {
             myPageTabLayout.addTab(tab);
         }
@@ -92,7 +93,19 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
+        int tabIdx = (int) tab.getTag();
 
+        switch (tabIdx) {
+            case MY_PAGE :
+                pageable.initPage();
+                List<Page> pages = MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
+                        pageable.getPageNumber(), pageable.getPerPageSize());
+
+                break;
+            case BOOK_MARK :
+                pageable.initPage();
+                break;
+        }
     }
 
     @Override

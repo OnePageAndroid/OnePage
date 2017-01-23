@@ -7,28 +7,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.nexters.onepage.common.model.TimeLine;
+import kr.nexters.onepage.common.model.Page;
 
-/**
- * Created by ohjaehwan on 2017. 1. 5..
- */
 
-public class TimeLineAdapter extends FragmentPagerAdapter {
+public class PageAdapter extends FragmentPagerAdapter {
 
-    private List<TimeLine> items = new ArrayList<>();
+    private List<Page> items = new ArrayList<>();
 
-    public TimeLineAdapter(FragmentManager fm) {
+    public PageAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public void add(List<TimeLine> timeLines) {
-        items.addAll(timeLines);
+    public void add(List<Page> pages) {
+        items.addAll(pages);
     }
 
     //포지션에 해당하는 페이져의 프래그먼트가 사용된다.
     @Override
     public Fragment getItem(int position) {
-        return TimeLineFragment.newInstance(items.get(position % items.size()));
+        return PageFragment.newInstance(items.get(position % items.size()));
     }
 
     @Override

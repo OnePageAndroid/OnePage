@@ -2,7 +2,6 @@ package kr.nexters.onepage.region;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -15,8 +14,8 @@ import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.InfinitePagerAdapter;
 import kr.nexters.onepage.common.InfiniteViewPager;
-import kr.nexters.onepage.common.TimeLineAdapter;
-import kr.nexters.onepage.common.model.TimeLine;
+import kr.nexters.onepage.common.PageAdapter;
+import kr.nexters.onepage.common.model.Page;
 
 public class RegionActivity extends BaseActivity {
 
@@ -26,7 +25,7 @@ public class RegionActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    TimeLineAdapter regionAdapter;
+    PageAdapter regionAdapter;
 
     InfinitePagerAdapter wrappedAdapter;
 
@@ -45,12 +44,12 @@ public class RegionActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
 
-        regionAdapter = new TimeLineAdapter(getSupportFragmentManager());
+        regionAdapter = new PageAdapter(getSupportFragmentManager());
 
-        List<TimeLine> items = new ArrayList<>();
+        List<Page> items = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             //어댑터에 프래그먼트들을 추가
-            items.add(new TimeLine(resIds[i % resIds.length], "" + i));
+            items.add(new Page(resIds[i % resIds.length], "" + i));
         }
 
         regionAdapter.add(items);

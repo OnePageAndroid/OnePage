@@ -24,6 +24,10 @@ public class PropertyManager {
         return InstanceHolder.INSTANCE;
     }
 
+    public static String getKeyId() {
+        return getInstance().getId();
+    }
+
     public void setId(String id) {
         mEditor.putString(KEY_ID, id);
         mEditor.apply();

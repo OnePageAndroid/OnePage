@@ -15,10 +15,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
-import kr.nexters.onepage.common.model.TimeLine;
+import kr.nexters.onepage.common.model.Page;
 
 
-public class TimeLineFragment extends Fragment {
+public class PageFragment extends Fragment {
 
     private static String IMAGE_RESOURCE = "image_resource";
 
@@ -31,17 +31,17 @@ public class TimeLineFragment extends Fragment {
 
     Unbinder unbinder;
 
-    private TimeLine timeLine;
+    private Page page;
 
     //프래그먼트 생성 팩토리 메서드
-    public static TimeLineFragment newInstance(TimeLine timeLine) {
-        TimeLineFragment fragment = new TimeLineFragment();
-        fragment.setTimeLine(timeLine);
+    public static PageFragment newInstance(Page page) {
+        PageFragment fragment = new PageFragment();
+        fragment.setPage(page);
         return fragment;
     }
 
-    public void setTimeLine(TimeLine timeLine) {
-        this.timeLine = timeLine;
+    public void setPage(Page page) {
+        this.page = page;
     }
 
     @Override
@@ -52,14 +52,12 @@ public class TimeLineFragment extends Fragment {
         //프래그먼트에서 버터나이프를 사용하려면 onCreateView에서 이렇게 사용해야함
         unbinder = ButterKnife.bind(this, view);
 
-        tvText.setText(timeLine.getText());
+        tvText.setText(page.getContent());
 
         //이미지로딩 라이브러리
         Glide.with(this)
-                .load(timeLine.getImgRes())
+                .load(page.getFirstImageUrl())
                 .into(ivImage);
-
-
         return view;
     }
 
