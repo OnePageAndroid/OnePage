@@ -17,4 +17,10 @@
     <!-- toast message -->
     <string name="toast_write_check_blank">Enter content.</string>
 
+    <!-- alert message -->
+    <string name="alert_network">Check your network connection.</string>
+
+    <string name="cancel">cancel</string>
+    <string name="retry">retry</string>
+
 </resources>

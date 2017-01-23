@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.InfinitePagerAdapter;
 import kr.nexters.onepage.common.InfiniteViewPager;
 import kr.nexters.onepage.common.NetworkManager;
@@ -36,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_MAP = 1000;
 

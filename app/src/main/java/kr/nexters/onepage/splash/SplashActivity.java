@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.ServerResponse;
@@ -27,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +116,8 @@ public class SplashActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ServerResponse> call, Throwable t) {
-                        Toast.makeText(SplashActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        finish();
+//                        Toast.makeText(SplashActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+//                        finish();
                     }
                 });
     }
