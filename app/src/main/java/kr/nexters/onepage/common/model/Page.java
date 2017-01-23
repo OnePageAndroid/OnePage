@@ -2,10 +2,6 @@ package kr.nexters.onepage.common.model;
 
 import java.io.File;
 
-/**
- * Created by hoody on 2017-01-18.
- */
-
 public class Page {
 
     private long pageId;

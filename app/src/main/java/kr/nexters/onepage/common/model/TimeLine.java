@@ -8,6 +8,7 @@ public class TimeLine {
     private int imgRes;
     private String imgUrl;
     private String text;
+    private int pageNumber;
 
     public TimeLine() {}
 
