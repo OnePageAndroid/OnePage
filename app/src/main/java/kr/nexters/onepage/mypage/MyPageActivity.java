@@ -17,8 +17,9 @@ import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.InfinitePagerAdapter;
 import kr.nexters.onepage.common.InfiniteViewPager;
-import kr.nexters.onepage.common.TimeLineAdapter;
-import kr.nexters.onepage.common.model.TimeLine;
+import kr.nexters.onepage.common.PropertyManager;
+import kr.nexters.onepage.common.PageAdapter;
+import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.util.Pageable;
 
 public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelectedListener {
@@ -36,7 +37,7 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    TimeLineAdapter myPageAdapter;
+    PageAdapter myPageAdapter;
     InfinitePagerAdapter wrappedAdapter;
 
     Pageable pageable;
@@ -58,13 +59,8 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
 
     private void initPager() {
         pageable = Pageable.of();
-        myPageAdapter = new TimeLineAdapter(getSupportFragmentManager());
-        List<TimeLine> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            //어댑터에 프래그먼트들을 추가
-            items.add(new TimeLine(resIds[i % resIds.length], "" + i));
-        }
-
+        myPageAdapter = new PageAdapter(getSupportFragmentManager());
+        List<Page> items = new ArrayList<>();
         myPageAdapter.add(items);
         wrappedAdapter = new InfinitePagerAdapter(myPageAdapter);
         myPagePager.setAdapter(wrappedAdapter);
@@ -102,6 +98,9 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
         switch (tabIdx) {
             case MY_PAGE :
                 pageable.initPage();
+                List<Page> pages = MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
+                        pageable.getPageNumber(), pageable.getPerPageSize());
+
                 break;
             case BOOK_MARK :
                 pageable.initPage();

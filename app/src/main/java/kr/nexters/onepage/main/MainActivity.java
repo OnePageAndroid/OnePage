@@ -10,7 +10,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,9 +25,9 @@ import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.InfinitePagerAdapter;
 import kr.nexters.onepage.common.InfiniteViewPager;
 import kr.nexters.onepage.common.NetworkManager;
-import kr.nexters.onepage.common.TimeLineAdapter;
+import kr.nexters.onepage.common.PageAdapter;
 import kr.nexters.onepage.common.WeatherAPI;
-import kr.nexters.onepage.common.model.TimeLine;
+import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.common.model.WeatherRepo;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
@@ -47,7 +46,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.iv_empty)
     ImageView ivEmpty;
 
-    TimeLineAdapter mainAdapter;
+    PageAdapter mainAdapter;
 
     InfinitePagerAdapter wrappedAdapter;
 
@@ -101,16 +100,14 @@ public class MainActivity extends BaseActivity {
 
         if(lastLocation != null) {
             ivEmpty.setVisibility(View.GONE);
-            mainAdapter = new TimeLineAdapter(getSupportFragmentManager());
+            mainAdapter = new PageAdapter(getSupportFragmentManager());
 
-            List<TimeLine> items = new ArrayList<>();
+            List<Page> items = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
                 //어댑터에 프래그먼트들을 추가
-                items.add(new TimeLine(resIds[i % resIds.length], "" + i));
+                items.add(new Page(resIds[i % resIds.length], "" + i));
             }
-
             mainAdapter.add(items);
-
             wrappedAdapter = new InfinitePagerAdapter(mainAdapter);
             mainPager.setAdapter(wrappedAdapter);
         } else {

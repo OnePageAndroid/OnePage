@@ -9,6 +9,7 @@ import java.util.List;
 
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.common.model.PostPage;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

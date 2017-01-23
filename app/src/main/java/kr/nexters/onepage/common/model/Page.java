@@ -1,30 +1,45 @@
 package kr.nexters.onepage.common.model;
 
-import java.io.File;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 public class Page {
-
-    private String locationId;
+    private Long pageId;
+    private String locationName;
+    private String locationAddress;
     private String email;
-    private File image;
     private String content;
+    private List<PageImage> images = Lists.newArrayList();
+    private int pageNum;
 
-    public Page() {
-    }
-
-    public Page(String content, String email, File image, String locationId) {
+    public Page(int resId, String content) {
         this.content = content;
-        this.email = email;
-        this.image = image;
-        this.locationId = locationId;
+        images.add(PageImage.of(resId));
     }
 
-    public String getContent() {
-        return content;
+    public Long getPageId() {
+        return pageId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPageId(Long pageId) {
+        this.pageId = pageId;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public void setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;
     }
 
     public String getEmail() {
@@ -35,29 +50,23 @@ public class Page {
         this.email = email;
     }
 
-    public File getImage() {
-        return image;
+    public String getContent() {
+        return content;
     }
 
-    public void setImage(File image) {
-        this.image = image;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getLocationId() {
-        return locationId;
+    public int getPageNum() {
+        return pageNum;
     }
 
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 
-    @Override
-    public String toString() {
-        return "Page{" +
-                "content='" + content + '\'' +
-                ", locationId='" + locationId + '\'' +
-                ", email='" + email + '\'' +
-                ", image=" + image +
-                '}';
+    public String getFirstImageUrl() {
+        return images.get(0).getUrl();
     }
 }
