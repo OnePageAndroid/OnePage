@@ -35,8 +35,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.common.model.ServerResponse;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WriteActivity extends AppCompatActivity {
 
@@ -130,7 +138,82 @@ public class WriteActivity extends AppCompatActivity {
 
             Toast.makeText(this, "save", Toast.LENGTH_LONG).show();
             Log.i("WriteActivityLog", page.toString());
+
+            savePage(page);
+
         }
+    }
+
+    private void savePage(Page page) {
+
+        Call<ServerResponse> saveCall = NetworkManager.getInstance().getApi().savePage(
+                1,
+                PropertyManager.getInstance().getId(),
+                page.getContent()
+        );
+
+        saveCall.enqueue(new Callback<ServerResponse>() {
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+
+                Log.d(WriteActivity.class.getSimpleName(), "page code : "+response.code());
+
+                if(response.isSuccessful() & response.body().isSuccess()) {
+                    Log.d(WriteActivity.class.getSimpleName(), response.body().message);
+                    saveImage(page);
+                    Toast.makeText(WriteActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                Toast.makeText(WriteActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveImage(Page page) {
+        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
+        // use the FileUtils to get the actual file by uri
+        File file = page.getImage();
+
+
+        // create RequestBody instance from file
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("multipartFile", file.getName(), requestFile);
+
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData(
+                "multipartFile",
+                file.getName(),
+                RequestBody.create(MediaType.parse("image/*"), file)
+//                RequestBody.create(MediaType.parse("image/*"), file)
+        );
+
+        Call<ServerResponse> saveImageCall = NetworkManager.getInstance().getApi().savePageImage(
+                1L,
+                filePart
+        );
+
+        saveImageCall.enqueue(new Callback<ServerResponse>() {
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+
+                Log.d(WriteActivity.class.getSimpleName(), "image code : "+response.code());
+
+                if(response.isSuccessful() && response.body().isSuccess()) {
+                    Log.d(WriteActivity.class.getSimpleName(), response.body().message);
+                    Toast.makeText(WriteActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                Toast.makeText(WriteActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //Action button
