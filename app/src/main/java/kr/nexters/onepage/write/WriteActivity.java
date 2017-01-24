@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -74,7 +75,7 @@ public class WriteActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Image save path
-        savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/OnePage/media";
+        savePath = "/OnePage";
         new File(savePath).mkdirs();
     }
 
@@ -153,7 +154,7 @@ public class WriteActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CALL_CAMERA :
-
+                    Toast.makeText(WriteActivity.this, "crop success", Toast.LENGTH_LONG).show();
                     ivWriteImage.setImageBitmap(BitmapFactory.decodeFile(savePath+ "/" + fileName));
 
                     image = new File(savePath+ "/" + fileName); //file to pass db
@@ -175,8 +176,9 @@ public class WriteActivity extends AppCompatActivity {
                 case CALL_CROP :
 
                     if(data.getExtras() != null) {
-                        final Bundle extras = data.getExtras();
+                        Bundle extras = data.getExtras();
                         if(extras != null) {
+                            Toast.makeText(WriteActivity.this, "crop success", Toast.LENGTH_LONG).show();
                             Bitmap cropBmp = (Bitmap)extras.get("data");
 
                             ivWriteImage.setImageBitmap(cropBmp);

@@ -77,4 +77,7 @@ dependencies {
 
     // lombok
     compile 'org.projectlombok:lombok:1.16.4'
+
+    // uCrop
+    compile 'com.yalantis:ucrop:2.2.0'
 }
