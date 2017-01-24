@@ -77,4 +77,5 @@ dependencies {
 
     // lombok
     compile 'org.projectlombok:lombok:1.16.4'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 }
