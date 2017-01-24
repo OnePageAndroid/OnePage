@@ -23,10 +23,11 @@ import kr.nexters.onepage.R;
  */
 
 public class BaseActivity extends AppCompatActivity {
+
     BroadcastReceiver networkReceiver;
     BroadcastReceiver gpsReceiver;
     ConnectivityManager connectivityManager;
-    LocationManager locationManager;
+    LocationManager locManager;
     NetworkInfo networkInfo;
 
     @Override
@@ -59,14 +60,14 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void gpsConnCheck() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        if(!locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
             showDialog("gps", getString(R.string.alert_gps));
         }
     }
 
-    private void showDialog(String type, String message) {
+    public void showDialog(String type, String message) {
 
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(BaseActivity.this);
         alertBuilder.setMessage(message)
@@ -95,7 +96,7 @@ public class BaseActivity extends AppCompatActivity {
 
                                 break;
                             case "gps" :
-                                if(!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                                if(!locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
                                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                     intent.addCategory(Intent.CATEGORY_DEFAULT);
                                     startActivity(intent);

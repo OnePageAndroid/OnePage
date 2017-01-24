@@ -19,13 +19,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.NetworkManager;
@@ -39,7 +36,6 @@ import retrofit2.Response;
 public class SplashActivity extends BaseActivity {
 
     private LocationManager locationManager;
-    private boolean isOnGps = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +44,7 @@ public class SplashActivity extends BaseActivity {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if(isOnGps()) {
-            //1초후 퍼미션 체크로 넘기는 핸들러
-            new Handler().postDelayed(this::initPermission, 1000);
-        }
-        else {
-            showGpsDialog(getString(R.string.alert_gps));
-        }
+        checkProgress();
 
     }
 
@@ -124,7 +114,7 @@ public class SplashActivity extends BaseActivity {
                 .enqueue(new Callback<ServerResponse>() {
                     @Override
                     public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && isOnGps()) {
+                        if (response.isSuccessful() && response.body() != null &&response.body().isSuccess()) {
                             Log.d(SplashActivity.class.getSimpleName(), response.body().message);
 
                             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
@@ -135,16 +125,28 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<ServerResponse> call, Throwable t) {
-//                        Toast.makeText(SplashActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//                        finish();
+                        Toast.makeText(SplashActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
     }
 
-    private void showGpsDialog(String message) {
+
+    //Check GPS on / off
+    // If gps is on, proceed
+    private void checkProgress(){
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            new Handler().postDelayed(this::initPermission, 1000);
+        }
+        else {
+            showGpsDialog();
+        }
+    }
+
+    private void showGpsDialog() {
 
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(SplashActivity.this);
-        alertBuilder.setMessage(message)
+        alertBuilder.setMessage(getString(R.string.alert_gps))
                 .setCancelable(false)
                 .setPositiveButton(getString(R.string.retry), null)
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -168,6 +170,7 @@ public class SplashActivity extends BaseActivity {
                             intent.addCategory(Intent.CATEGORY_DEFAULT);
                             startActivity(intent);
                         } else {
+                            checkProgress();
                             dialog.dismiss();
                         }
                     }
@@ -179,20 +182,4 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-    private boolean isOnGps() {
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 }
