@@ -91,7 +91,7 @@ public class ResultActivity extends UCropBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_download) {
-            saveCroppedImage();
+            //saveCroppedImage();
 
             intent.putExtra(CROP_URI, getIntent().getData());
 
@@ -108,77 +108,77 @@ public class ResultActivity extends UCropBaseActivity {
     /**
      * Callback received when a permissions request has been completed.
      */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_STORAGE_WRITE_ACCESS_PERMISSION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    saveCroppedImage();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        switch (requestCode) {
+//            case REQUEST_STORAGE_WRITE_ACCESS_PERMISSION:
+//                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    saveCroppedImage();
+//                }
+//                break;
+//            default:
+//                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        }
+//    }
+//
+//    private void saveCroppedImage() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                    getString(R.string.permission_write_storage_rationale),
+//                    REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
+//        } else {
+//            Uri imageUri = getIntent().getData();
+//            if (imageUri != null && imageUri.getScheme().equals("file")) {
+//                try {
+//                    copyFileToDownloads(getIntent().getData());
+//                } catch (Exception e) {
+//                    Toast.makeText(ResultActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Log.e(TAG, imageUri.toString(), e);
+//                }
+//            } else {
+//                Toast.makeText(ResultActivity.this, getString(R.string.toast_unexpected_error), Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
-    private void saveCroppedImage() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    getString(R.string.permission_write_storage_rationale),
-                    REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
-        } else {
-            Uri imageUri = getIntent().getData();
-            if (imageUri != null && imageUri.getScheme().equals("file")) {
-                try {
-                    copyFileToDownloads(getIntent().getData());
-                } catch (Exception e) {
-                    Toast.makeText(ResultActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, imageUri.toString(), e);
-                }
-            } else {
-                Toast.makeText(ResultActivity.this, getString(R.string.toast_unexpected_error), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void copyFileToDownloads(Uri croppedFileUri) throws Exception {
-        String downloadsDirectoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-
-        Calendar cal = Calendar.getInstance();
-
-        String filename = String.format("%d%d%d_%d_%s",
-                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.getTimeInMillis(), croppedFileUri.getLastPathSegment());
-
-        File saveFile = new File(downloadsDirectoryPath, filename);
-
-        FileInputStream inStream = new FileInputStream(new File(croppedFileUri.getPath()));
-        FileOutputStream outStream = new FileOutputStream(saveFile);
-        FileChannel inChannel = inStream.getChannel();
-        FileChannel outChannel = outStream.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        inStream.close();
-        outStream.close();
-
-        showNotification(saveFile);
-    }
-
-    private void showNotification(@NonNull File file) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.fromFile(file), "image/*");
-
-        NotificationCompat.Builder mNotification = new NotificationCompat.Builder(this);
-
-        mNotification
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.notification_image_saved_click_to_preview))
-                .setTicker(getString(R.string.notification_image_saved))
-                .setSmallIcon(R.drawable.ic_done)
-                .setOngoing(false)
-                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
-                .setAutoCancel(true);
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(DOWNLOAD_NOTIFICATION_ID_DONE, mNotification.build());
-    }
+//    private void copyFileToDownloads(Uri croppedFileUri) throws Exception {
+//        String downloadsDirectoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+//
+//        Calendar cal = Calendar.getInstance();
+//
+//        String filename = String.format("%d%d%d_%d_%s",
+//                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.getTimeInMillis(), croppedFileUri.getLastPathSegment());
+//
+//        File saveFile = new File(downloadsDirectoryPath, filename);
+//
+//        FileInputStream inStream = new FileInputStream(new File(croppedFileUri.getPath()));
+//        FileOutputStream outStream = new FileOutputStream(saveFile);
+//        FileChannel inChannel = inStream.getChannel();
+//        FileChannel outChannel = outStream.getChannel();
+//        inChannel.transferTo(0, inChannel.size(), outChannel);
+//        inStream.close();
+//        outStream.close();
+//
+//        showNotification(saveFile);
+//    }
+//
+//    private void showNotification(@NonNull File file) {
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setDataAndType(Uri.fromFile(file), "image/*");
+//
+//        NotificationCompat.Builder mNotification = new NotificationCompat.Builder(this);
+//
+//        mNotification
+//                .setContentTitle(getString(R.string.app_name))
+//                .setContentText(getString(R.string.notification_image_saved_click_to_preview))
+//                .setTicker(getString(R.string.notification_image_saved))
+//                .setSmallIcon(R.drawable.ic_done)
+//                .setOngoing(false)
+//                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+//                .setAutoCancel(true);
+//        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(DOWNLOAD_NOTIFICATION_ID_DONE, mNotification.build());
+//    }
 
 }

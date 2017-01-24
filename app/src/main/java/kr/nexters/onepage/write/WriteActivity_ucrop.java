@@ -1,16 +1,19 @@
 package kr.nexters.onepage.write;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -22,7 +25,11 @@ import android.widget.Toast;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +52,8 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
     private static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
 
+    private static final int DOWNLOAD_NOTIFICATION_ID_DONE = 911;
+
     private static final int PERMISSION_REQUEST_CAMERA = 1001;
     private static final int REQUEST_CAMERA = 100;
     private static final int REQUEST_GALLERY = 200;
@@ -58,6 +67,8 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
 
     @BindView(R.id.btnWriteSave)
     Button btnWriteSave;
+
+    Uri imageUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +106,7 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
         dialog.setNegativeButton("Gallery",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 //1
-                pickFromGallery();
+                navigateToGallery();
             }
         });
         dialog.show();
@@ -104,26 +115,29 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
     @OnClick(R.id.btnWriteSave)
     public void onClickBtn() {
         //blank check
-
         if(etWriteContent.getText().length() == 0) {
             Toast.makeText(WriteActivity_ucrop.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
         }
         else {
+
+            //Image Save To File
+            File savedImg = saveCroppedImage();
+
             PostPage postPage = new PostPage();
 
             postPage.setLocationId("");
             //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
             postPage.setEmail(PropertyManager.getInstance().getId());
-            postPage.setImage(null);
+            postPage.setImage(savedImg);
             postPage.setContent(etWriteContent.getText().toString());
 
-            Toast.makeText(this, "save", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
             Log.i("WriteActivityLog", postPage.toString());
         }
     }
 
     //2
-    private void pickFromGallery() {
+    private void navigateToGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -155,7 +169,8 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
                 handleCropResult(data);
             } else if (requestCode == ResultActivity.REQUEST_SAVE_RESULT) { //show crop image
                 try {
-                    ivWriteImage.setImageBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData()));
+                    imageUri = data.getData();
+                    ivWriteImage.setImageBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -211,6 +226,89 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
         }
     }
 
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_STORAGE_WRITE_ACCESS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveCroppedImage();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private File saveCroppedImage() {
+        File savedImg = null;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    getString(R.string.permission_write_storage_rationale),
+                    REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
+        } else {
+//            Uri imageUri = getIntent().getData();
+            if (imageUri != null && imageUri.getScheme().equals("file")) {
+                try {
+                    savedImg = getSaveImgFile(imageUri);
+                } catch (Exception e) {
+                    Toast.makeText(WriteActivity_ucrop.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, imageUri.toString(), e);
+                }
+            } else {
+                Toast.makeText(WriteActivity_ucrop.this, getString(R.string.toast_unexpected_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        return savedImg;
+    }
+
+
+    private File getSaveImgFile(Uri croppedFileUri) throws Exception {
+        String downloadsDirectoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+
+        Calendar cal = Calendar.getInstance();
+
+        String filename = String.format("%d%d%d_%d_%s",
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.getTimeInMillis(), croppedFileUri.getLastPathSegment());
+
+        File saveFile = new File(downloadsDirectoryPath, filename);
+
+        FileInputStream inStream = new FileInputStream(new File(croppedFileUri.getPath()));
+        FileOutputStream outStream = new FileOutputStream(saveFile);
+        FileChannel inChannel = inStream.getChannel();
+        FileChannel outChannel = outStream.getChannel();
+        inChannel.transferTo(0, inChannel.size(), outChannel);
+        inStream.close();
+        outStream.close();
+
+        showNotification(saveFile);
+
+        return saveFile;
+    }
+
+    private void showNotification(@NonNull File file) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.fromFile(file), "image/*");
+
+        NotificationCompat.Builder mNotification = new NotificationCompat.Builder(this);
+
+        mNotification
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.notification_image_saved_click_to_preview))
+                .setTicker(getString(R.string.notification_image_saved))
+                .setSmallIcon(R.drawable.ic_done)
+                .setOngoing(false)
+                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+                .setAutoCancel(true);
+        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(DOWNLOAD_NOTIFICATION_ID_DONE, mNotification.build());
+    }
 
 
     //add customizing
