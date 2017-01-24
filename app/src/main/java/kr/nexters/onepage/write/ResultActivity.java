@@ -27,7 +27,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import kr.nexters.onepage.R;
 
@@ -38,11 +41,17 @@ public class ResultActivity extends UCropBaseActivity {
 
     private static final String TAG = "ResultActivity";
     private static final int DOWNLOAD_NOTIFICATION_ID_DONE = 911;
+    protected static final int REQUEST_SAVE_RESULT = 400;
+    protected static final String CROP_URI = "CropUri";
+
+    private static Intent intent;
 
     public static void startWithUri(@NonNull Context context, @NonNull Uri uri) {
-        Intent intent = new Intent(context, ResultActivity.class);
+        intent = new Intent(context, ResultActivity.class);
         intent.setData(uri);
-        context.startActivity(intent);
+        //context.startActivity(intent);
+
+        ((WriteActivity_ucrop)context).startActivityForResult(intent, REQUEST_SAVE_RESULT);
     }
 
     @Override
@@ -83,6 +92,12 @@ public class ResultActivity extends UCropBaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_download) {
             saveCroppedImage();
+
+            intent.putExtra(CROP_URI, getIntent().getData());
+
+            setResult(ResultActivity.this.RESULT_OK, intent);
+
+            finish();
         } else if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
@@ -129,7 +144,11 @@ public class ResultActivity extends UCropBaseActivity {
 
     private void copyFileToDownloads(Uri croppedFileUri) throws Exception {
         String downloadsDirectoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-        String filename = String.format("%d_%s", Calendar.getInstance().getTimeInMillis(), croppedFileUri.getLastPathSegment());
+
+        Calendar cal = Calendar.getInstance();
+
+        String filename = String.format("%d%d%d_%d_%s",
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.getTimeInMillis(), croppedFileUri.getLastPathSegment());
 
         File saveFile = new File(downloadsDirectoryPath, filename);
 
