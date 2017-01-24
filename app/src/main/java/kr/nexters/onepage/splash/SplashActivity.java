@@ -132,7 +132,7 @@ public class SplashActivity extends BaseActivity {
     }
 
 
-    //Check GPS on / off
+    // Check GPS on / off
     // If gps is on, proceed
     private void checkProgress(){
         if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
