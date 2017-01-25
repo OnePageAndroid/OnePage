@@ -60,7 +60,8 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     private void initPager() {
         pageable = Pageable.of();
         myPageAdapter = new PageAdapter(getSupportFragmentManager());
-        List<Page> items = new ArrayList<>();
+        List<Page> items =  MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
+                pageable.getPageNumber(), pageable.getPerPageSize());
         myPageAdapter.add(items);
         wrappedAdapter = new InfinitePagerAdapter(myPageAdapter);
         myPagePager.setAdapter(wrappedAdapter);
@@ -94,16 +95,18 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         int tabIdx = (int) tab.getTag();
-
         switch (tabIdx) {
             case MY_PAGE :
                 pageable.initPage();
-                List<Page> pages = MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
-                        pageable.getPageNumber(), pageable.getPerPageSize());
-
+                myPageAdapter.clear();
+                myPageAdapter.add(MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
+                        pageable.getPageNumber(), pageable.getPerPageSize()));
                 break;
             case BOOK_MARK :
                 pageable.initPage();
+                myPageAdapter.clear();
+                myPageAdapter.add(MyPageAPI.Factory.findPageByHeart(PropertyManager.getKeyId(),
+                        pageable.getPageNumber(), pageable.getPerPageSize()));
                 break;
         }
     }
