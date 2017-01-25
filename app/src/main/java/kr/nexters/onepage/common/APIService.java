@@ -4,6 +4,7 @@ import io.reactivex.Flowable;
 import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.ServerResponse;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
+import kr.nexters.onepage.write.model.PageSaveResponse;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -29,7 +30,7 @@ public interface APIService {
     //페이지 저장
     @FormUrlEncoded
     @POST("page/save")
-    Call<ServerResponse> savePage(
+    Call<PageSaveResponse> savePage(
             @Field("locationId") long locationId,
             @Field("email") String email,
             @Field("content") String content

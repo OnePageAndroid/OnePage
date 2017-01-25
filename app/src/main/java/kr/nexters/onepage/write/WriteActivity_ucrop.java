@@ -35,8 +35,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.PostPage;
+import kr.nexters.onepage.common.model.ServerResponse;
+import kr.nexters.onepage.write.model.PageSaveResponse;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by hoody on 2017-01-25.
@@ -124,9 +133,82 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
             postPage.setImage(savedImg);
             postPage.setContent(etWriteContent.getText().toString());
 
+            savePage(postPage);
+
             Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
             Log.i("WriteActivityLog", postPage.toString());
         }
+    }
+
+    private void savePage(PostPage page) {
+
+        Call<PageSaveResponse> saveCall = NetworkManager.getInstance().getApi().savePage(
+                1,
+                PropertyManager.getInstance().getId(),
+                page.getContent()
+        );
+
+        saveCall.enqueue(new Callback<PageSaveResponse>() {
+            @Override
+            public void onResponse(Call<PageSaveResponse> call, Response<PageSaveResponse> response) {
+
+                Log.d(WriteActivity.class.getSimpleName(), "page code : "+response.code());
+
+                if(response.isSuccessful()) {
+                    Log.d(WriteActivity.class.getSimpleName(), response.body().getMessage());
+                    saveImage(page, response.body().getId());
+                    Toast.makeText(WriteActivity_ucrop.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PageSaveResponse> call, Throwable t) {
+                Toast.makeText(WriteActivity_ucrop.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveImage(PostPage page, long pageId) {
+        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
+        // use the FileUtils to get the actual file by uri
+        File file = page.getImage();
+
+//        // create RequestBody instance from file
+//        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+//
+//        // MultipartBody.Part is used to send also the actual file name
+//        MultipartBody.Part body =
+//                MultipartBody.Part.createFormData("multipartFile", file.getName(), requestFile);
+
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData(
+                "multipartFile",
+                file.getName(),
+                RequestBody.create(MediaType.parse("image/*"), file)
+//                RequestBody.create(MediaType.parse("image/*"), file)
+        );
+
+        Call<ServerResponse> saveImageCall = NetworkManager.getInstance().getApi().savePageImage(
+                pageId,
+                filePart
+        );
+
+        saveImageCall.enqueue(new Callback<ServerResponse>() {
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+
+                Log.d(WriteActivity.class.getSimpleName(), "image code : "+response.code());
+
+                if(response.isSuccessful() && response.body().isSuccess()) {
+                    Log.d(WriteActivity.class.getSimpleName(), response.body().message);
+                    Toast.makeText(WriteActivity_ucrop.this, response.body().message, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                Toast.makeText(WriteActivity_ucrop.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -300,7 +382,7 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
         inStream.close();
         outStream.close();
 
-        showNotification(saveFile);
+//        showNotification(saveFile);
 
         return saveFile;
     }
