@@ -67,6 +67,9 @@ public class Page {
     }
 
     public String getFirstImageUrl() {
-        return images.get(0).getUrl();
+        if (images.size() > 0 && images.get(0) != null) {
+            return images.get(0).getUrl();
+        }
+        return "";
     }
 }
