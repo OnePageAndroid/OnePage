@@ -1,0 +1,61 @@
+machine:
+  java:
+    version: oraclejdk8
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+    # Java Settings
+    JAVA_OPTS: "-Xms512m -Xmx2048m"
+     # AVD Settings
+    ADB_INSTALL_TIMEOUT: 5000
+
+dependencies:
+  pre:
+    # Install the android packages
+    #- echo y | android update sdk --no-ui --all --filter "extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository,extra-google-market_apk_expansion,extra-google-market_licensing,extra-google-play_billing"
+    # [Hint] Some are already available on system: https://circleci.com/docs/build-image-precise/#android
+
+    # Android SDK Platform 25
+    - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-25" ]; then echo y | android update sdk --no-ui --all --filter "android-25"; fi
+    # Android SDK Build-tools, revision 25.0.2
+    - if [ ! -d "/usr/local/android-sdk-linux/build-tools/25.0.2" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.2"; fi
+    # Android Support Repository / Local Maven repository for Support Libraries
+    - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/design/25.1.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
+
+
+  cache_directories:
+    - /usr/local/android-sdk-linux/platforms/android-25
+    - /usr/local/android-sdk-linux/build-tools/25.1.0
+    - /usr/local/android-sdk-linux/extras/android/m2repository
+
+  override:
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-21.1.2,android-21,extra-google-m2repository,extra-google-google_play_services,extra-android-support
+    - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+
+test:
+  #pre:
+    # Start the android emulator (circle-ci built-in)
+    #- emulator -avd circleci-android22 -no-audio -no-window:
+    #    background: true
+    #    parallel: true
+  override:
+    # Generate a debug-apk
+    - ./gradlew assembleDebug
+
+    # Wait for emulator to boot
+    #- circle-android wait-for-boot; sleep 20
+    # Pre-install the app (debug-apk)
+    #- fb-adb install app/build/outputs/apk/app-debug.apk
+    # Allow the SET_ANIMATION_SCALE permission to the app
+    #- fb-adb shell pm grant YOUR-PACKAGE-NAME android.permission.SET_ANIMATION_SCALE
+    # Unlock the emulator screen
+    #- fb-adb shell input keyevent 82
+    # Install the app (test-apk) and Run the tests
+    #- ./gradlew connectedDebugAndroidTest --stacktrace
+    # Save a screenshot to Circle-CI Artifacts
+    #- fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
+
+    # Copy the generated apk files to Circle-CI Artifacts
+    - cp -r app/build/outputs/apk/ $CIRCLE_ARTIFACTS
+
+    # Copy the test results to Circle-CI Artifacts
+    #- cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
