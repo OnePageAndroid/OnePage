@@ -58,11 +58,24 @@
             android:name=".write.WriteActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".write.WriteActivity_ucrop"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".write.ResultActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDzU2-_jmDsO0O65uznKJfaKeTb1ofa3xg" />
 
-        <!-- Check Network Connection-->
+        <!-- uCrop Activity -->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
 
     </application>

@@ -27,6 +27,10 @@ import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
 import kr.nexters.onepage.write.WriteActivity;
+import kr.nexters.onepage.write.WriteActivity_ucrop;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity {
 
@@ -163,8 +167,9 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.btn_write)
     public void navigasteToWrite() {
-        //TODO 여기다 글쓰기 액티비티로 가면됨
-        Intent intent = new Intent(MainActivity.this, WriteActivity.class);
+
+        Intent intent = new Intent(MainActivity.this, WriteActivity_ucrop.class);
+
         startActivity(intent);
     }
 

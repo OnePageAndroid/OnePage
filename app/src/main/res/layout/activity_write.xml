@@ -44,6 +44,5 @@
         android:id="@+id/ivWriteImage"
         android:layout_height="350dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
