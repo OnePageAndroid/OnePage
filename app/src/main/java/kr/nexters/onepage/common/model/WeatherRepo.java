@@ -5,12 +5,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Flowable;
+import kr.nexters.onepage.common.NetworkManager;
+
 public class WeatherRepo {
 
     @SerializedName("result")
     Result result;
-    @SerializedName("weather")
-    weather weather;
+    @SerializedName("Weather")
+    Weather weather;
 
     public class Result {
         @SerializedName("message")
@@ -27,23 +30,23 @@ public class WeatherRepo {
         }
     }
 
-    public class weather {
+    public class Weather {
 
-        public List<hourly> hourly = new ArrayList<>();
+        public List<Hourly> hourly = new ArrayList<>();
 
-        public List<hourly> getHourly() {
+        public List<Hourly> getHourly() {
             return hourly;
         }
 
-        public class hourly {
+        public class Hourly {
             @SerializedName("sky")
             Sky sky;
-            @SerializedName("precipitation")
-            precipitation precipitation;
-            @SerializedName("temperature")
-            temperature temperature;
-            @SerializedName("wind")
-            wind wind;
+            @SerializedName("Precipitation")
+            Precipitation precipitation;
+            @SerializedName("Temperature")
+            Temperature temperature;
+            @SerializedName("Wind")
+            Wind wind;
 
             public class Sky {
                 @SerializedName("name")
@@ -60,7 +63,7 @@ public class WeatherRepo {
                 }
             }
 
-            public class precipitation { // 강수 정보
+            public class Precipitation { // 강수 정보
                 @SerializedName("sinceOntime")
                 String sinceOntime; // 강우
                 @SerializedName("type")
@@ -75,7 +78,7 @@ public class WeatherRepo {
                 }
             }
 
-            public class temperature {
+            public class Temperature {
                 @SerializedName("tc")
                 String tc; // 현재 기온
 
@@ -84,7 +87,7 @@ public class WeatherRepo {
                 }
             }
 
-            public class wind { // 바람
+            public class Wind { // 바람
                 @SerializedName("wdir")
                 String wdir;
                 @SerializedName("wspd")
@@ -103,15 +106,15 @@ public class WeatherRepo {
                 return sky;
             }
 
-            public hourly.precipitation getPrecipitation() {
+            public Precipitation getPrecipitation() {
                 return precipitation;
             }
 
-            public hourly.temperature getTemperature() {
+            public Temperature getTemperature() {
                 return temperature;
             }
 
-            public hourly.wind getWind() {
+            public Wind getWind() {
                 return wind;
             }
         }
@@ -121,7 +124,14 @@ public class WeatherRepo {
         return result;
     }
 
-    public weather getWeather() {
+    public Weather getWeather() {
         return weather;
+    }
+
+
+    public static Flowable<Weather.Hourly.Sky> getSky() {
+        return NetworkManager.getInstance().getWeatherApi()
+                .getWeather(1, "37.5714000000", "126.9658000000")
+                .map(res -> res.getWeather().getHourly().get(0).getSky());
     }
 }

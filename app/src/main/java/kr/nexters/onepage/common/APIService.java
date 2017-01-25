@@ -1,8 +1,9 @@
 package kr.nexters.onepage.common;
 
-import kr.nexters.onepage.common.model.PageResponse;
+import io.reactivex.Flowable;
+import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.ServerResponse;
-import kr.nexters.onepage.main.model.LocationSearchResponse;
+import kr.nexters.onepage.main.model.LocationSearchRepo;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -44,17 +45,35 @@ public interface APIService {
 
     //위도경도로 SearchedLocation Id 받아오기
     @GET("location/search/coordinates")
-    Call<LocationSearchResponse> getLocationsFromCoordniates(
+    Call<LocationSearchRepo> getLocationsFromCoordniates(
             @Query("latitude") double latitude,
             @Query("longitude") double longitude
     );
 
     //페이지 받아오기
     @GET("page/location")
-    Call<PageResponse> getPagesFromLocation(
+    Call<PageRepo> getPagesFromLocation(
             @Query("locationId") long locationId,
             @Query("pageNumber") int pageNumber,
             @Query("perPageSize") int perPageSize
     );
 
+
+    /** API for Rx  **/
+
+    //위도경도로 SearchedLocation Id 받아오기
+    @GET("location/search/coordinates")
+    Flowable<LocationSearchRepo> getFlowableLocationsFromCoordniates(
+            @Query("latitude") double latitude,
+            @Query("longitude") double longitude
+    );
+
+
+    //페이지 받아오기
+    @GET("page/location")
+    Flowable<PageRepo> getFlowablePagesFromLocation(
+            @Query("locationId") long locationId,
+            @Query("pageNumber") int pageNumber,
+            @Query("perPageSize") int perPageSize
+    );
 }

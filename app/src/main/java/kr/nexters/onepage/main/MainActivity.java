@@ -1,34 +1,28 @@
 package kr.nexters.onepage.main;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.InfiniteViewPager;
-import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PageAdapter;
-import kr.nexters.onepage.common.WeatherAPI;
-import kr.nexters.onepage.common.model.PageResponse;
+import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.WeatherRepo;
-import kr.nexters.onepage.main.model.LocationSearchResponse;
+import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
 import kr.nexters.onepage.write.WriteActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends BaseActivity {
 
@@ -50,6 +44,8 @@ public class MainActivity extends BaseActivity {
     int totalSize;
     int curPage = 0;
     int PAGE_SIZE = 5;
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,28 +83,19 @@ public class MainActivity extends BaseActivity {
 
     private void initLocationManager() {
         //적절한 위치제공자 선택
-        lastLocationManager = new LastLocationManager(this, newLocation -> {
-            this.lastLocation = newLocation;
-        });
+        lastLocationManager = new LastLocationManager(this, newLocation -> this.lastLocation = newLocation);
     }
 
     private void initWeather() {
-        WeatherAPI weatherApi = NetworkManager.getInstance().getWeatherApi();
-        weatherApi.getWeather(1, "37.5714000000", "126.9658000000").enqueue(new Callback<WeatherRepo>() {
-            @Override
-            public void onResponse(Call<WeatherRepo> call, Response<WeatherRepo> response) {
-                if (response.isSuccessful()) {
-                    WeatherRepo.weather.hourly.Sky sky = response.body().getWeather().getHourly().get(0).getSky();
-                    Toast.makeText(getApplicationContext(), sky.getName(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WeatherRepo> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        disposables.add(WeatherRepo
+                .getSky()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        sky -> toast(sky.getName()),
+                        throwable -> toast(throwable.getLocalizedMessage())
+                )
+        );
     }
 
     @Override
@@ -118,64 +105,42 @@ public class MainActivity extends BaseActivity {
     }
 
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
         if (lastLocation == null) {
             ivEmpty.setVisibility(View.VISIBLE);
         } else {
-            NetworkManager.getInstance().getApi().getLocationsFromCoordniates(
-                    1.0,
-                    1.0
-            ).enqueue(new Callback<LocationSearchResponse>() {
-                @Override
-                public void onResponse(Call<LocationSearchResponse> call, Response<LocationSearchResponse> response) {
-                    if (response.isSuccessful() && response.body() != null
-                            && response.body().getLocations() != null && response.body().getLocations().get(0) != null) {
-
-                        long locationId = response.body().getLocations().get(0).getLocationId();
-
-                        if (lastLocationId != locationId) {
-                            lastLocationId = locationId;
-                            mainAdapter.clear();
-                            getPages(locationId, 0, PAGE_SIZE);
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<LocationSearchResponse> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            disposables.add(LocationSearchRepo
+                    .getLocationId(1.0, 1.0)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            newLocationId -> {
+                                if (lastLocationId != newLocationId) {
+                                    lastLocationId = newLocationId;
+                                    mainAdapter.clear();
+                                    getPages(lastLocationId, 0, PAGE_SIZE);
+                                }
+                            },
+                            throwable -> toast(throwable.getLocalizedMessage())
+                    )
+            );
         }
-
     }
 
     private void getPages(long locationId, int pageNumber, int perPageSize) {
-        NetworkManager.getInstance().getApi()
-                .getPagesFromLocation(locationId, pageNumber, perPageSize)
-                .enqueue(new Callback<PageResponse>() {
-                    @Override
-                    public void onResponse(Call<PageResponse> call, Response<PageResponse> response) {
-                        if (response.isSuccessful() && response.body() != null && response.body().getPages() != null) {
-                            ivEmpty.setVisibility(View.GONE);
-                            PageResponse pageResponse = response.body();
+        disposables.add(PageRepo
+                .findPageRepoById(locationId, pageNumber, perPageSize)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        pageRepo -> {
+                            totalSize = pageRepo.getTotalSize();
+                            curPage = pageRepo.getPageNumber();
 
-                            totalSize = pageResponse.getTotalSize();
-                            curPage = pageResponse.getPageNumber();
-
-                            mainAdapter.add(pageResponse.getPages());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PageResponse> call, Throwable t) {
-
-                    }
-                });
+                            mainAdapter.add(pageRepo.getPages());
+                        },
+                        throwable -> toast(throwable.getLocalizedMessage()),
+                        () -> ivEmpty.setVisibility(View.GONE)
+                ));
     }
 
     @OnClick(R.id.btn_my)
@@ -198,4 +163,9 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        disposables.clear();
+        super.onDestroy();
+    }
 }
