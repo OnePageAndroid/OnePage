@@ -42,7 +42,6 @@ import kr.nexters.onepage.common.model.PostPage;
  * Created by hoody on 2017-01-25.
  */
 
-
 public class WriteActivity_ucrop extends UCropBaseActivity {
 
     private static final String TAG = "WriteActivity";
@@ -92,13 +91,7 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
         dialog.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                //camera permission check
-                if(ContextCompat.checkSelfPermission(WriteActivity_ucrop.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    //navigateToCamera();
-                }
-                else {
-                    ActivityCompat.requestPermissions(WriteActivity_ucrop.this, new String[] {Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
-                }
+                navigateToCamera();
 
             }
         });
@@ -136,6 +129,21 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
         }
     }
 
+
+    private void navigateToCamera() {
+
+        //camera permission check
+        if(ContextCompat.checkSelfPermission(WriteActivity_ucrop.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+
+
+        } else {
+            ActivityCompat.requestPermissions(WriteActivity_ucrop.this, new String[] {Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
+        }
+    }
+
+
+
     //2
     private void navigateToGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
@@ -165,6 +173,14 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
                 } else {
                     Toast.makeText(WriteActivity_ucrop.this, R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
                 }
+            } else if (requestCode == REQUEST_CAMERA) {
+                final Uri selectedUri = data.getData();
+                if (selectedUri != null) {
+                    startCropActivity(data.getData());
+                } else {
+                    Toast.makeText(WriteActivity_ucrop.this, R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
+                }
+
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 handleCropResult(data);
             } else if (requestCode == ResultActivity.REQUEST_SAVE_RESULT) { //show crop image
@@ -225,9 +241,6 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
             Toast.makeText(WriteActivity_ucrop.this, R.string.toast_unexpected_error, Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 
 
     @Override
@@ -359,5 +372,6 @@ public class WriteActivity_ucrop extends UCropBaseActivity {
 
         return uCrop.withOptions(options);
     }
+
 
 }
