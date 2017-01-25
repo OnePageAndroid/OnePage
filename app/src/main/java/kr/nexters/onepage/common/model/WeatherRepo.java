@@ -12,7 +12,7 @@ public class WeatherRepo {
 
     @SerializedName("result")
     Result result;
-    @SerializedName("Weather")
+    @SerializedName("weather")
     Weather weather;
 
     public class Result {
@@ -41,11 +41,11 @@ public class WeatherRepo {
         public class Hourly {
             @SerializedName("sky")
             Sky sky;
-            @SerializedName("Precipitation")
+            @SerializedName("precipitation")
             Precipitation precipitation;
-            @SerializedName("Temperature")
+            @SerializedName("temperature")
             Temperature temperature;
-            @SerializedName("Wind")
+            @SerializedName("wind")
             Wind wind;
 
             public class Sky {

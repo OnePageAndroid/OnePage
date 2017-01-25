@@ -15,7 +15,7 @@ public interface WeatherAPI {
             "Accept: application/json",
             "appKey: 5f1ae395-cd12-315f-bff7-9e7622e81aa9"
             })
-    @GET("Weather/current/Hourly")
+    @GET("weather/current/hourly")
     Flowable<WeatherRepo> getWeather(
             @Query("version") int version,
             @Query("lat") String lat,
