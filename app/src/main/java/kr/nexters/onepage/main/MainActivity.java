@@ -3,9 +3,13 @@ package kr.nexters.onepage.main;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +57,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        initAppbar();
         initPager();
         initLocationManager();
         initWeather();
@@ -167,5 +172,61 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         disposables.clear();
         super.onDestroy();
+    }
+
+
+    /**
+     * Appbar Animiation
+     **/
+
+    private static final float PERCENTAGE_TO_SHOW_CONTENT_AT_TOOLBAR = 0.5f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 500;
+
+    private boolean isCollapseLayoutVisible = false;
+
+    @BindView(R.id.appbar)
+    AppBarLayout appbarLayout;
+
+    @BindView(R.id.layout_content_collapse)
+    ViewGroup layoutCollapse;
+    @BindView(R.id.layout_content_expand)
+    LinearLayout layoutExpand;
+
+    private void initAppbar() {
+        appbarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            int maxScroll = appBarLayout.getTotalScrollRange();
+            float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
+
+            handleToolbarVisibility(percentage);
+        });
+        startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
+    }
+
+
+    private void handleToolbarVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_CONTENT_AT_TOOLBAR) {
+            if (!isCollapseLayoutVisible) {
+                startAlphaAnimation(layoutCollapse, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                startAlphaAnimation(layoutExpand, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                isCollapseLayoutVisible = true;
+            }
+
+        } else {
+            if (isCollapseLayoutVisible) {
+                startAlphaAnimation(layoutCollapse, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                startAlphaAnimation(layoutExpand, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                isCollapseLayoutVisible = false;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation(View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
     }
 }

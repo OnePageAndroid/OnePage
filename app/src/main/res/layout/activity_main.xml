@@ -24,96 +24,137 @@
 
             <!--확장 시-->
             <RelativeLayout
-                android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:fitsSystemWindows="true"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax">
 
                 <ImageView
-                    android:src="@drawable/main_test_img2"
-                    android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/main_test_img2" />
 
-                <Button
-                    android:id="@+id/btn_write"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/layout_content_expand"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:text="글쓰기" />
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingStart="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="나는 지금"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_location_name_kor_expand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="올림픽 대교"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tv_location_name_eng_expand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Olympic-daegyo"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/btn_write"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:text="글쓰기" />
+                </LinearLayout>
+
+
             </RelativeLayout>
 
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:contentInsetLeft="4dp"
-                android:contentInsetStart="4dp"
-                app:contentInsetLeft="4dp"
-                app:contentInsetStart="4dp"
+                android:layout_height="wrap_content"
+                android:contentInsetLeft="0dp"
+                android:contentInsetStart="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
+
+                    <Button
+                        android:id="@+id/btn_my"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:text="MY" />
+
+                    <Button
+                        android:id="@+id/btn_map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:text="지도" />
+
+                    <!--줄어들었을 때-->
+                    <RelativeLayout
+                        android:id="@+id/layout_content_collapse"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/btn_map"
+                        android:orientation="vertical"
+                        android:paddingLeft="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="나는 지금"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tv_location_name_kor_collapse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="올림픽 대교"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tv_location_name_eng_collapse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Olympic-daegyo"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:gravity="bottom"
+                            android:text="201페이지가 남겨졌습니다" />
+                    </RelativeLayout>
+                </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
 
-            <RelativeLayout
-                app:layout_collapseMode="pin"
-                android:layout_width="match_parent"
-                android:layout_height="200dp">
-
-                <Button
-                    android:id="@+id/btn_my"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:text="MY" />
-
-                <Button
-                    android:id="@+id/btn_map"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:text="지도" />
-
-                <!--줄어들었을 때-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/btn_map"
-                    android:orientation="vertical"
-                    android:paddingLeft="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="나는 지금" />
-
-                    <TextView
-                        android:id="@+id/tv_location_name_kor_collapse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="올림픽 대교" />
-
-                    <TextView
-                        android:id="@+id/tv_location_name_eng_collapse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Olympic-daegyo" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|right"
-                        android:visibility="gone"
-                        android:text="201페이지가 남겨졌습니다" />
-                </LinearLayout>
-            </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
