@@ -18,8 +18,13 @@ public class PageAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+    public void clear() {
+        items.clear();
+    }
+
     public void add(List<Page> pages) {
         items.addAll(pages);
+        notifyDataSetChanged();
     }
 
     //포지션에 해당하는 페이져의 프래그먼트가 사용된다.
@@ -35,7 +40,7 @@ public class PageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return items.size() * 3;
+        return items.size();
     }
 }
 
