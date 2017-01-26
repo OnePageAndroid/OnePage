@@ -7,18 +7,19 @@ import com.google.android.gms.maps.model.Marker;
  */
 
 public class Poi {
+
+    private Long locationId;
+    private String address;
     private double latitude;
     private double longitude;
     private String name;
-    private String address;
-
     private Marker marker;
-
 
     public Poi() {
     }
 
-    public Poi(String address, double latitude, double longitude, String name, Marker marke) {
+    public Poi(Long locationId, String address, String name, double latitude, double longitude, Marker marker) {
+        this.locationId = locationId;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -42,20 +43,20 @@ public class Poi {
         this.latitude = latitude;
     }
 
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
     public double getLongitude() {
         return longitude;
     }
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Marker getMarker() {
@@ -66,14 +67,27 @@ public class Poi {
         this.marker = marker;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Poi{" +
                 "address='" + address + '\'' +
+                ", locationId=" + locationId +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", name='" + name + '\'' +
                 ", marker=" + marker +
                 '}';
+    }
+
+    public Long getLocationId(Marker marker) {
+        return locationId;
     }
 }
