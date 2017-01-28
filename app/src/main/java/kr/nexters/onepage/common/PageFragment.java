@@ -20,8 +20,6 @@ import kr.nexters.onepage.common.model.Page;
 
 public class PageFragment extends Fragment {
 
-    private static String IMAGE_RESOURCE = "image_resource";
-
     //버터나이프 사용
     @BindView(R.id.iv_image)
     ImageView ivImage;
