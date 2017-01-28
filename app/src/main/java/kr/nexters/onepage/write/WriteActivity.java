@@ -1,20 +1,15 @@
 package kr.nexters.onepage.write;
 
 import android.Manifest;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -26,11 +21,7 @@ import android.widget.Toast;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -152,7 +143,7 @@ public class WriteActivity extends UCropBaseActivity {
 
                 if(response.isSuccessful()) {
 //                    Log.d(WriteActivity.class.getSimpleName(), response.body().getMessage());
-//                    saveImage(page, response.body().getId());
+                    saveImage(page, response.body().getId());
 //                    Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -168,13 +159,6 @@ public class WriteActivity extends UCropBaseActivity {
         // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
         // use the FileUtils to get the actual file by uri
         File file = page.getImage();
-
-//        // create RequestBody instance from file
-//        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-//
-//        // MultipartBody.Part is used to send also the actual file name
-//        MultipartBody.Part body =
-//                MultipartBody.Part.createFormData("multipartFile", file.getName(), requestFile);
 
         MultipartBody.Part filePart = MultipartBody.Part.createFormData(
                 "multipartFile",

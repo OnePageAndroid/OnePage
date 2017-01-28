@@ -2,36 +2,30 @@ package kr.nexters.onepage.region;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.common.InfinitePagerAdapter;
-import kr.nexters.onepage.common.InfiniteViewPager;
-import kr.nexters.onepage.common.PageAdapter;
-import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.common.model.PageRepo;
+import kr.nexters.onepage.main.adapter.MainAdapter;
 
 public class RegionActivity extends BaseActivity {
 
-    @BindView(R.id.pager_mypage)
-    InfiniteViewPager regionPager;
+    @BindView(R.id.pager_region)
+    RecyclerViewPager recyclerViewPager;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    PageAdapter regionAdapter;
-
-    InfinitePagerAdapter wrappedAdapter;
-
-    int resIds[] = {R.mipmap.ic_launcher, android.R.drawable.ic_dialog_alert,
-            android.R.drawable.ic_delete, android.R.drawable.ic_input_add,
-            android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
+    MainAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +38,31 @@ public class RegionActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
 
-        regionAdapter = new PageAdapter(getSupportFragmentManager());
+        mAdapter = new MainAdapter();
+        LinearLayoutManager linearLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewPager.setLayoutManager(linearLayout);
+        recyclerViewPager.setAdapter(mAdapter);
 
-        List<Page> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            //어댑터에 프래그먼트들을 추가
-            items.add(new Page(resIds[i % resIds.length], "" + i));
-        }
 
-        regionAdapter.add(items);
+        PageRepo
+                .findPageRepoById(1, -2, 5)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        pageRepo -> {
+                            mAdapter.add(pageRepo.getPages());
+                        },
+                        throwable -> toast(throwable.getLocalizedMessage()),
+                        () -> {
+                            recyclerViewPager.scrollToPosition(mAdapter.getFirstPagePostion());
+                        }
+                );
 
-        wrappedAdapter = new InfinitePagerAdapter(regionAdapter);
-        regionPager.setAdapter(wrappedAdapter);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
