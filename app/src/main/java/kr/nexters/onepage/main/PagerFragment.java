@@ -19,14 +19,14 @@ import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
 import kr.nexters.onepage.common.model.PageRepo;
-import kr.nexters.onepage.main.adapter.MainAdapter;
+import kr.nexters.onepage.main.adapter.PageAdapter;
 
 public class PagerFragment extends BaseFragment {
 
     @BindView(R.id.pager_main)
     RecyclerViewPager mainPager;
 
-    MainAdapter mainAdapter;
+    PageAdapter mainAdapter;
 
     Unbinder unbinder;
 
@@ -35,12 +35,24 @@ public class PagerFragment extends BaseFragment {
     int PAGE_SIZE = 5;
     boolean loading = false;
 
+    public static final String KEY_LAST_LOCATION = "key_last_location";
+
     private final CompositeDisposable disposables = new CompositeDisposable();
+
+    OnLongClickPageListener onLongClickPageListener;
+
+    interface OnLongClickPageListener {
+        void onLongClick();
+    }
+
+    public void setOnLongClickPageListener(OnLongClickPageListener onLongClickPageListener) {
+        this.onLongClickPageListener = onLongClickPageListener;
+    }
 
     public static PagerFragment newInstance(long lastLocationId) {
         PagerFragment fragment = new PagerFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong("lastLocationId", lastLocationId);
+        bundle.putLong(KEY_LAST_LOCATION, lastLocationId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -51,13 +63,13 @@ public class PagerFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
-        lastLocationId = getArguments().getLong("lastLocationId", -1L);
+        lastLocationId = getArguments().getLong(KEY_LAST_LOCATION, -1L);
         initPager();
         return view;
     }
 
     private void initPager() {
-        mainAdapter = new MainAdapter();
+        mainAdapter = new PageAdapter();
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mainPager.setLayoutManager(linearLayout);
         mainPager.setAdapter(mainAdapter);
@@ -69,6 +81,10 @@ public class PagerFragment extends BaseFragment {
                 getPages(lastLocationId, PAGE_SIZE, true);
             }
         });
+
+        if(onLongClickPageListener != null) {
+            mainAdapter.setOnLongClickPageViewHolderListener(() -> onLongClickPageListener.onLongClick());
+        }
 
         getFirstPages(lastLocationId, PAGE_SIZE);
     }

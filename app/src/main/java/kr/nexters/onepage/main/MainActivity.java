@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -24,6 +25,8 @@ import kr.nexters.onepage.mypage.MyPageActivity;
 import kr.nexters.onepage.region.RegionActivity;
 import kr.nexters.onepage.util.AppbarAnimUtil;
 import kr.nexters.onepage.write.WriteActivity;
+
+import static kr.nexters.onepage.main.PagerFragment.KEY_LAST_LOCATION;
 
 public class MainActivity extends BaseActivity {
 
@@ -43,13 +46,15 @@ public class MainActivity extends BaseActivity {
     Location lastLocation;
     long lastLocationId;
 
+    Unbinder unbinder;
+
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         initAppbar();
         initLocationManager();
@@ -97,9 +102,8 @@ public class MainActivity extends BaseActivity {
                     .subscribe(
                             newLocationId -> {
                                 if (lastLocationId != newLocationId) {
-                                    ivEmpty.setVisibility(View.GONE);
                                     lastLocationId = newLocationId;
-                                    replaceFragment(R.id.fragment_main, PagerFragment.newInstance(lastLocationId));
+                                    initFragment();
                                 }
                             },
                             throwable -> toast(throwable.getLocalizedMessage())
@@ -109,6 +113,13 @@ public class MainActivity extends BaseActivity {
         } else {
             ivEmpty.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void initFragment() {
+        ivEmpty.setVisibility(View.GONE);
+        PagerFragment pagerFragment = PagerFragment.newInstance(lastLocationId);
+        pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
+        replaceFragment(R.id.fragment_main, pagerFragment);
     }
 
     @OnClick(R.id.btn_my)
@@ -126,7 +137,9 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.btn_region)
     public void navigateToRegion() {
-        startActivity(new Intent(MainActivity.this, RegionActivity.class));
+        Intent intent = new Intent(this, RegionActivity.class);
+        intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
+        startActivity(intent);
     }
 
     @OnClick(R.id.btn_write)
@@ -138,6 +151,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         disposables.clear();
+        unbinder.unbind();
         super.onDestroy();
     }
 }

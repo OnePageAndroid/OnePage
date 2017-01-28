@@ -21,18 +21,28 @@ import kr.nexters.onepage.common.model.Page;
  * Created by ohjaehwan on 2017. 1. 28..
  */
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
+public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder> {
 
     List<Page> items = new ArrayList<>();
 
-    @Override
-    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_page, parent, false);
-        return new MainViewHolder(view);
+    public interface OnLongClickPageViewHolderListener {
+        void onLongClick();
+    }
+
+    OnLongClickPageViewHolderListener onLongClickPageViewHolderListener;
+
+    public void setOnLongClickPageViewHolderListener(OnLongClickPageViewHolderListener onLongClickPageViewHolderListener) {
+        this.onLongClickPageViewHolderListener = onLongClickPageViewHolderListener;
     }
 
     @Override
-    public void onBindViewHolder(MainViewHolder holder, int position) {
+    public PageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_page, parent, false);
+        return new PageViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(PageViewHolder holder, int position) {
         holder.bind(items.get(position));
     }
 
@@ -91,7 +101,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         return items.size();
     }
 
-    class MainViewHolder extends RecyclerView.ViewHolder {
+    class PageViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_text)
         TextView tvText;
@@ -100,9 +110,17 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         @BindView(R.id.iv_image)
         ImageView ivImg;
 
-        public MainViewHolder(View itemView) {
+        public PageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            if (onLongClickPageViewHolderListener != null) {
+                itemView.setOnClickListener(v -> onLongClickPageViewHolderListener.onLongClick());
+//                itemView.setOnLongClickListener(v -> {
+//                    onLongClickPageViewHolderListener.onLongClick();
+//                    return false;
+//                });
+            }
         }
 
         public void bind(Page item) {

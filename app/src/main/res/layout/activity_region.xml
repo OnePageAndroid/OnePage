@@ -9,6 +9,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -35,19 +36,10 @@
             android:text="지역명"
             android:textSize="40sp" />
 
-        <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-            android:background="@color/cardview_dark_background"
-            android:id="@+id/pager_region"
+        <FrameLayout
+            android:id="@+id/fragment_region"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingEnd="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingStart="20dp"
-            app:rvp_singlePageFling="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
