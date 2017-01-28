@@ -168,31 +168,22 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+
     <ImageView
         android:id="@+id/iv_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:src="@android:drawable/ic_delete"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="gone" />
 
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout
+        android:id="@+id/fragment_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-            android:id="@+id/pager_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingEnd="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingStart="20dp"
-            app:rvp_singlePageFling="true" />
-    </android.support.v4.widget.NestedScrollView>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
 </android.support.design.widget.CoordinatorLayout>

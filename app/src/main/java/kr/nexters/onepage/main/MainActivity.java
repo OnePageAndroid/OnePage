@@ -4,14 +4,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,9 +17,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.WeatherRepo;
-import kr.nexters.onepage.main.adapter.MainAdapter;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
@@ -37,26 +31,17 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.appbar)
     AppBarLayout appbarLayout;
+    @BindView(R.id.iv_empty)
+    ImageView ivEmpty;
 
     @BindView(R.id.layout_content_collapse)
     ViewGroup layoutCollapse;
     @BindView(R.id.layout_content_expand)
     LinearLayout layoutExpand;
 
-    @BindView(R.id.iv_empty)
-    ImageView ivEmpty;
-
-    @BindView(R.id.pager_main)
-    RecyclerViewPager mainPager;
-
-    MainAdapter mainAdapter;
-
     LastLocationManager lastLocationManager;
     Location lastLocation;
     long lastLocationId;
-
-    int PAGE_SIZE = 5;
-    boolean loading = false;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -67,7 +52,6 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         initAppbar();
-        initPager();
         initLocationManager();
         initWeather();
     }
@@ -80,22 +64,6 @@ public class MainActivity extends BaseActivity {
             AppbarAnimUtil.getInstance().handleAppbar(layoutCollapse, layoutExpand, percentage);
         });
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
-    }
-
-    private void initPager() {
-
-        mainAdapter = new MainAdapter();
-        LinearLayoutManager linearLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mainPager.setLayoutManager(linearLayout);
-        mainPager.setAdapter(mainAdapter);
-
-        mainPager.addOnPageChangedListener((prePosotion, curPosition) -> {
-            if (!loading && curPosition >= mainAdapter.getItemCount() - 2) {
-                getPages(lastLocationId, PAGE_SIZE, false);
-            } else if (!loading && curPosition <= 1) {
-                getPages(lastLocationId, PAGE_SIZE, true);
-            }
-        });
     }
 
     private void initLocationManager() {
@@ -121,70 +89,26 @@ public class MainActivity extends BaseActivity {
     }
 
     private void getLocation() {
-        if (lastLocation == null) {
-            ivEmpty.setVisibility(View.VISIBLE);
-        } else {
+        if (lastLocation != null) {
             disposables.add(LocationSearchRepo
                     .getLocationId(1.0, 1.0)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                            //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
                             newLocationId -> {
                                 if (lastLocationId != newLocationId) {
+                                    ivEmpty.setVisibility(View.GONE);
                                     lastLocationId = newLocationId;
-                                    mainAdapter.clear();
-                                    getFirstPages(lastLocationId, PAGE_SIZE);
+                                    replaceFragment(R.id.fragment_main, PagerFragment.newInstance(lastLocationId));
                                 }
                             },
                             throwable -> toast(throwable.getLocalizedMessage())
                     )
 
             );
+        } else {
+            ivEmpty.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void getPages(long locationId, int perPageSize, boolean isReverse) {
-        loading = true;
-
-        disposables.add(PageRepo
-                .findPageRepoById(locationId, mainAdapter.getLoadPageNum(isReverse), perPageSize)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        pageRepo -> {
-                            Log.d("PageRepo", pageRepo.getPages().toString());
-                            if (isReverse) {
-                                mainAdapter.add(0, pageRepo.getPages());
-                            } else {
-                                mainAdapter.add(pageRepo.getPages());
-                            }
-                            loading = false;
-                        },
-                        throwable -> toast(throwable.getLocalizedMessage())
-                ));
-    }
-
-    private void getFirstPages(long locationId, int perPageSize) {
-        disposables.add(PageRepo
-                .findPageRepoById(locationId, -2, perPageSize)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        pageRepo -> {
-                            mainAdapter.add(pageRepo.getPages());
-                            Log.d("PageRepo", pageRepo.getPages().toString());
-                        },
-                        throwable -> toast(throwable.getLocalizedMessage()),
-                        () -> {
-                            ivEmpty.setVisibility(View.GONE);
-
-                            //뷰페이저의 가운데가 첫번쨰 페이지로 오게 세팅
-                            if (mainAdapter.getItemCount() > 0) {
-                                mainPager.scrollToPosition(mainAdapter.getFirstPagePostion());
-                            }
-                        }
-                ));
     }
 
     @OnClick(R.id.btn_my)
