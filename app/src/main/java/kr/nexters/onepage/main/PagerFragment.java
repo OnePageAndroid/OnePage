@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
 import kr.nexters.onepage.common.model.PageRepo;
-import kr.nexters.onepage.main.adapter.PageAdapter;
+import kr.nexters.onepage.common.adapter.PageAdapter;
 
 public class PagerFragment extends BaseFragment {
 

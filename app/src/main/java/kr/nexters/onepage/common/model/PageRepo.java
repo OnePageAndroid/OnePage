@@ -23,4 +23,8 @@ public class PageRepo {
         return NetworkManager.getInstance().getApi()
                 .getFlowablePagesFromLocation(locationId, page, pageSize);
     }
+
+    public boolean isPresent() {
+        return resultCount != 0;
+    }
 }
