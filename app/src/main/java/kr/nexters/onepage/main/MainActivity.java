@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,12 +20,15 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
+import kr.nexters.onepage.common.event.Events;
+import kr.nexters.onepage.common.event.RxBus;
 import kr.nexters.onepage.common.model.WeatherRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
 import kr.nexters.onepage.region.RegionActivity;
 import kr.nexters.onepage.util.AppbarAnimUtil;
+import kr.nexters.onepage.util.ConvertUtil;
 import kr.nexters.onepage.write.WriteActivity;
 
 import static kr.nexters.onepage.main.PagerFragment.KEY_LAST_LOCATION;
@@ -34,13 +39,18 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.appbar)
     AppBarLayout appbarLayout;
-    @BindView(R.id.iv_empty)
-    ImageView ivEmpty;
-
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.layout_content_collapse)
     ViewGroup layoutCollapse;
     @BindView(R.id.layout_content_expand)
     LinearLayout layoutExpand;
+
+    @BindView(R.id.tv_toolbar_total_page)
+    TextView tvToolbarTotalPage;
+
+    @BindView(R.id.iv_empty)
+    ImageView ivEmpty;
 
     LastLocationManager lastLocationManager;
     Location lastLocation;
@@ -59,6 +69,7 @@ public class MainActivity extends BaseActivity {
         initAppbar();
         initLocationManager();
         initWeather();
+        initToolbarPageNum();
     }
 
 
@@ -69,6 +80,17 @@ public class MainActivity extends BaseActivity {
             AppbarAnimUtil.getInstance().handleAppbar(layoutCollapse, layoutExpand, percentage);
         });
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
+        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+    }
+
+    // A method to find height of the status bar
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     private void initLocationManager() {
@@ -85,6 +107,21 @@ public class MainActivity extends BaseActivity {
                         throwable -> toast(throwable.getLocalizedMessage())
                 )
         );
+    }
+
+    private void initToolbarPageNum() {
+        RxBus.getInstance().toObserverable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    int pageNum = ((Events.ToolbarPageNumEvent) event).getTotalPageNum();
+                    tvToolbarTotalPage.setText(
+                            String.format(
+                                    getResources().getString(R.string.main_toolbar_page),
+                                    ConvertUtil.integerToCommaString(pageNum)
+                            )
+                    );
+                });
     }
 
     @Override
