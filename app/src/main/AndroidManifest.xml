@@ -38,7 +38,7 @@
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.TransparentStatusBar" />
 
         <activity
             android:name=".intro.IntroActivity"
@@ -57,10 +57,6 @@
 
         <activity
             android:name=".write.WriteActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".write.WriteActivity_ucrop"
             android:screenOrientation="portrait" />
 
         <activity

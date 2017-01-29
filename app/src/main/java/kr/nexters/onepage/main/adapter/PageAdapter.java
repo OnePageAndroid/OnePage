@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.util.ConvertUtil;
 
 /**
  * Created by ohjaehwan on 2017. 1. 28..
@@ -23,7 +25,12 @@ import kr.nexters.onepage.common.model.Page;
 
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder> {
 
-    List<Page> items = new ArrayList<>();
+    private List<Page> items = new ArrayList<>();
+    private int totalPageSize;
+
+    public PageAdapter(int totalPageSize) {
+        this.totalPageSize = totalPageSize;
+    }
 
     public interface OnLongClickPageViewHolderListener {
         void onLongClick();
@@ -105,8 +112,10 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
         @BindView(R.id.tv_text)
         TextView tvText;
-        @BindView(R.id.tv_page)
-        TextView tvPage;
+        @BindView(R.id.tv_page_current)
+        TextView tvPageCurrent;
+        @BindView(R.id.tv_page_total)
+        TextView tvPageTotal;
         @BindView(R.id.iv_image)
         ImageView ivImg;
 
@@ -125,7 +134,9 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
         public void bind(Page item) {
             tvText.setText(item.getContent());
-            tvPage.setText(item.getPageNum() + "page");
+            tvPageCurrent.setText(ConvertUtil.integerToCommaString(item.getPageNum()));
+            tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
+
             Glide.with(itemView.getContext())
                     .load(item.getFirstImageUrl())
                     .into(ivImg);

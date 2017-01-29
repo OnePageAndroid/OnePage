@@ -1,20 +1,20 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="15dp"
             android:id="@+id/pager_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="414dp"
             android:clipToPadding="false"
-            android:paddingEnd="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingStart="20dp"
-            app:rvp_singlePageFling="true" />
+            android:paddingEnd="42.5dp"
+            android:paddingLeft="42.5dp"
+            android:paddingRight="42.5dp"
+            android:paddingStart="42.5dp"
+            app:rvp_singlePageFling="true"/>
 </android.support.v4.widget.NestedScrollView>
 
 

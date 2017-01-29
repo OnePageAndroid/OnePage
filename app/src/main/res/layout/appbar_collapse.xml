@@ -1,0 +1,99 @@
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:contentInsetEnd="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetRight="0dp"
+    android:contentInsetStart="0dp"
+    app:contentInsetEnd="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetStart="0dp"
+    app:layout_collapseMode="pin"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="133dp">
+
+        <ImageButton
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/btn_my"
+            android:background="@drawable/mypage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <ImageButton
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/btn_map"
+            android:background="@drawable/placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btn_region"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/btn_map"
+            android:text="지역" />
+
+        <!--줄어들었을 때-->
+        <RelativeLayout
+            android:id="@+id/layout_content_collapse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_location_name_kor_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="올림픽 대교"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:id="@+id/tv_location_name_eng_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="11dp"
+                    android:layout_marginLeft="18dp"
+                    android:text="Olympic-daegyo"
+                    android:textColor="#d5d5d5"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_toolbar_total_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="15dp"
+                android:gravity="bottom"
+                android:text="2,101페이지가 남겨졌습니다."
+                android:textColor="#ececec"
+                android:textSize="10sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>
