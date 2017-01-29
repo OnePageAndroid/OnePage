@@ -3,6 +3,7 @@ package kr.nexters.onepage.mypage;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -55,6 +56,9 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     }
 
     private void initPager() {
+        LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        viewPager.setLayoutManager(layout);
+
         MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(), pageable.getPageNumber(), pageable.getPerPageSize(), pages -> items.addAll(pages));
         for(int resId : resIds) {
             items.add(Page.of(resId, "" + resId));

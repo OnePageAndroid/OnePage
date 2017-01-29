@@ -1,6 +1,5 @@
 package kr.nexters.onepage.common.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ import kr.nexters.onepage.common.model.Page;
  */
 
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder> {
-    private Context context;
     private List<Page> pages = Lists.newArrayList();
 
     public PageAdapter() {
@@ -41,7 +39,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
     @Override
     public PageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_page, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_page, parent, false);
         return new PageViewHolder(view);
     }
 
