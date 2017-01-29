@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,9 @@ import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.PageAdapter;
 import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.util.Pageable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelectedListener {
     private final static int MY_PAGE = 1;
@@ -37,6 +42,7 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    List<Page> items = Lists.newArrayList();
     PageAdapter myPageAdapter;
     InfinitePagerAdapter wrappedAdapter;
 
@@ -60,8 +66,19 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     private void initPager() {
         pageable = Pageable.of();
         myPageAdapter = new PageAdapter(getSupportFragmentManager());
-        List<Page> items =  MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
-                pageable.getPageNumber(), pageable.getPerPageSize());
+
+        MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
+                pageable.getPageNumber(), pageable.getPerPageSize()).enqueue(new Callback<List<Page>>() {
+            @Override
+            public void onResponse(Call<List<Page>> call, Response<List<Page>> response) {
+                items.addAll(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Page>> call, Throwable t) {
+                Log.e("initPager : " + t.getMessage(), t.getMessage());
+            }
+        });
         myPageAdapter.add(items);
         wrappedAdapter = new InfinitePagerAdapter(myPageAdapter);
         myPagePager.setAdapter(wrappedAdapter);
@@ -99,14 +116,14 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
             case MY_PAGE :
                 pageable.initPage();
                 myPageAdapter.clear();
-                myPageAdapter.add(MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
-                        pageable.getPageNumber(), pageable.getPerPageSize()));
+//                myPageAdapter.add(MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(),
+//                        pageable.getPageNumber(), pageable.getPerPageSize()));
                 break;
             case BOOK_MARK :
                 pageable.initPage();
                 myPageAdapter.clear();
-                myPageAdapter.add(MyPageAPI.Factory.findPageByHeart(PropertyManager.getKeyId(),
-                        pageable.getPageNumber(), pageable.getPerPageSize()));
+//                myPageAdapter.add(MyPageAPI.Factory.findPageByHeart(PropertyManager.getKeyId(),
+//                        pageable.getPageNumber(), pageable.getPerPageSize()));
                 break;
         }
     }
