@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -118,6 +119,12 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void toast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void replaceFragment(int containerViewId, Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(containerViewId, fragment)
+                .commitAllowingStateLoss();
     }
 
     @Override

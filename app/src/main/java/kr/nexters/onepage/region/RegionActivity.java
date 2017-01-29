@@ -5,62 +5,51 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.common.InfinitePagerAdapter;
-import kr.nexters.onepage.common.InfiniteViewPager;
-import kr.nexters.onepage.common.PageAdapter;
-import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.main.PagerFragment;
+
+import static kr.nexters.onepage.main.PagerFragment.KEY_LAST_LOCATION;
 
 public class RegionActivity extends BaseActivity {
-
-    @BindView(R.id.pager_mypage)
-    InfiniteViewPager regionPager;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    PageAdapter regionAdapter;
-
-    InfinitePagerAdapter wrappedAdapter;
-
-    int resIds[] = {R.mipmap.ic_launcher, android.R.drawable.ic_dialog_alert,
-            android.R.drawable.ic_delete, android.R.drawable.ic_input_add,
-            android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
+    Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_region);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
 
-        regionAdapter = new PageAdapter(getSupportFragmentManager());
-
-        List<Page> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            //어댑터에 프래그먼트들을 추가
-            items.add(new Page(resIds[i % resIds.length], "" + i));
+        long locationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
+        if(locationId == -1L) {
+            toast("잘못된 접근");
+            finish();
         }
 
-        regionAdapter.add(items);
+        replaceFragment(R.id.fragment_region, PagerFragment.newInstance(locationId));
+    }
 
-        wrappedAdapter = new InfinitePagerAdapter(regionAdapter);
-        regionPager.setAdapter(wrappedAdapter);
+    @Override
+    protected void onDestroy() {
+        unbinder.unbind();
+        super.onDestroy();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

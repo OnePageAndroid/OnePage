@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class Page {
     private Long pageId;
     private String locationName;

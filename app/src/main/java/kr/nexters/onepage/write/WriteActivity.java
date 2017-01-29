@@ -4,33 +4,24 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.BufferedOutputStream;
+import com.yalantis.ucrop.UCrop;
+
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,25 +29,32 @@ import butterknife.OnClick;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
+import kr.nexters.onepage.common.model.PostPage;
 import kr.nexters.onepage.common.model.ServerResponse;
+import kr.nexters.onepage.write.model.PageSaveResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import kr.nexters.onepage.common.model.PostPage;
 
-public class WriteActivity extends AppCompatActivity {
+/**
+ * Created by hoody on 2017-01-25.
+ */
 
-    static final int PERMISSION_REQUEST_CAMERA = 1000;
-    static final int CALL_GALLERY = 100;
-    static final int CALL_CAMERA = 200;
-    static final int CALL_CROP = 300;
+public class WriteActivity extends UCropBaseActivity {
 
-    private File image;
-    private String savePath;
-    private String fileName;
+    private static final String TAG = "WriteActivity";
+    private static final String ONE_PAGE_IMAGE_NAME = "OnePage";
+
+    private static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
+    private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
+    private static final int PERMISSION_REQUEST_CAMERA = 1001;
+    private static final int REQUEST_CAMERA = 100;
+    private static final int REQUEST_GALLERY = 200;
+
+    private UCropManager uCropManager;
 
     @BindView(R.id.ivWriteImage)
     ImageView ivWriteImage;
@@ -67,10 +65,7 @@ public class WriteActivity extends AppCompatActivity {
     @BindView(R.id.btnWriteSave)
     Button btnWriteSave;
 
-    Intent intent;
-
-    //TODO update alertDialog design
-    //TODO Camera에서 찍은 사진이 save 눌렀을때만 저장되게!
+    Uri imageUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +74,12 @@ public class WriteActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        //Go MainActivity
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        uCropManager = new UCropManager();
 
-        //Image save path
-        savePath = "/OnePage";
-        new File(savePath).mkdirs();
     }
-
 
     @OnClick(R.id.ivWriteImage)
     public void onClickImage() {
-
         //dialog 커스텀 가능
         AlertDialog.Builder dialog = new AlertDialog.Builder(WriteActivity.this);
 
@@ -100,22 +89,13 @@ public class WriteActivity extends AppCompatActivity {
 
         dialog.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
-                //camera permission check
-                if(ContextCompat.checkSelfPermission(WriteActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    navigateToCamera();
-                }
-                else {
-                    ActivityCompat.requestPermissions(WriteActivity.this, new String[] {Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
-                }
-
+                navigateToCamera();
             }
         });
 
         dialog.setNegativeButton("Gallery",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                navigateToGallery();
-
+                navigateToGallery(); //1
             }
         });
         dialog.show();
@@ -124,65 +104,61 @@ public class WriteActivity extends AppCompatActivity {
     @OnClick(R.id.btnWriteSave)
     public void onClickBtn() {
         //blank check
-
         if(etWriteContent.getText().length() == 0) {
             Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
         }
         else {
+
+            //Image Save To File
+            File savedImg = saveCroppedImage();
+
             PostPage postPage = new PostPage();
 
             postPage.setLocationId("");
             //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
             postPage.setEmail(PropertyManager.getInstance().getId());
-            postPage.setImage(image);
+            postPage.setImage(savedImg);
             postPage.setContent(etWriteContent.getText().toString());
 
-            Toast.makeText(this, "save", Toast.LENGTH_LONG).show();
             savePage(postPage);
+
+            Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
             Log.i("WriteActivityLog", postPage.toString());
         }
     }
 
     private void savePage(PostPage page) {
 
-        Call<ServerResponse> saveCall = NetworkManager.getInstance().getApi().savePage(
+        Call<PageSaveResponse> saveCall = NetworkManager.getInstance().getApi().savePage(
                 1,
                 PropertyManager.getInstance().getId(),
                 page.getContent()
         );
 
-        saveCall.enqueue(new Callback<ServerResponse>() {
+        saveCall.enqueue(new Callback<PageSaveResponse>() {
             @Override
-            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+            public void onResponse(Call<PageSaveResponse> call, Response<PageSaveResponse> response) {
 
                 Log.d(WriteActivity.class.getSimpleName(), "page code : "+response.code());
 
-                if(response.isSuccessful() & response.body().isSuccess()) {
-                    Log.d(WriteActivity.class.getSimpleName(), response.body().message);
-                    saveImage(page);
-                    Toast.makeText(WriteActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                if(response.isSuccessful()) {
+//                    Log.d(WriteActivity.class.getSimpleName(), response.body().getMessage());
+                    saveImage(page, response.body().getId());
+//                    Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ServerResponse> call, Throwable t) {
+            public void onFailure(Call<PageSaveResponse> call, Throwable t) {
                 Toast.makeText(WriteActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void saveImage(PostPage page) {
+    private void saveImage(PostPage page, long pageId) {
         // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
         // use the FileUtils to get the actual file by uri
         File file = page.getImage();
-
-
-        // create RequestBody instance from file
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
-        // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("multipartFile", file.getName(), requestFile);
 
         MultipartBody.Part filePart = MultipartBody.Part.createFormData(
                 "multipartFile",
@@ -192,7 +168,7 @@ public class WriteActivity extends AppCompatActivity {
         );
 
         Call<ServerResponse> saveImageCall = NetworkManager.getInstance().getApi().savePageImage(
-                1L,
+                pageId,
                 filePart
         );
 
@@ -215,146 +191,141 @@ public class WriteActivity extends AppCompatActivity {
         });
     }
 
-    //Action button
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    private void navigateToCamera() {
 
-        switch(id) {
-            case android.R.id.home :
-                finish();
-                return true;
+        //camera permission check
+        if(ContextCompat.checkSelfPermission(WriteActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, REQUEST_CAMERA);
+        } else {
+            ActivityCompat.requestPermissions(WriteActivity.this, new String[] {Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
         }
-        return super.onOptionsItemSelected(item);
     }
 
+    //2
+    private void navigateToGallery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                    getString(R.string.permission_read_storage_rationale),
+                    REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+        } else {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_picture)), REQUEST_GALLERY);
+        }
+    }
+
+    //3
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_GALLERY) {
+                final Uri selectedUri = data.getData();
+                if (selectedUri != null) {
+                    //4
+                    startCropActivity(data.getData());
+                } else {
+                    Toast.makeText(WriteActivity.this, R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
+                }
+            } else if (requestCode == REQUEST_CAMERA) {
+                final Uri selectedUri = data.getData();
+                if (selectedUri != null) {
+                    startCropActivity(data.getData());
+                } else {
+                    Toast.makeText(WriteActivity.this, R.string.toast_cannot_retrieve_selected_image, Toast.LENGTH_SHORT).show();
+                }
 
-        if(resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case CALL_CAMERA :
-                    Toast.makeText(WriteActivity.this, "crop success", Toast.LENGTH_LONG).show();
-                    ivWriteImage.setImageBitmap(BitmapFactory.decodeFile(savePath+ "/" + fileName));
-
-                    image = new File(savePath+ "/" + fileName); //file to pass db
-
-                    cropImage(Uri.fromFile(image));
-
-                    Log.i("fileName", fileName);
-                    break;
-
-                case CALL_GALLERY :
-                    //Bitmap getImgFromGallery = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                    //ivWriteImage.setImageBitmap(getImgFromGallery);
-
-                    image = new File(getImgPath(data.getData())); //temp file to pass crop
-
-                    cropImage(Uri.fromFile(image));
-
-                    break;
-                case CALL_CROP :
-
-                    if(data.getExtras() != null) {
-                        Bundle extras = data.getExtras();
-                        if(extras != null) {
-                            Toast.makeText(WriteActivity.this, "crop success", Toast.LENGTH_LONG).show();
-                            Bitmap cropBmp = (Bitmap)extras.get("data");
-
-                            ivWriteImage.setImageBitmap(cropBmp);
-
-                            image = getCropImg(cropBmp);
-                        }
-                    }
-                    break;
+            } else if (requestCode == UCrop.REQUEST_CROP) {
+                handleCropResult(data);
+            } else if (requestCode == ResultActivity.REQUEST_SAVE_RESULT) { //show crop image
+                try {
+                    imageUri = data.getData();
+                    ivWriteImage.setImageBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+        if (resultCode == UCrop.RESULT_ERROR) {
+            handleCropError(data);
+        }
     }
 
-
+    //   * Callback received when a permissions request has been completed.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch(requestCode) {
-            case PERMISSION_REQUEST_CAMERA :
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    navigateToCamera();
+        switch (requestCode) {
+            case REQUEST_STORAGE_WRITE_ACCESS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveCroppedImage();
                 }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
-    private void navigateToCamera() {
-        fileName = createFileName();
+    //4
+    public void startCropActivity(@NonNull Uri uri) {
+        String destinationFileName = ONE_PAGE_IMAGE_NAME;
 
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(savePath + "/" + fileName)));
+        destinationFileName += ".jpg";
 
-        startActivityForResult(intent, CALL_CAMERA);
+        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
+
+        uCrop = uCropManager.basisConfig(uCrop, getApplicationContext());
+
+        uCrop.start(WriteActivity.this);
     }
 
-    private void navigateToGallery() {
-        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, CALL_GALLERY);
-
-//        startActivityForResult(
-//            intent.createChooser(new Intent(Intent.ACTION_GET_CONTENT) .setType("image/*"), getString(R.string.chooser_gallery), CALL_GALLERY);
-    }
-
-    //Create image file name with current time
-    private String createFileName() {
-        Date day = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA);
-        return "OnePage_" + String.valueOf(sdf.format(day)) + ".jpg";
-    }
-
-    //Gets real path of the selected file in the gallery
-    private String getImgPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        cursor.moveToFirst();
-
-        return cursor.getString(column_index);
-    }
-
-    private void cropImage(Uri uri) {
-        Intent cropIntent = new Intent("com.android.camera.action.CROP");
-        //indicate image type and Uri of image
-        cropIntent.setDataAndType(uri, "image/*");
-        //set crop properties
-        cropIntent.putExtra("crop", "true");
-        //indicate aspect of desired crop
-        cropIntent.putExtra("aspectX", 1);
-        cropIntent.putExtra("aspectY", 1);
-        //indicate output X and Y
-        cropIntent.putExtra("outputX", ivWriteImage.getWidth());
-        cropIntent.putExtra("outputY", ivWriteImage.getHeight());
-        //retrieve data on return
-        cropIntent.putExtra("return-data", true);
-        startActivityForResult(cropIntent, CALL_CROP);
-    }
-
-    private File getCropImg(Bitmap bitmap) {
-
-        File cropImg = new File(savePath + "/" + createFileName());
-
-        BufferedOutputStream out;
-
-        try {
-            cropImg.createNewFile();
-            out = new BufferedOutputStream(new FileOutputStream(cropImg));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(cropImg)));
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    //5
+    public void handleCropResult(@NonNull Intent result) {
+        final Uri resultUri = UCrop.getOutput(result);
+        if (resultUri != null) {
+            ResultActivity.startWithUri(WriteActivity.this, resultUri);
+        } else {
+            Toast.makeText(WriteActivity.this, R.string.toast_cannot_retrieve_cropped_image, Toast.LENGTH_SHORT).show();
         }
-        return cropImg;
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    public void handleCropError(@NonNull Intent result) {
+        final Throwable cropError = UCrop.getError(result);
+        if (cropError != null) {
+            Log.e(TAG, "handleCropError: ", cropError);
+            Toast.makeText(WriteActivity.this, cropError.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(WriteActivity.this, R.string.toast_unexpected_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public File saveCroppedImage() {
+        File savedImg = null;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    getString(R.string.permission_write_storage_rationale),
+                    REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
+        } else {
+//            Uri imageUri = getIntent().getData();
+            if (imageUri != null && imageUri.getScheme().equals("file")) {
+                try {
+                    savedImg = uCropManager.getSaveImgFile(imageUri);
+                } catch (Exception e) {
+                    Toast.makeText(WriteActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, imageUri.toString(), e);
+                }
+            } else {
+                Toast.makeText(WriteActivity.this, getString(R.string.toast_unexpected_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        return savedImg;
+    }
 }

@@ -54,9 +54,9 @@ public class MapActivity extends BaseActivity {
         ArrayList<Poi> poiList = new ArrayList();
 
         //sample data
-        poiList.add(new Poi(null, 37.5759879,126.97692289999998, "광화문", null));
-        poiList.add(new Poi(null, 37.5545168,126.9706483, "서울역", null));
-        poiList.add(new Poi(null, 37.60193, 127.04153, "월곡역", null));
+        poiList.add(new Poi(null, "", "광화문", 37.5759879,126.97692289999998, null));
+        poiList.add(new Poi(null, "", "서울역", 37.5545168,126.9706483, null));
+        poiList.add(new Poi(null, "", "월곡역", 37.60193, 127.04153, null));
 
         return poiList;
 
@@ -85,6 +85,8 @@ public class MapActivity extends BaseActivity {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mGoogleMap = googleMap;
+
+            mGoogleMap.setMyLocationEnabled(true);
 
             //Check location permission
             checkPermission();
