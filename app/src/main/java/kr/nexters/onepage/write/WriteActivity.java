@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,8 +12,13 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,8 +68,8 @@ public class WriteActivity extends UCropBaseActivity {
     @BindView(R.id.etWriteContent)
     EditText etWriteContent;
 
-    @BindView(R.id.btnWriteSave)
-    Button btnWriteSave;
+//    @BindView(R.id.btnWriteSave)
+//    Button btnWriteSave;
 
     Uri imageUri = null;
 
@@ -75,10 +81,16 @@ public class WriteActivity extends UCropBaseActivity {
         ButterKnife.bind(this);
 
         uCropManager = new UCropManager();
+        setSupportActionBar((Toolbar) findViewById(R.id.writeToolbar));
+        final ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
     }
 
-    @OnClick(R.id.ivWriteImage)
+    @OnClick(R.id.btnCamera)
     public void onClickImage() {
         //dialog 커스텀 가능
         AlertDialog.Builder dialog = new AlertDialog.Builder(WriteActivity.this);
@@ -101,31 +113,31 @@ public class WriteActivity extends UCropBaseActivity {
         dialog.show();
     }
 
-    @OnClick(R.id.btnWriteSave)
-    public void onClickBtn() {
-        //blank check
-        if(etWriteContent.getText().length() == 0) {
-            Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
-        }
-        else {
-
-            //Image Save To File
-            File savedImg = saveCroppedImage();
-
-            PostPage postPage = new PostPage();
-
-            postPage.setLocationId("");
-            //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
-            postPage.setEmail(PropertyManager.getInstance().getId());
-            postPage.setImage(savedImg);
-            postPage.setContent(etWriteContent.getText().toString());
-
-            savePage(postPage);
-
-            Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
-            Log.i("WriteActivityLog", postPage.toString());
-        }
-    }
+//    @OnClick(R.id.btnWriteSave)
+//    public void onClickBtn() {
+//        //blank check
+//        if(etWriteContent.getText().length() == 0) {
+//            Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
+//        }
+//        else {
+//
+//            //Image Save To File
+//            File savedImg = saveCroppedImage();
+//
+//            PostPage postPage = new PostPage();
+//
+//            postPage.setLocationId("");
+//            //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
+//            postPage.setEmail(PropertyManager.getInstance().getId());
+//            postPage.setImage(savedImg);
+//            postPage.setContent(etWriteContent.getText().toString());
+//
+//            savePage(postPage);
+//
+//            Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
+//            Log.i("WriteActivityLog", postPage.toString());
+//        }
+//    }
 
     private void savePage(PostPage page) {
 
@@ -143,7 +155,7 @@ public class WriteActivity extends UCropBaseActivity {
 
                 if(response.isSuccessful()) {
 //                    Log.d(WriteActivity.class.getSimpleName(), response.body().getMessage());
-                    saveImage(page, response.body().getId());
+                    //saveImage(page, response.body().getId());
 //                    Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -327,5 +339,44 @@ public class WriteActivity extends UCropBaseActivity {
         }
 
         return savedImg;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_write, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_write) {
+            //blank check
+            if(etWriteContent.getText().length() == 0) {
+                Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
+            }
+            else {
+
+                //Image Save To File
+                File savedImg = saveCroppedImage();
+
+                PostPage postPage = new PostPage();
+
+                postPage.setLocationId("");
+                //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
+                postPage.setEmail(PropertyManager.getInstance().getId());
+                postPage.setImage(savedImg);
+                postPage.setContent(etWriteContent.getText().toString());
+
+                savePage(postPage);
+
+                Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
+                Log.i("WriteActivityLog", postPage.toString());
+            }
+        }
+
+        else if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -5,4 +5,15 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorWhite">#ffffff</color>
+
+    <color name="colorOrange">#f68558</color>
+    <color name="colorLightGray">#33000000</color>
+
+    <color name="colorToolbarBorder">#d5d5d5</color>
+    <!-- toolbar color -->
+    <color name="colorToolbarWrite">#656465</color>
+
+
+    <color name="colorImageBackground">#fbfbfb</color>
+
 </resources>

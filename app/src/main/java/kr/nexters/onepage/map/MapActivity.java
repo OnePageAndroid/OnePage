@@ -11,6 +11,9 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +49,10 @@ public class MapActivity extends BaseActivity {
     private Marker currentMarker;
     private MarkerOptions currentOptions;
 
+    private MapInfoFragment mapInfoFragment;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
+
     private LatLng currentLatLng;
     private LatLng lastLatLng;
     private Poi poi;
@@ -78,6 +85,14 @@ public class MapActivity extends BaseActivity {
         mapFragment.getMapAsync(mapReadyCallBack);
 
         currentOptions = new MarkerOptions();
+
+        fragmentManager = getFragmentManager();
+
+        mapInfoFragment = (MapInfoFragment)getFragmentManager().findFragmentById(R.id.mapInfoFragment);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.hide(mapInfoFragment);
 
     }
 
@@ -127,7 +142,6 @@ public class MapActivity extends BaseActivity {
             currentOptions.snippet("fake");
 
             currentMarker = googleMap.addMarker(currentOptions);
-            currentMarker.showInfoWindow();
 
             currentOptions.visible(false); //hide last location marker
 
@@ -144,7 +158,6 @@ public class MapActivity extends BaseActivity {
                         = createMarkerOptions(new LatLng(poi.getLatitude(), poi.getLongitude()), poi.getName(), null, R.drawable.red_marker);
 
                 poi.setMarker(googleMap.addMarker(poiOptions));
-                poi.getMarker().showInfoWindow();
 
                 Log.i("MapActivityLog", poi.toString());
             }
@@ -153,8 +166,10 @@ public class MapActivity extends BaseActivity {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
                     //click event
+
+                    fragmentTransaction.show(mapInfoFragment);
+
                     //new activity
-                    marker.showInfoWindow();
                     return true;
                 }
             });

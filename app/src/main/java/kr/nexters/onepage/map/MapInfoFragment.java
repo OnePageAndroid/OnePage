@@ -12,7 +12,7 @@ import kr.nexters.onepage.R;
  * Created by hoody on 2017-01-25.
  */
 
-public class MapTextviewFragment extends Fragment {
+public class MapInfoFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
