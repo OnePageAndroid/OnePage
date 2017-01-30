@@ -18,6 +18,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
+import kr.nexters.onepage.common.event.Events;
+import kr.nexters.onepage.common.event.RxBus;
 import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.adapter.PageAdapter;
 
@@ -37,7 +39,7 @@ public class PagerFragment extends BaseFragment {
 
     public static final String KEY_LAST_LOCATION = "key_last_location";
 
-    private final CompositeDisposable disposables = new CompositeDisposable();
+    public final CompositeDisposable disposables = new CompositeDisposable();
 
     OnLongClickPageListener onLongClickPageListener;
 
@@ -64,12 +66,34 @@ public class PagerFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
         lastLocationId = getArguments().getLong(KEY_LAST_LOCATION, -1L);
-        initPager();
+        getFirstPages(lastLocationId, PAGE_SIZE);
         return view;
+
     }
 
-    private void initPager() {
-        mainAdapter = new PageAdapter();
+    private void getFirstPages(long locationId, int perPageSize) {
+        //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
+        disposables.add(PageRepo
+                .findPageRepoById(locationId, -2, perPageSize)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        pageRepo -> {
+                            RxBus.getInstance().send(new Events.ToolbarPageNumEvent(pageRepo.getTotalSize()));
+                            initPager(pageRepo);
+                        },
+                        throwable -> toast(throwable.getLocalizedMessage()),
+                        () -> {                            //뷰페이저의 가운데가 첫번쨰 페이지로 오게 세팅
+                            if (mainAdapter.getItemCount() > 0) {
+                                mainPager.scrollToPosition(mainAdapter.getFirstPagePostion());
+                            }
+                        }
+                ));
+    }
+
+    private void initPager(PageRepo pageRepo) {
+
+        mainAdapter = new PageAdapter(pageRepo.getTotalSize());
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mainPager.setLayoutManager(linearLayout);
         mainPager.setAdapter(mainAdapter);
@@ -85,8 +109,7 @@ public class PagerFragment extends BaseFragment {
         if(onLongClickPageListener != null) {
             mainAdapter.setOnLongClickPageViewHolderListener(() -> onLongClickPageListener.onLongClick());
         }
-
-        getFirstPages(lastLocationId, PAGE_SIZE);
+        mainAdapter.add(pageRepo.getPages());
     }
 
     private void getPages(long locationId, int perPageSize, boolean isReverse) {
@@ -106,26 +129,6 @@ public class PagerFragment extends BaseFragment {
                             loading = false;
                         },
                         throwable -> toast(throwable.getLocalizedMessage())
-                ));
-    }
-
-    private void getFirstPages(long locationId, int perPageSize) {
-        //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
-        disposables.add(PageRepo
-                .findPageRepoById(locationId, -2, perPageSize)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        pageRepo -> {
-                            mainAdapter.add(pageRepo.getPages());
-                            Log.d("PageRepo", pageRepo.getPages().toString());
-                        },
-                        throwable -> toast(throwable.getLocalizedMessage()),
-                        () -> {                            //뷰페이저의 가운데가 첫번쨰 페이지로 오게 세팅
-                            if (mainAdapter.getItemCount() > 0) {
-                                mainPager.scrollToPosition(mainAdapter.getFirstPagePostion());
-                            }
-                        }
                 ));
     }
 
