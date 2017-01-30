@@ -2,15 +2,16 @@ package kr.nexters.onepage.mypage;
 
 import android.util.Log;
 
-import com.google.common.collect.Lists;
-
-import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.functions.Consumer;
+import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.model.Page;
-import kr.nexters.onepage.common.model.PostPage;
+import kr.nexters.onepage.common.model.PageRepo;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
@@ -18,44 +19,76 @@ import retrofit2.http.Query;
 
 
 public interface MyPageAPI {
-    @GET("/api/v1/page/user")
-    Call<List<Page>> findPageByUser(
+    @GET("page/user")
+    Call<PageRepo> findPageByUser(
             @Query("email") String email,
             @Query("pageNumber") Integer pageNumber,
             @Query("perPageSize") Integer perPageSize
     );
 
-    @GET("/api/v1/page/heart")
-    Call<List<Page>> findPageByHeart(
+    @GET("page/heart")
+    Call<PageRepo> findPageByHeart(
             @Query("email") String email,
             @Query("pageNumber") Integer pageNumber,
             @Query("perPageSize") Integer perPageSize
     );
 
     class Factory {
-        public static MyPageAPI create(){
+        private static int resIds[] = {R.mipmap.ic_launcher, android.R.drawable.ic_dialog_alert,
+                android.R.drawable.ic_delete, android.R.drawable.ic_input_add,
+                android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
+
+        public static MyPageAPI create() {
             return new Retrofit.Builder()
                     .baseUrl(NetworkManager.SERVER)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build().create(MyPageAPI.class);
         }
 
-        public static List<Page> findPageByUser(String email, Integer pageNumber, Integer perPageSize) {
-            try {
-                return create().findPageByUser(email, pageNumber, perPageSize).execute().body();
-            } catch (IOException e) {
-                Log.e("findPageByUser : ", e.getMessage());
-                return Lists.newArrayList();
-            }
+        public static void findPageByUser(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+            create().findPageByUser(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
+                @Override
+                public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
+                    if (response.isSuccessful()) {
+                        try {
+                            List<Page> pages = response.body().getPages();
+                            for (int resId : resIds) {
+                                pages.add(Page.of(resId, "" + resId));
+                            }
+                            addFunc.accept(pages);
+                        } catch (Exception e) {
+                            Log.e("indPageByUser : ", e.getMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PageRepo> call, Throwable t) {
+                    Log.e("findPageByUser : ", t.getMessage());
+                }
+            });
         }
 
-        public static List<Page> findPageByHeart(String email, Integer pageNumber, Integer perPageSize) {
-            try {
-                return create().findPageByHeart(email, pageNumber, perPageSize).execute().body();
-            } catch (IOException e) {
-                Log.e("findPageByUser : ", e.getMessage());
-                return Lists.newArrayList();
-            }
+        public static void findPageByHeart(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+            create().findPageByHeart(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
+                @Override
+                public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
+                    if (response.isSuccessful()) {
+                        try {
+                            List<Page> pages = response.body().getPages();
+                            pages.add(Page.of(resIds[0], "" + resIds[0]));
+                            addFunc.accept(pages);
+                        } catch (Exception e) {
+                            Log.e("findPageByHeart : ", e.getMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PageRepo> call, Throwable t) {
+                    Log.e("findPageByHeart : ", t.getMessage());
+                }
+            });
         }
     }
 }

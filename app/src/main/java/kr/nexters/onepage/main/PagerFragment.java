@@ -21,7 +21,7 @@ import kr.nexters.onepage.common.BaseFragment;
 import kr.nexters.onepage.common.event.Events;
 import kr.nexters.onepage.common.event.RxBus;
 import kr.nexters.onepage.common.model.PageRepo;
-import kr.nexters.onepage.main.adapter.PageAdapter;
+import kr.nexters.onepage.common.adapter.PageAdapter;
 
 public class PagerFragment extends BaseFragment {
 
