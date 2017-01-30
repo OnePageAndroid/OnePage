@@ -59,7 +59,7 @@
         android:ems="9"
         android:id="@+id/etWriteContent"
         android:hint="@string/write_hint"
-        android:background="@color/cardview_light_background"
+        android:background="@color/colorWhite"
         android:layout_height="100dp"
         android:layout_above="@+id/btnCamera"
         android:layout_alignParentLeft="true"
@@ -73,7 +73,8 @@
         android:maxLength="100"
         android:gravity="top"
         android:textCursorDrawable="@drawable/cursor_drawable"
-        android:cursorVisible="true" />
+        android:cursorVisible="true"
+        android:textColor="#b1b1b1" />
 
     <TextView
         android:text="0 / 100"

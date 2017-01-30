@@ -356,16 +356,9 @@ public class WriteActivity extends UCropBaseActivity {
             }
             else {
 
-                //Image Save To File
-                File savedImg = saveCroppedImage();
-
-                PostPage postPage = new PostPage();
-
-                postPage.setLocationId("");
+                PostPage postPage =
+                        new PostPage("", PropertyManager.getInstance().getId(), saveCroppedImage(), etWriteContent.getText().toString());
                 //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
-                postPage.setEmail(PropertyManager.getInstance().getId());
-                postPage.setImage(savedImg);
-                postPage.setContent(etWriteContent.getText().toString());
 
                 savePage(postPage);
 
