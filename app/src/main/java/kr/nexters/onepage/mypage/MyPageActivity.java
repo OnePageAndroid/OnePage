@@ -15,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.util.Pageable;
 
 public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelectedListener {
     private final static int MY_PAGE = 1;
@@ -28,7 +27,6 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     Toolbar toolbar;
 
     List<TabLayout.Tab> tabs = Lists.newArrayList();
-    Pageable pageable = Pageable.of();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +41,12 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
 
     private void navigateMyPage() {
         UserPagerFragment pagerFragment = UserPagerFragment.newInstance();
+//        pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
+        replaceFragment(R.id.fragment_main, pagerFragment);
+    }
+
+    private void navigateMark() {
+        MarkPagerFragment pagerFragment = MarkPagerFragment.newInstance();
 //        pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         replaceFragment(R.id.fragment_main, pagerFragment);
     }
@@ -78,11 +82,10 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
         int tabIdx = (int) tab.getTag();
         switch (tabIdx) {
             case MY_PAGE :
-                pageable.initPage();
-
+                navigateMyPage();
                 break;
             case BOOK_MARK :
-                pageable.initPage();
+                navigateMark();
                 break;
         }
     }

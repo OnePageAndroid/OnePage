@@ -38,7 +38,7 @@ public interface MyPageAPI {
                 android.R.drawable.ic_delete, android.R.drawable.ic_input_add,
                 android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
 
-        public static MyPageAPI create(){
+        public static MyPageAPI create() {
             return new Retrofit.Builder()
                     .baseUrl(NetworkManager.SERVER)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -49,10 +49,10 @@ public interface MyPageAPI {
             create().findPageByUser(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
                 @Override
                 public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
-                    if(response.isSuccessful() && response.body().isPresent()) {
+                    if (response.isSuccessful()) {
                         try {
                             List<Page> pages = response.body().getPages();
-                            for(int resId : resIds) {
+                            for (int resId : resIds) {
                                 pages.add(Page.of(resId, "" + resId));
                             }
                             addFunc.accept(pages);
@@ -61,6 +61,7 @@ public interface MyPageAPI {
                         }
                     }
                 }
+
                 @Override
                 public void onFailure(Call<PageRepo> call, Throwable t) {
                     Log.e("findPageByUser : ", t.getMessage());
@@ -68,8 +69,26 @@ public interface MyPageAPI {
             });
         }
 
-        public static Call<PageRepo> findPageByHeart(String email, Integer pageNumber, Integer perPageSize) {
-            return create().findPageByHeart(email, pageNumber, perPageSize);
+        public static void findPageByHeart(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+            create().findPageByHeart(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
+                @Override
+                public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
+                    if (response.isSuccessful()) {
+                        try {
+                            List<Page> pages = response.body().getPages();
+                            pages.add(Page.of(resIds[0], "" + resIds[0]));
+                            addFunc.accept(pages);
+                        } catch (Exception e) {
+                            Log.e("indPageByUser : ", e.getMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PageRepo> call, Throwable t) {
+                    Log.e("findPageByHeart : ", t.getMessage());
+                }
+            });
         }
     }
 }

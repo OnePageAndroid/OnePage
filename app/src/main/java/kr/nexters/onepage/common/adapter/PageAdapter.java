@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,7 +25,6 @@ import kr.nexters.onepage.util.ConvertUtil;
 public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder> {
     private List<Page> pages = Lists.newArrayList();
 
-    private List<Page> items = new ArrayList<>();
     private int totalPageSize;
 
     public PageAdapter() {
