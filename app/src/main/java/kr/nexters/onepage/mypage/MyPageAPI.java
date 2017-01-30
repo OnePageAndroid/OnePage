@@ -79,7 +79,7 @@ public interface MyPageAPI {
                             pages.add(Page.of(resIds[0], "" + resIds[0]));
                             addFunc.accept(pages);
                         } catch (Exception e) {
-                            Log.e("indPageByUser : ", e.getMessage());
+                            Log.e("findPageByHeart : ", e.getMessage());
                         }
                     }
                 }
