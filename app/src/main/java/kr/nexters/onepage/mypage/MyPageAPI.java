@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.common.model.PageRepo;
@@ -33,6 +34,10 @@ public interface MyPageAPI {
     );
 
     class Factory {
+        private static int resIds[] = {R.mipmap.ic_launcher, android.R.drawable.ic_dialog_alert,
+                android.R.drawable.ic_delete, android.R.drawable.ic_input_add,
+                android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
+
         public static MyPageAPI create(){
             return new Retrofit.Builder()
                     .baseUrl(NetworkManager.SERVER)
@@ -46,7 +51,11 @@ public interface MyPageAPI {
                 public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
                     if(response.isSuccessful() && response.body().isPresent()) {
                         try {
-                            addFunc.accept(response.body().getPages());
+                            List<Page> pages = response.body().getPages();
+                            for(int resId : resIds) {
+                                pages.add(Page.of(resId, "" + resId));
+                            }
+                            addFunc.accept(pages);
                         } catch (Exception e) {
                             Log.e("indPageByUser : ", e.getMessage());
                         }
