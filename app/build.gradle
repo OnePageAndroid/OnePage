@@ -89,4 +89,7 @@ dependencies {
 
     //Recycler Viewpager
     compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2'
+
+    //Font
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }
