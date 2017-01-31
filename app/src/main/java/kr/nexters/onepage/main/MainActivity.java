@@ -114,13 +114,10 @@ public class MainActivity extends BaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
-                    int pageNum = ((Events.ToolbarPageNumEvent) event).getTotalPageNum();
-                    tvToolbarTotalPage.setText(
-                            String.format(
-                                    getResources().getString(R.string.main_toolbar_page),
-                                    ConvertUtil.integerToCommaString(pageNum)
-                            )
-                    );
+                    if(event instanceof Events.ToolbarPageNumEvent) {
+                        int pageNum = ((Events.ToolbarPageNumEvent) event).getTotalPageNum();
+                        tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageNum));
+                    }
                 });
     }
 

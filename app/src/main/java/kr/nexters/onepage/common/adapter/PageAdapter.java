@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.common.collect.Lists;
-
 import java.util.List;
 
 import butterknife.BindView;
