@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -23,6 +25,7 @@ import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.event.Events;
 import kr.nexters.onepage.common.event.RxBus;
 import kr.nexters.onepage.common.model.WeatherRepo;
+import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
@@ -46,6 +49,13 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.layout_content_expand)
     LinearLayout layoutExpand;
 
+    @BindView(R.id.iv_location)
+    ImageView ivLocation;
+    @BindView(R.id.tv_location_name_kor_expand)
+    TextView tvLocationNameKorExpand;
+    @BindView(R.id.tv_location_name_kor_collapse)
+    TextView tvLocationNameKorCollapse;
+
     @BindView(R.id.tv_toolbar_total_page)
     TextView tvToolbarTotalPage;
 
@@ -68,10 +78,7 @@ public class MainActivity extends BaseActivity {
 
         initAppbar();
         initLocationManager();
-        initWeather();
-        initToolbarPageNum();
     }
-
 
     private void initAppbar() {
         appbarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -97,16 +104,26 @@ public class MainActivity extends BaseActivity {
         lastLocationManager = new LastLocationManager(this, newLocation -> this.lastLocation = newLocation);
     }
 
-    private void initWeather() {
+    private void initLocationContent(long locationId) {
         disposables.add(WeatherRepo
-                .getSky()
+                .getPrecipitation()
+                .flatMap(precipitation -> LocationContentRepo.findLocationContentById(locationId, precipitation.getType().equals("0") ? "SUNNY" : "CLOUD"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        sky -> toast(sky.getName()),
+                        locationContentRepo -> {
+                            Glide.with(this)
+                                    .load(locationContentRepo.getUrl())
+                                    .into(ivLocation);
+
+                            tvLocationNameKorExpand.setText(locationContentRepo.getName());
+                            tvLocationNameKorCollapse.setText(locationContentRepo.getName());
+                        },
                         throwable -> toast(throwable.getLocalizedMessage())
                 )
         );
+
+        initToolbarPageNum();
     }
 
     private void initToolbarPageNum() {
@@ -114,9 +131,10 @@ public class MainActivity extends BaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
-                    if(event instanceof Events.ToolbarPageNumEvent) {
-                        int pageNum = ((Events.ToolbarPageNumEvent) event).getTotalPageNum();
-                        tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageNum));
+                    if (event instanceof Events.MainToolbarPageNumEvent) {
+                        int pageNum = ((Events.MainToolbarPageNumEvent) event).getTotalPageNum();
+                        if (tvToolbarTotalPage != null)
+                            tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageNum));
                     }
                 });
     }
@@ -137,7 +155,7 @@ public class MainActivity extends BaseActivity {
                             newLocationId -> {
                                 if (lastLocationId != newLocationId) {
                                     lastLocationId = newLocationId;
-                                    initFragment();
+                                    initFragment(lastLocationId);
                                 }
                             },
                             throwable -> toast(throwable.getLocalizedMessage())
@@ -149,11 +167,13 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void initFragment() {
+    private void initFragment(long locationId) {
         ivEmpty.setVisibility(View.GONE);
-        PagerFragment pagerFragment = PagerFragment.newInstance(lastLocationId);
+        PagerFragment pagerFragment = PagerFragment.newInstance(locationId);
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         replaceFragment(R.id.fragment_main, pagerFragment);
+
+        initLocationContent(locationId);
     }
 
     @OnClick(R.id.btn_my)

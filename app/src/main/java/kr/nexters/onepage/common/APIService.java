@@ -3,6 +3,7 @@ package kr.nexters.onepage.common;
 import io.reactivex.Flowable;
 import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.ServerResponse;
+import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.write.model.PageSaveResponse;
 import okhttp3.MultipartBody;
@@ -76,5 +77,11 @@ public interface APIService {
             @Query("locationId") long locationId,
             @Query("pageNumber") int pageNumber,
             @Query("perPageSize") int perPageSize
+    );
+
+    @GET("locationImage")
+    Flowable<LocationContentRepo> getFlowableLocationImageFromId(
+        @Query("locationId") long locationId,
+        @Query("weather") String weather
     );
 }
