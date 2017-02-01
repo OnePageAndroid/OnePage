@@ -4,7 +4,7 @@ machine:
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
     # Java Settings
-    JAVA_OPTS: "-Xms512m -Xmx2048m"
+    JAVA_OPTS: "-Xms512m -Xmx4096m"
      # AVD Settings
     ADB_INSTALL_TIMEOUT: 5000
 
