@@ -1,10 +1,9 @@
-package kr.nexters.onepage.main;
+package kr.nexters.onepage.landmark;
 
-import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,27 +13,18 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.landmark.LandmarkActivity;
+import kr.nexters.onepage.main.PagerFragment;
+import kr.nexters.onepage.main.PagerFragment.CallBackToolbar;
 import kr.nexters.onepage.main.model.LocationContentRepo;
-import kr.nexters.onepage.main.model.LocationSearchRepo;
-import kr.nexters.onepage.map.MapActivity;
-import kr.nexters.onepage.mypage.MyPageActivity;
 import kr.nexters.onepage.util.AppbarAnimUtil;
 import kr.nexters.onepage.util.ConvertUtil;
-import kr.nexters.onepage.write.WriteActivity;
 
 import static kr.nexters.onepage.main.PagerFragment.KEY_LAST_LOCATION;
 
-public class MainActivity extends BaseActivity {
-
-    private static final int REQUEST_MAP = 1000;
+public class LandmarkActivity extends BaseActivity {
 
     @BindView(R.id.appbar)
     AppBarLayout appbarLayout;
@@ -53,27 +43,26 @@ public class MainActivity extends BaseActivity {
     TextView tvLocationNameKorCollapse;
 
     @BindView(R.id.tv_toolbar_total_page)
-    TextView tvToolbarTotalPage;
-
-    @BindView(R.id.iv_empty)
-    ImageView ivEmpty;
-
-    LastLocationManager lastLocationManager;
-    Location lastLocation;
-    long lastLocationId;
+    TextView tvToolbarTotalPageCollapse;
+    @BindView(R.id.tv_toolbar_total_page_expand)
+    TextView tvToolbarTotalPageExpand;
 
     Unbinder unbinder;
-
-    private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_landmark);
         unbinder = ButterKnife.bind(this);
 
+        long locationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
+        if(locationId == -1L) {
+            toast("잘못된 접근");
+            finish();
+        }
+
         initAppbar();
-        initLocationManager();
+        initFragment(locationId);
     }
 
     private void initAppbar() {
@@ -96,47 +85,15 @@ public class MainActivity extends BaseActivity {
         return result;
     }
 
-    private void initLocationManager() {
-        lastLocationManager = new LastLocationManager(this, newLocation -> this.lastLocation = newLocation);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getLocation();
-    }
-
-    private void getLocation() {
-        if (lastLocation != null) {
-            disposables.add(LocationSearchRepo
-                    .getLocationId(1.0, 1.0)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            newLocationId -> {
-                                if (lastLocationId != newLocationId) {
-                                    lastLocationId = newLocationId;
-                                    initFragment(lastLocationId);
-                                }
-                            },
-                            throwable -> toast(throwable.getLocalizedMessage())
-                    )
-
-            );
-        } else {
-            ivEmpty.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void initFragment(long locationId) {
-        ivEmpty.setVisibility(View.GONE);
         PagerFragment pagerFragment = PagerFragment.newInstance(locationId);
 
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
-        pagerFragment.setCallBackToolbar(new PagerFragment.CallBackToolbar() {
+        pagerFragment.setCallBackToolbar(new CallBackToolbar() {
             @Override
             public void initToolbarPageNumber(int pageSize) {
-                tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageSize));
+                tvToolbarTotalPageCollapse.setText(ConvertUtil.integerToCommaString(pageSize));
+                tvToolbarTotalPageExpand.setText(ConvertUtil.integerToCommaString(pageSize));
             }
 
             @Override
@@ -151,39 +108,21 @@ public class MainActivity extends BaseActivity {
         });
 
 
-        replaceFragment(R.id.fragment_main, pagerFragment);
-    }
-
-    @OnClick(R.id.btn_my)
-    public void navigateToMyPage() {
-        Intent intent = new Intent(this, MyPageActivity.class);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.btn_map)
-    public void navigateToMap() {
-        //TODO 여기다 지도 액티비티로 가면됨
-        Intent intent = new Intent(MainActivity.this, MapActivity.class);
-        startActivityForResult(intent, REQUEST_MAP);
-    }
-
-    @OnClick(R.id.btn_landmark)
-    public void navigateToLandmark() {
-        Intent intent = new Intent(this, LandmarkActivity.class);
-        intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.btn_write)
-    public void navigasteToWrite() {
-        Intent intent = new Intent(MainActivity.this, WriteActivity.class);
-        startActivity(intent);
+        replaceFragment(R.id.fragment_landmark, pagerFragment);
     }
 
     @Override
     protected void onDestroy() {
-        disposables.clear();
         unbinder.unbind();
         super.onDestroy();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

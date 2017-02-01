@@ -60,9 +60,9 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".region.RegionActivity"
+            android:name=".landmark.LandmarkActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/AppTheme.TransparentStatusBar" />
 
         <activity
             android:name=".write.ResultActivity"
