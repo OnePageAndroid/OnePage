@@ -34,9 +34,9 @@ public class PagerFragment extends BaseFragment {
 
     long lastLocationId;
 
+    int PAGE_SIZE = 5;
     boolean loading = false;
 
-    private static int PAGE_SIZE = 5;
     public static final String KEY_LAST_LOCATION = "key_last_location";
 
     public final CompositeDisposable disposables = new CompositeDisposable();
