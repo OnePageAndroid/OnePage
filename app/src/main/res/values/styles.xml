@@ -12,6 +12,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WriteTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorLightGray</item>
+        <item name="actionMenuTextColor">@color/colorOrange</item>
+        <item name="android:statusBarColor">@color/colorLightGray</item>
+    </style>
+
     <style name="AppTheme.TransparentStatusBar" parent="AppTheme.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

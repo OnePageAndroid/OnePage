@@ -92,4 +92,5 @@ dependencies {
 
     //Font
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.android.support:gridlayout-v7:25.1.0'
 }

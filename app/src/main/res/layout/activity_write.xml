@@ -1,48 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_write"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="kr.nexters.onepage.write.WriteActivity">
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:weightSum="1">
 
-    <Button
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/btnWriteSave"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/writeToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="@string/action_title_write"
+        app:theme="@style/WriteTheme"
+        app:titleTextColor="@color/colorToolbarWrite"
+        android:background="#ffffff" />
+
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorToolbarBorder"
+        android:gravity="center_horizontal" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="319.4dp"
+        android:background="#fbfbfb"
+        android:id="@+id/btnCamera">
+
+        <ImageView
+            android:layout_width="match_parent"
+            app:srcCompat="@drawable/picture"
+            android:id="@+id/ivWriteImage"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_height="29.5dp"
+            android:layout_marginTop="133.5dp" />
+
+        <TextView
+            android:text="@string/upload_photos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:gravity="center"
+            android:layout_marginTop="6dp" />
+    </LinearLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ededed"
+        android:gravity="center_horizontal" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:inputType="textMultiLine"
         android:maxLines="5"
         android:ems="9"
         android:id="@+id/etWriteContent"
-        android:hint="content"
-        android:background="@color/cardview_light_background"
-        android:singleLine="false"
+        android:hint="@string/write_hint"
+        android:background="@color/colorWhite"
         android:layout_height="100dp"
-        android:layout_above="@+id/btnWriteSave"
+        android:layout_above="@+id/btnCamera"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_weight="0.84"
+        android:paddingLeft="19dp"
+        android:paddingTop="19dp"
+        android:textSize="16sp"
+        android:maxLength="100"
+        android:gravity="top"
+        android:textCursorDrawable="@drawable/cursor_drawable"
+        android:cursorVisible="true"
+        android:textColor="#b1b1b1" />
 
-    <ImageView
-        android:layout_width="350dp"
-        app:srcCompat="@drawable/picture"
-        android:id="@+id/ivWriteImage"
-        android:layout_height="350dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
+    <TextView
+        android:text="0 / 100"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTextCount"
+        android:gravity="right"
+        android:paddingRight="16.5dp"
+        android:layout_marginBottom="59dp"
+        android:textColor="#9b9b9b" />
+
+</LinearLayout>

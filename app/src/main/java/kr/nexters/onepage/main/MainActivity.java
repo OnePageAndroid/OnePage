@@ -162,7 +162,6 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.btn_map)
     public void navigateToMap() {
-        //TODO 여기다 지도 액티비티로 가면됨
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         startActivityForResult(intent, REQUEST_MAP);
     }

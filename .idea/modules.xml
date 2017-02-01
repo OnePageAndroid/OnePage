@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OnePage.iml" filepath="$PROJECT_DIR$/OnePage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OnePageAndroid.iml" filepath="$PROJECT_DIR$/OnePageAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
