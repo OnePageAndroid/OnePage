@@ -5,6 +5,8 @@ machine:
     ANDROID_HOME: /usr/local/android-sdk-linux
     # Java Settings
     JAVA_OPTS: "-Xms512m -Xmx4096m"
+    # Gradle Settings
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"'
      # AVD Settings
     ADB_INSTALL_TIMEOUT: 5000
 
