@@ -7,10 +7,10 @@ package kr.nexters.onepage.common.event;
 public class Events {
     private Events() {}
 
-    public static class ToolbarPageNumEvent {
+    public static class MainToolbarPageNumEvent {
         private int totalPageNum;
 
-        public ToolbarPageNumEvent(int totalPageNum) {
+        public MainToolbarPageNumEvent(int totalPageNum) {
             this.totalPageNum = totalPageNum;
         }
 

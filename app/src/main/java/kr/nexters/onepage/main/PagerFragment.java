@@ -79,7 +79,7 @@ public class PagerFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pageRepo -> {
-                            RxBus.getInstance().send(new Events.ToolbarPageNumEvent(pageRepo.getTotalSize()));
+                            RxBus.getInstance().send(new Events.MainToolbarPageNumEvent(pageRepo.getTotalSize()));
                             initPager(pageRepo);
                         },
                         throwable -> toast(throwable.getLocalizedMessage()),
