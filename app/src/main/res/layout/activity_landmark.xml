@@ -20,25 +20,16 @@
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <include layout="@layout/appbar_main_expand" />
-            <include layout="@layout/appbar_main_collapse" />
+            <include layout="@layout/appbar_landmark_expand" />
+            <include layout="@layout/appbar_landmark_collapse" />
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/iv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_delete"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
     <FrameLayout
-        android:id="@+id/fragment_main"
+        android:id="@+id/fragment_landmark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

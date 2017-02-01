@@ -18,10 +18,10 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
-import kr.nexters.onepage.common.event.Events;
-import kr.nexters.onepage.common.event.RxBus;
-import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.adapter.PageAdapter;
+import kr.nexters.onepage.common.model.PageRepo;
+import kr.nexters.onepage.common.model.WeatherRepo;
+import kr.nexters.onepage.main.model.LocationContentRepo;
 
 public class PagerFragment extends BaseFragment {
 
@@ -34,21 +34,31 @@ public class PagerFragment extends BaseFragment {
 
     long lastLocationId;
 
-    int PAGE_SIZE = 5;
     boolean loading = false;
 
+    private static int PAGE_SIZE = 5;
     public static final String KEY_LAST_LOCATION = "key_last_location";
 
     public final CompositeDisposable disposables = new CompositeDisposable();
 
     OnLongClickPageListener onLongClickPageListener;
+    CallBackToolbar callBackToolbar;
 
-    interface OnLongClickPageListener {
+    public interface OnLongClickPageListener {
         void onLongClick();
+    }
+
+    public interface CallBackToolbar {
+        void initToolbarPageNumber(int pageSize);
+        void initToolbarLocationContent(LocationContentRepo locationContentRepo);
     }
 
     public void setOnLongClickPageListener(OnLongClickPageListener onLongClickPageListener) {
         this.onLongClickPageListener = onLongClickPageListener;
+    }
+
+    public void setCallBackToolbar(CallBackToolbar callBackToolbar) {
+        this.callBackToolbar = callBackToolbar;
     }
 
     public static PagerFragment newInstance(long lastLocationId) {
@@ -66,9 +76,28 @@ public class PagerFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
         lastLocationId = getArguments().getLong(KEY_LAST_LOCATION, -1L);
+        getLocationContent(lastLocationId);
         getFirstPages(lastLocationId, PAGE_SIZE);
+
         return view;
 
+    }
+
+    private void getLocationContent(long locationId) {
+        disposables.add(WeatherRepo
+                .getPrecipitation()
+                .flatMap(precipitation -> LocationContentRepo.findLocationContentById(locationId, precipitation.getType().equals("0") ? "SUNNY" : "CLOUD"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        locationContentRepo -> {
+                            if (callBackToolbar != null) {
+                                callBackToolbar.initToolbarLocationContent(locationContentRepo);
+                            }
+                        },
+                        throwable -> toast(throwable.getLocalizedMessage())
+                )
+        );
     }
 
     private void getFirstPages(long locationId, int perPageSize) {
@@ -79,7 +108,9 @@ public class PagerFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         pageRepo -> {
-                            RxBus.getInstance().send(new Events.MainToolbarPageNumEvent(pageRepo.getTotalSize()));
+                            if (callBackToolbar != null) {
+                                callBackToolbar.initToolbarPageNumber(pageRepo.getTotalSize());
+                            }
                             initPager(pageRepo);
                         },
                         throwable -> toast(throwable.getLocalizedMessage()),
@@ -106,7 +137,7 @@ public class PagerFragment extends BaseFragment {
             }
         });
 
-        if(onLongClickPageListener != null) {
+        if (onLongClickPageListener != null) {
             mainAdapter.setOnLongClickPageViewHolderListener(() -> onLongClickPageListener.onLongClick());
         }
         mainAdapter.add(pageRepo.getPages());

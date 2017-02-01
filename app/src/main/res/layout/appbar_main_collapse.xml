@@ -39,13 +39,13 @@
             android:background="@drawable/placeholder" />
 
         <Button
-            android:id="@+id/btn_region"
+            android:id="@+id/btn_landmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/btn_map"
             android:text="지역"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <!--줄어들었을 때-->
         <RelativeLayout
