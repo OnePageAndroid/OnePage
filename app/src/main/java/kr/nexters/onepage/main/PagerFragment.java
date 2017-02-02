@@ -48,6 +48,9 @@ public class PagerFragment extends BaseFragment {
 
     public interface CallBackToolbar {
         void initToolbarPageNumber(int pageSize);
+
+        void initWeatherImage(String weatherCode);
+
         void initToolbarLocationContent(LocationContentRepo locationContentRepo);
     }
 
@@ -74,27 +77,43 @@ public class PagerFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
         lastLocationId = getArguments().getLong(MainActivity.KEY_LAST_LOCATION, -1L);
-        getLocationContent(lastLocationId);
+        getWeather(lastLocationId);
         getFirstPages(lastLocationId, PAGE_SIZE);
 
         return view;
 
     }
 
-    private void getLocationContent(long locationId) {
+    private void getWeather(long locationId) {
         disposables.add(WeatherRepo
-                .getPrecipitation()
-                .flatMap(precipitation -> LocationContentRepo.findLocationContentById(locationId, precipitation.getType().equals("0") ? "SUNNY" : "CLOUD"))
+                .getWeatherHourly()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        locationContentRepo -> {
+                        hourly -> {
                             if (callBackToolbar != null) {
-                                callBackToolbar.initToolbarLocationContent(locationContentRepo);
+                                callBackToolbar.initWeatherImage(hourly.getSky().getCode());
                             }
+                            getLocationContent(locationId, hourly.getPrecipitation().getType().equals("0") ? "SUNNY" : "CLOUD");
                         },
                         throwable -> toast(throwable.getLocalizedMessage())
                 )
+        );
+    }
+
+    private void getLocationContent(long locationId, String weather) {
+        disposables.add(
+                LocationContentRepo.findLocationContentById(locationId, weather)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                locationContentRepo -> {
+                                    if (callBackToolbar != null) {
+                                        callBackToolbar.initToolbarLocationContent(locationContentRepo);
+                                    }
+                                },
+                                throwable -> toast(throwable.getLocalizedMessage())
+                        )
         );
     }
 

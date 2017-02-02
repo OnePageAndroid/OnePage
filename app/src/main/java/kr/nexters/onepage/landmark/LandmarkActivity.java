@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +38,8 @@ public class LandmarkActivity extends BaseActivity {
 
     @BindView(R.id.iv_location)
     ImageView ivLocation;
+    @BindView(R.id.iv_weather)
+    ImageView ivWeather;
     @BindView(R.id.tv_location_name_kor_expand)
     TextView tvLocationNameKorExpand;
     @BindView(R.id.tv_location_name_kor_collapse)
@@ -94,6 +97,16 @@ public class LandmarkActivity extends BaseActivity {
             public void initToolbarPageNumber(int pageSize) {
                 tvToolbarTotalPageCollapse.setText(ConvertUtil.integerToCommaString(pageSize));
                 tvToolbarTotalPageExpand.setText(ConvertUtil.integerToCommaString(pageSize));
+            }
+
+            @Override
+            public void initWeatherImage(String weatherCode) {
+                int resId = ConvertUtil.WeatherCodeToResouceId(weatherCode);
+                Glide.with(getApplicationContext())
+                        .load(resId != 0 ? resId : 0)
+                        .asGif()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(ivWeather);
             }
 
             @Override

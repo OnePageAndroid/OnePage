@@ -6,12 +6,23 @@
     android:orientation="vertical"
     app:layout_collapseMode="parallax">
 
-    <ImageView
-        android:id="@+id/iv_location"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/main_test_img2" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/main_test_img2" />
+
+        <ImageView
+            android:id="@+id/iv_weather"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/layout_content_expand"

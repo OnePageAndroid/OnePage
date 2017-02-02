@@ -16,13 +16,10 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include layout="@layout/appbar_main_expand" />
             <include layout="@layout/appbar_main_collapse" />
-
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
