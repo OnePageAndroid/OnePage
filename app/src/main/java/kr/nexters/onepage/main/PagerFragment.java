@@ -37,8 +37,6 @@ public class PagerFragment extends BaseFragment {
     int PAGE_SIZE = 5;
     boolean loading = false;
 
-    public static final String KEY_LAST_LOCATION = "key_last_location";
-
     public final CompositeDisposable disposables = new CompositeDisposable();
 
     OnLongClickPageListener onLongClickPageListener;
@@ -64,7 +62,7 @@ public class PagerFragment extends BaseFragment {
     public static PagerFragment newInstance(long lastLocationId) {
         PagerFragment fragment = new PagerFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(KEY_LAST_LOCATION, lastLocationId);
+        bundle.putLong(MainActivity.KEY_LAST_LOCATION, lastLocationId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -75,7 +73,7 @@ public class PagerFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
-        lastLocationId = getArguments().getLong(KEY_LAST_LOCATION, -1L);
+        lastLocationId = getArguments().getLong(MainActivity.KEY_LAST_LOCATION, -1L);
         getLocationContent(lastLocationId);
         getFirstPages(lastLocationId, PAGE_SIZE);
 
