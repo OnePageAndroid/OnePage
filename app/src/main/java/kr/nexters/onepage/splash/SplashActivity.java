@@ -14,15 +14,17 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.NetworkManager;
@@ -90,7 +92,6 @@ public class SplashActivity extends BaseActivity {
                 }
 
                 if (!myGoogleIds.isEmpty()) {
-                    PropertyManager.getInstance().setId(myGoogleIds.get(0));
                     login(myGoogleIds.get(0));
                 } else {
                     Toast.makeText(SplashActivity.this, "맙소사 구글아이디가 없다니...", Toast.LENGTH_SHORT).show();
@@ -109,6 +110,7 @@ public class SplashActivity extends BaseActivity {
     private void login(String id) {
         //네트워크 처리 성공일시 메인으로 넘김
         Log.d(SplashActivity.class.getSimpleName(), "login id = " + id);
+        PropertyManager.getInstance().setId(id);
 
         NetworkManager.getInstance().getApi()
                 .login(id)

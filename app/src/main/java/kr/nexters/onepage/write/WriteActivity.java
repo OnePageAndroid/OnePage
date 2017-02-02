@@ -1,39 +1,38 @@
 package kr.nexters.onepage.write;
 
 import android.Manifest;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.widget.Button;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
+import kr.nexters.onepage.common.OnePageException;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.PostPage;
 import kr.nexters.onepage.common.model.ServerResponse;
@@ -44,6 +43,8 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static kr.nexters.onepage.main.MainActivity.KEY_LAST_LOCATION;
 
 /**
  * Created by hoody on 2017-01-25.
@@ -65,13 +66,22 @@ public class WriteActivity extends UCropBaseActivity {
     @BindView(R.id.ivWriteImage)
     ImageView ivWriteImage;
 
+    @BindView(R.id.tvWriteLabel)
+    TextView tvWriteLabel;
+
     @BindView(R.id.etWriteContent)
     EditText etWriteContent;
 
-//    @BindView(R.id.btnWriteSave)
-//    Button btnWriteSave;
+    @BindView(R.id.btnCamera)
+    ViewGroup btnCamera;
+
+    @BindView(R.id.tvTextCount)
+    TextView tvTextCount;
 
     Uri imageUri = null;
+    long locationId;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,61 +98,23 @@ public class WriteActivity extends UCropBaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        locationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
+        if(locationId == -1L) {
+            toast("잘못된 접근");
+            finish();
+        }
+
     }
 
     @OnClick(R.id.btnCamera)
     public void onClickImage() {
-        //dialog 커스텀 가능
-        AlertDialog.Builder dialog = new AlertDialog.Builder(WriteActivity.this);
-
-        dialog.setTitle("Image");
-        dialog.setMessage("select Image");
-        dialog.setIcon(R.drawable.check);
-
-        dialog.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                navigateToCamera();
-            }
-        });
-
-        dialog.setNegativeButton("Gallery",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                navigateToGallery(); //1
-            }
-        });
-        dialog.show();
+        navigateToGallery();
     }
-
-//    @OnClick(R.id.btnWriteSave)
-//    public void onClickBtn() {
-//        //blank check
-//        if(etWriteContent.getText().length() == 0) {
-//            Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
-//        }
-//        else {
-//
-//            //Image Save To File
-//            File savedImg = saveCroppedImage();
-//
-//            PostPage postPage = new PostPage();
-//
-//            postPage.setLocationId("");
-//            //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
-//            postPage.setEmail(PropertyManager.getInstance().getId());
-//            postPage.setImage(savedImg);
-//            postPage.setContent(etWriteContent.getText().toString());
-//
-//            savePage(postPage);
-//
-//            Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
-//            Log.i("WriteActivityLog", postPage.toString());
-//        }
-//    }
 
     private void savePage(PostPage page) {
 
         Call<PageSaveResponse> saveCall = NetworkManager.getInstance().getApi().savePage(
-                1,
+                locationId,
                 PropertyManager.getInstance().getId(),
                 page.getContent()
         );
@@ -151,32 +123,34 @@ public class WriteActivity extends UCropBaseActivity {
             @Override
             public void onResponse(Call<PageSaveResponse> call, Response<PageSaveResponse> response) {
 
-                Log.d(WriteActivity.class.getSimpleName(), "page code : "+response.code());
-
-                if(response.isSuccessful()) {
-//                    Log.d(WriteActivity.class.getSimpleName(), response.body().getMessage());
-                    //saveImage(page, response.body().getId());
-//                    Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(WriteActivity.class.getSimpleName(), "page code : " + response.code());
+                if (response.isSuccessful()) {
+                    Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    if(page.getImage() == null) {
+                        finish();
+                    } else {
+                        saveImage(page, response.body().getId());
+                    }
+                } else {
+                    throw new OnePageException("페이지 저장 실패");
                 }
             }
 
             @Override
             public void onFailure(Call<PageSaveResponse> call, Throwable t) {
                 Toast.makeText(WriteActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                throw new OnePageException(t.getLocalizedMessage());
             }
         });
     }
 
     private void saveImage(PostPage page, long pageId) {
-        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
-        // use the FileUtils to get the actual file by uri
         File file = page.getImage();
 
         MultipartBody.Part filePart = MultipartBody.Part.createFormData(
                 "multipartFile",
                 file.getName(),
                 RequestBody.create(MediaType.parse("image/*"), file)
-//                RequestBody.create(MediaType.parse("image/*"), file)
         );
 
         Call<ServerResponse> saveImageCall = NetworkManager.getInstance().getApi().savePageImage(
@@ -188,33 +162,25 @@ public class WriteActivity extends UCropBaseActivity {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
-                Log.d(WriteActivity.class.getSimpleName(), "image code : "+response.code());
+                Log.d(WriteActivity.class.getSimpleName(), "image code : " + response.code());
 
-                if(response.isSuccessful() && response.body().isSuccess()) {
+                if (response.isSuccessful() && response.body().isSuccess()) {
                     Log.d(WriteActivity.class.getSimpleName(), response.body().message);
                     Toast.makeText(WriteActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    throw new OnePageException("페이지 이미지 저장 실패");
                 }
             }
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
                 Toast.makeText(WriteActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                throw new OnePageException(t.getLocalizedMessage());
             }
         });
     }
 
-    private void navigateToCamera() {
-
-        //camera permission check
-        if(ContextCompat.checkSelfPermission(WriteActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent, REQUEST_CAMERA);
-        } else {
-            ActivityCompat.requestPermissions(WriteActivity.this, new String[] {Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
-        }
-    }
-
-    //2
     private void navigateToGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -254,12 +220,10 @@ public class WriteActivity extends UCropBaseActivity {
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 handleCropResult(data);
             } else if (requestCode == ResultActivity.REQUEST_SAVE_RESULT) { //show crop image
-                try {
-                    imageUri = data.getData();
-                    ivWriteImage.setImageBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                imageUri = data.getData();
+                tvWriteLabel.setVisibility(View.INVISIBLE);
+                ivWriteImage.setVisibility(View.INVISIBLE);
+                btnCamera.setBackground(BitmapDrawable.createFromPath(imageUri.getPath()));
             }
         }
 
@@ -325,12 +289,10 @@ public class WriteActivity extends UCropBaseActivity {
                     getString(R.string.permission_write_storage_rationale),
                     REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
         } else {
-//            Uri imageUri = getIntent().getData();
             if (imageUri != null && imageUri.getScheme().equals("file")) {
                 try {
                     savedImg = uCropManager.getSaveImgFile(imageUri);
                 } catch (Exception e) {
-                    Toast.makeText(WriteActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, imageUri.toString(), e);
                 }
             } else {
@@ -351,25 +313,30 @@ public class WriteActivity extends UCropBaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_write) {
             //blank check
-            if(etWriteContent.getText().length() == 0) {
+            if (etWriteContent.getText().length() == 0) {
                 Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
-            }
-            else {
+            } else {
 
                 PostPage postPage =
                         new PostPage("", PropertyManager.getInstance().getId(), saveCroppedImage(), etWriteContent.getText().toString());
                 //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
-
-                savePage(postPage);
-
-                Toast.makeText(this, postPage.toString(), Toast.LENGTH_LONG).show();
-                Log.i("WriteActivityLog", postPage.toString());
+                try {
+                    progressDialog = ProgressDialog.show(WriteActivity.this, "페이지 저장", "페이지 저장중");
+                    savePage(postPage);
+                } catch (OnePageException oe) {
+                    if(progressDialog!=null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                }
             }
-        }
-
-        else if (item.getItemId() == android.R.id.home) {
+        } else if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnTextChanged(value=R.id.etWriteContent, callback = OnTextChanged.Callback.TEXT_CHANGED)
+    public void onTextChangedTvTextCount(CharSequence s) {
+        tvTextCount.setText(s.length()+" / 100");
     }
 }

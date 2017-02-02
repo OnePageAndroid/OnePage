@@ -30,10 +30,9 @@ import kr.nexters.onepage.util.AppbarAnimUtil;
 import kr.nexters.onepage.util.ConvertUtil;
 import kr.nexters.onepage.write.WriteActivity;
 
-import static kr.nexters.onepage.main.PagerFragment.KEY_LAST_LOCATION;
-
 public class MainActivity extends BaseActivity {
 
+    public static final String KEY_LAST_LOCATION = "key_last_location";
     private static final int REQUEST_MAP = 1000;
 
     @BindView(R.id.appbar)
@@ -176,6 +175,7 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.btn_write)
     public void navigasteToWrite() {
         Intent intent = new Intent(MainActivity.this, WriteActivity.class);
+        intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
         startActivity(intent);
     }
 

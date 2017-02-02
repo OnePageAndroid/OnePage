@@ -22,7 +22,7 @@ import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.util.AppbarAnimUtil;
 import kr.nexters.onepage.util.ConvertUtil;
 
-import static kr.nexters.onepage.main.PagerFragment.KEY_LAST_LOCATION;
+import static kr.nexters.onepage.main.MainActivity.KEY_LAST_LOCATION;
 
 public class LandmarkActivity extends BaseActivity {
 

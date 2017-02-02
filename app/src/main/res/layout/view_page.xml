@@ -26,6 +26,7 @@
         <TextView
             android:id="@+id/tv_text"
             fontPath="fonts/NotoSansKR-DemiLight.otf"
+            android:lineSpacingMultiplier="1.2"
             android:layout_width="wrap_content"
             android:layout_height="82dp"
             android:layout_below="@+id/iv_image"
@@ -94,6 +95,14 @@
                 android:textSize="11sp" />
 
         </LinearLayout>
-
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_mark"
+        android:src="@drawable/bookmark"
+        android:layout_gravity="right"
+        android:layout_marginRight="17dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </android.support.v7.widget.CardView>
