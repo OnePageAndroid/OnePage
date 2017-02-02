@@ -79,9 +79,24 @@ public interface APIService {
             @Query("perPageSize") int perPageSize
     );
 
+    //지역 이미 받아오기
     @GET("locationImage")
     Flowable<LocationContentRepo> getFlowableLocationImageFromId(
         @Query("locationId") long locationId,
         @Query("weather") String weather
+    );
+
+    @GET("heart/save")
+    Flowable<Boolean> getBookmark(
+            @Query("pageId") long pageId,
+            @Query("email") String email
+    );
+
+    //좋아요
+    @FormUrlEncoded
+    @POST("heart/save")
+    Flowable<ServerResponse> saveBookmark(
+              @Field("pageId") long pageId,
+              @Field("email") String email
     );
 }
