@@ -2,6 +2,8 @@ package kr.nexters.onepage.util;
 
 import java.text.DecimalFormat;
 
+import kr.nexters.onepage.R;
+
 /**
  * Created by OhJaeHwan on 2017-01-30.
  */
@@ -11,5 +13,31 @@ public class ConvertUtil {
     public static String integerToCommaString(int number) {
         DecimalFormat df = new DecimalFormat("#,###");
         return df.format(number);
+    }
+
+    public static int WeatherCodeToResouceId(String code) {
+        switch (Integer.parseInt(code.substring(code.length()-2))) {
+            case 3:
+            case 7: {
+                return R.raw.daytime_cloud;
+            }
+            case 4:
+            case 6:
+            case 8:
+            case 10:
+            case 11:
+            case 12:
+            case 14: {
+                return R.raw.rain;
+            }
+            case 5:
+            case 9:
+            case 13: {
+                return R.raw.night_star;
+            }
+            default: {
+                return R.raw.daytime_cloud;
+            }
+        }
     }
 }

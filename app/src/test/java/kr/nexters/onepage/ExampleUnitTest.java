@@ -14,4 +14,12 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void parse_stringWeather() {
+        String t1 = "SKY_A01";
+        String t2 = "SKY_A14";
+
+        System.out.println(Integer.parseInt(t1.substring(t1.length()-2)));
+    }
 }
