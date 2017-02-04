@@ -2,24 +2,18 @@ package kr.nexters.onepage.map;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,15 +25,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
+import kr.nexters.onepage.common.model.PageCount;
 import kr.nexters.onepage.common.model.Poi;
+import kr.nexters.onepage.common.model.LocationList;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapActivity extends BaseActivity {
 
+    private static final String TAG = "MapActivity";
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     public final static int ZOOM_LEVEL = 13;
 
@@ -57,17 +54,54 @@ public class MapActivity extends BaseActivity {
     private LatLng lastLatLng;
     private Poi poi;
 
-    private ArrayList<Poi> getLocationList() {
-        ArrayList<Poi> poiList = new ArrayList();
+    private void findLocationList() {
 
-        //sample data
-        poiList.add(new Poi(null, "", "광화문", 37.5759879,126.97692289999998, null));
-        poiList.add(new Poi(null, "", "서울역", 37.5545168,126.9706483, null));
-        poiList.add(new Poi(null, "", "월곡역", 37.60193, 127.04153, null));
+        LocationAPI.Factory.create().getLocationList().enqueue(new Callback<LocationList>() {
+            @Override
+            public void onResponse(Call<LocationList> call, Response<LocationList> response) {
+                if (response.isSuccessful()) {
+                    LocationList locations = response.body();
+                    Log.i(TAG, locations.toString());
+                }
+            }
 
-        return poiList;
-
+            @Override
+            public void onFailure(Call<LocationList> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
     }
+
+    private void getTotalPageSize(Long locationId) {
+        LocationAPI.Factory.create().getTotalPageSize(locationId).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                int totalPageSize = (Integer)response.body();
+                Log.i(TAG, "total page size : " + totalPageSize);
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+    }
+
+    private void getPageSizeByPeriod(Long locationId, String startDate, String endDate) {
+        LocationAPI.Factory.create().getPageSizeByPeriod(locationId, startDate, endDate).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                int todayPageSize = (Integer)response.body();
+                Log.i(TAG, "today page size : " + todayPageSize);
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +127,13 @@ public class MapActivity extends BaseActivity {
         fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.hide(mapInfoFragment);
+
+
+        findLocationList();
+
+        getTotalPageSize(Long.parseLong("1"));
+        getPageSizeByPeriod(Long.parseLong("1"), "2017-02-01", "2017-03-01");
+
 
     }
 
@@ -148,19 +189,19 @@ public class MapActivity extends BaseActivity {
 
             //set marker from location list
             //sample data
-            ArrayList<Poi> locationList = getLocationList(); //get location from db
+            //ArrayList<Poi> locationList = getLocationList(); //get location from db
 
             MarkerOptions poiOptions;
 
-            for (Poi poi : locationList) {
-                //change db location
-                poiOptions
-                        = createMarkerOptions(new LatLng(poi.getLatitude(), poi.getLongitude()), poi.getName(), null, R.drawable.red_marker);
-
-                poi.setMarker(googleMap.addMarker(poiOptions));
-
-                Log.i("MapActivityLog", poi.toString());
-            }
+//            for (Poi poi : locationList) {
+//                //change db location
+//                poiOptions
+//                        = createMarkerOptions(new LatLng(poi.getLatitude(), poi.getLongitude()), poi.getName(), null, R.drawable.red_marker);
+//
+//                poi.setMarker(googleMap.addMarker(poiOptions));
+//
+//                Log.i("MapActivityLog", poi.toString());
+//            }
 
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
