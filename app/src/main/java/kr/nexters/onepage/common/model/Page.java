@@ -24,6 +24,7 @@ public class Page {
 
     public static Page of(int resId, String content) {
         return Page.builder()
+                .pageId(1L)
                 .content(content)
                 .images(Lists.newArrayList(PageImage.of(resId))).build();
     }
