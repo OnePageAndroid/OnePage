@@ -22,6 +22,8 @@ public class UserPagerFragment extends BaseFragment {
     @BindView(R.id.pager_main)
     RecyclerViewPager mainPager;
 
+    private MyPageService myPageService = new MyPageService();
+
     PageAdapter mainAdapter;
     Unbinder unbinder;
 
@@ -78,7 +80,7 @@ public class UserPagerFragment extends BaseFragment {
 
     private void getPages(int perPageSize, boolean isReverse) {
         loading = true;
-        MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
+        myPageService.findPageByUser(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
             if (isReverse) {
                 mainAdapter.add(0, pages);
                 return;
@@ -89,7 +91,7 @@ public class UserPagerFragment extends BaseFragment {
 
     private void getFirstPages(int perPageSize) {
         //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
-        MyPageAPI.Factory.findPageByUser(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
+        myPageService.findPageByUser(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
             mainAdapter.add(pages);
             Log.d("PageRepo", pages.toString());
             if (mainAdapter.getItemCount() > 0) {
