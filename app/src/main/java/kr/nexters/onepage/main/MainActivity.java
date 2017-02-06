@@ -58,8 +58,8 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.tv_toolbar_total_page)
     TextView tvToolbarTotalPage;
 
-    @BindView(R.id.iv_empty)
-    ImageView ivEmpty;
+    @BindView(R.id.layout_empty)
+    ViewGroup layoutEmpty;
 
     LastLocationManager lastLocationManager;
     Location lastLocation;
@@ -128,12 +128,12 @@ public class MainActivity extends BaseActivity {
 
             );
         } else {
-            ivEmpty.setVisibility(View.VISIBLE);
+            layoutEmpty.setVisibility(View.VISIBLE);
         }
     }
 
     private void initFragment(long locationId) {
-        ivEmpty.setVisibility(View.GONE);
+        layoutEmpty.setVisibility(View.GONE);
         PagerFragment pagerFragment = PagerFragment.newInstance(locationId);
 
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));

@@ -19,21 +19,42 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include layout="@layout/appbar_main_expand" />
+
             <include layout="@layout/appbar_main_collapse" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/iv_empty"
+    <!-- 비어있을 시 레이아웃 -->
+    <LinearLayout
+        android:id="@+id/layout_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/ic_delete"
-        android:visibility="gone"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="#f7f7f7"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <ImageView
+            android:layout_marginTop="108.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/empty_post"
+            android:visibility="visible" />
+
+        <TextView
+            android:text="@string/main_empty"
+            fontPath="fonts/NotoSansKR-DemiLight.otf"
+            android:includeFontPadding="false"
+            android:textSize="15sp"
+            android:textColor="#9b9b9b"
+            android:layout_marginTop="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- 프래그먼트 -->
     <FrameLayout
         android:id="@+id/fragment_main"
         android:layout_width="match_parent"
