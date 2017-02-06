@@ -22,13 +22,15 @@ public class MarkPagerFragment extends BaseFragment {
     @BindView(R.id.pager_main)
     RecyclerViewPager mainPager;
 
+    private MyPageService myPageService = new MyPageService();
+
     PageAdapter mainAdapter;
     Unbinder unbinder;
 
     int PAGE_SIZE = 5;
     boolean loading = false;
 
-    OnLongClickPageListener onLongClickPageListener;
+    private OnLongClickPageListener onLongClickPageListener;
 
     interface OnLongClickPageListener {
         void onLongClick();
@@ -78,7 +80,7 @@ public class MarkPagerFragment extends BaseFragment {
 
     private void getPages(int perPageSize, boolean isReverse) {
         loading = true;
-        MyPageAPI.Factory.findPageByHeart(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
+        myPageService.findPageByHeart(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
             if (isReverse) {
                 mainAdapter.add(0, pages);
                 return;
@@ -89,7 +91,7 @@ public class MarkPagerFragment extends BaseFragment {
 
     private void getFirstPages(int perPageSize) {
         //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
-        MyPageAPI.Factory.findPageByHeart(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
+        myPageService.findPageByHeart(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
             mainAdapter.add(pages);
             Log.d("PageRepo", pages.toString());
             if (mainAdapter.getItemCount() > 0) {
