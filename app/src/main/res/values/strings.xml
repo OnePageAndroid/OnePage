@@ -84,4 +84,5 @@
     <string name="upload_photos">Upload photos</string>
 
     <string name="write_hint">&#160; What are you doing now?</string>
+    <string name="main_empty">아직 쓴 글이 없어요!</string>
 </resources>
