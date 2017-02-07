@@ -307,7 +307,7 @@ public class MapActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         int today = response.body();
-                        info.setTotalPageSize(today);
+                        info.setPeriodPageSize(today);
                         Log.i(TAG, "today : " + today);
                     }
                     @Override
