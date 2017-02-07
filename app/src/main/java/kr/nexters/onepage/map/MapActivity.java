@@ -25,14 +25,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.common.model.PageCount;
-import kr.nexters.onepage.common.model.Poi;
-import kr.nexters.onepage.common.model.LocationList;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import kr.nexters.onepage.common.model.Loc;
 
 public class MapActivity extends BaseActivity {
 
@@ -41,7 +39,7 @@ public class MapActivity extends BaseActivity {
     public final static int ZOOM_LEVEL = 13;
 
     private LocationManager locationManager;
-    private GoogleMap mGoogleMap;
+    public static GoogleMap mGoogleMap;
     private MapFragment mapFragment;
     private Marker currentMarker;
     private MarkerOptions currentOptions;
@@ -52,56 +50,8 @@ public class MapActivity extends BaseActivity {
 
     private LatLng currentLatLng;
     private LatLng lastLatLng;
-    private Poi poi;
-
-    private void findLocationList() {
-
-        LocationAPI.Factory.create().getLocationList().enqueue(new Callback<LocationList>() {
-            @Override
-            public void onResponse(Call<LocationList> call, Response<LocationList> response) {
-                if (response.isSuccessful()) {
-                    LocationList locations = response.body();
-                    Log.i(TAG, locations.toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LocationList> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
-            }
-        });
-    }
-
-    private void getTotalPageSize(Long locationId) {
-        LocationAPI.Factory.create().getTotalPageSize(locationId).enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                int totalPageSize = (Integer)response.body();
-                Log.i(TAG, "total page size : " + totalPageSize);
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                Log.e(TAG, t.getMessage());
-            }
-        });
-    }
-
-    private void getPageSizeByPeriod(Long locationId, String startDate, String endDate) {
-        LocationAPI.Factory.create().getPageSizeByPeriod(locationId, startDate, endDate).enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                int todayPageSize = (Integer)response.body();
-                Log.i(TAG, "today page size : " + todayPageSize);
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                Log.e(TAG, t.getMessage());
-            }
-        });
-    }
-
+    private Loc loc;
+    private LocationService locationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +78,12 @@ public class MapActivity extends BaseActivity {
 
         fragmentTransaction.hide(mapInfoFragment);
 
-
-        findLocationList();
-
-        getTotalPageSize(Long.parseLong("1"));
-        getPageSizeByPeriod(Long.parseLong("1"), "2017-02-01", "2017-03-01");
-
+        //LocationAPI test
+        locationService = new LocationService();
+        //Setting marker. Get location from db
+        locationService.showLocationList();
+        locationService.getTotalPageSize(Long.parseLong("5"));
+        locationService.getPageSizeByPeriod(Long.parseLong("5"), "2017-02-07", "2017-02-07");
 
     }
 
@@ -142,6 +92,7 @@ public class MapActivity extends BaseActivity {
         public void onMapReady(GoogleMap googleMap) {
             mGoogleMap = googleMap;
 
+            //현재 위치 button 활성화
             mGoogleMap.setMyLocationEnabled(true);
 
             //Check location permission
@@ -155,62 +106,48 @@ public class MapActivity extends BaseActivity {
 
             String bestProvider = locationManager.getBestProvider(criteria, true);
             Log.i("bestProvider", bestProvider);
-            //locationManager.requestLocationUpdates(bestProvider, 10000, 3, locationListener);
 
             //5초 간격, 3미터 이상 이동시 update
-            //use fake gps for testing
-            //locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
+            locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
+            //locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
 
             //last location
-            //Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
-            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
+            //Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             if(lastLocation == null) {
-                lastLatLng = new LatLng(37.5759879,126.97692289999998); //광화문
-
+                lastLatLng = new LatLng(37.5759879,126.97692289999998); //마지막 위치가 없을 경우 광화문으로
             } else {
                 lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
             }
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
 
-            //setting marker
-//            currentOptions
-//                    = createMarkerOptions(lastLatLng, "current loc", "fake", R.drawable.green_marker);
-
             currentOptions.position(lastLatLng);
-            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
-            currentOptions.title("current loc");
-            currentOptions.snippet("fake");
+            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_landmark));
 
             currentMarker = googleMap.addMarker(currentOptions);
-
             currentOptions.visible(false); //hide last location marker
 
 
-            //set marker from location list
-            //sample data
-            //ArrayList<Poi> locationList = getLocationList(); //get location from db
-
-            MarkerOptions poiOptions;
-
-//            for (Poi poi : locationList) {
-//                //change db location
-//                poiOptions
-//                        = createMarkerOptions(new LatLng(poi.getLatitude(), poi.getLongitude()), poi.getName(), null, R.drawable.red_marker);
-//
-//                poi.setMarker(googleMap.addMarker(poiOptions));
-//
-//                Log.i("MapActivityLog", poi.toString());
-//            }
 
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    //click event
+                    //마커로 해당 LocationInfo 불러오기
+                    Log.i(TAG, marker.toString());
+                    //Log.i(TAG, "location name : " + loc.getLocationName(marker));
+                    //Log.i(TAG, "location info : " + loc.getLocationInfo(marker));
 
-                    fragmentTransaction.show(mapInfoFragment);
+                    //List<Loc> ll = new ArrayList<Loc>();
+                    //ll = locationService.getLocationList();
+//                    locationService.getLocationList();
+                    //show location info
+//                    List<Loc> locl = locationService.getLocationList();
+//                    Log.i(TAG, "loc : " + locl.get(0).toString());
 
-                    //new activity
+//                    Log.i(TAG, "ll" + locationService.getLocationList().getLocations().get(1));
+                    //fragmentTransaction.show(mapInfoFragment);
+                    Log.i(TAG, "click marker : " + marker.toString());
+                    locationService.getLocationInfo(marker);
                     return true;
                 }
             });
@@ -227,6 +164,7 @@ public class MapActivity extends BaseActivity {
             currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
             if(flg == 0) {
+                Log.i(TAG, "flag : " + flg);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
                 flg = 1;
             }
@@ -287,14 +225,12 @@ public class MapActivity extends BaseActivity {
 
         switch(id) {
             case R.id.action_current_loc :
-
                 if(currentLatLng == null) {
                     Toast.makeText(MapActivity.this, getString(R.string.toast_gps_error), Toast.LENGTH_LONG).show();
                 }
                 else {
                     mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
                 }
-
                 return true;
             case android.R.id.home :
                 finish();

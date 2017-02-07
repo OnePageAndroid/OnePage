@@ -1,13 +1,24 @@
 package kr.nexters.onepage.map;
 
+import android.util.Log;
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
+import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.LocationList;
-import kr.nexters.onepage.common.model.PageCount;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+
+import static kr.nexters.onepage.map.MapActivity.mGoogleMap;
 
 /**
  * Created by hoody on 2017-02-01.
