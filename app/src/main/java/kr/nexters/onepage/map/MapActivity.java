@@ -25,12 +25,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.model.Loc;
+import kr.nexters.onepage.common.model.LocationInfo;
+import kr.nexters.onepage.common.model.LocationList;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapActivity extends BaseActivity {
 
@@ -39,7 +46,7 @@ public class MapActivity extends BaseActivity {
     public final static int ZOOM_LEVEL = 13;
 
     private LocationManager locationManager;
-    public static GoogleMap mGoogleMap;
+    public GoogleMap mGoogleMap;
     private MapFragment mapFragment;
     private Marker currentMarker;
     private MarkerOptions currentOptions;
@@ -50,8 +57,8 @@ public class MapActivity extends BaseActivity {
 
     private LatLng currentLatLng;
     private LatLng lastLatLng;
-    private Loc loc;
-    private LocationService locationService;
+
+    private LocationList locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +86,11 @@ public class MapActivity extends BaseActivity {
         fragmentTransaction.hide(mapInfoFragment);
 
         //LocationAPI test
-        locationService = new LocationService();
         //Setting marker. Get location from db
-        locationService.showLocationList();
-        locationService.getTotalPageSize(Long.parseLong("5"));
-        locationService.getPageSizeByPeriod(Long.parseLong("5"), "2017-02-07", "2017-02-07");
-
+        showLocationList();
     }
+
+
 
     OnMapReadyCallback mapReadyCallBack = new OnMapReadyCallback() {
         @Override
@@ -134,20 +139,7 @@ public class MapActivity extends BaseActivity {
                 public boolean onMarkerClick(Marker marker) {
                     //마커로 해당 LocationInfo 불러오기
                     Log.i(TAG, marker.toString());
-                    //Log.i(TAG, "location name : " + loc.getLocationName(marker));
-                    //Log.i(TAG, "location info : " + loc.getLocationInfo(marker));
-
-                    //List<Loc> ll = new ArrayList<Loc>();
-                    //ll = locationService.getLocationList();
-//                    locationService.getLocationList();
-                    //show location info
-//                    List<Loc> locl = locationService.getLocationList();
-//                    Log.i(TAG, "loc : " + locl.get(0).toString());
-
-//                    Log.i(TAG, "ll" + locationService.getLocationList().getLocations().get(1));
-                    //fragmentTransaction.show(mapInfoFragment);
-                    Log.i(TAG, "click marker : " + marker.toString());
-                    locationService.getLocationInfo(marker);
+                    getLocationInfo(marker);
                     return true;
                 }
             });
@@ -255,6 +247,81 @@ public class MapActivity extends BaseActivity {
         checkPermission();
         //Quit location listener
         locationManager.removeUpdates(locationListener);
+    }
+
+
+    //db에서 받아온 랜드마크 리스트 google map 에 마커 찍기
+    public void showLocationList() {
+        LocationAPI.Factory.create().getLocationList().enqueue(new Callback<LocationList>() {
+            @Override
+            public void onResponse(Call<LocationList> call, Response<LocationList> response) {
+                if (response.isSuccessful()) {
+                    locations = response.body();
+
+                    MarkerOptions options = new MarkerOptions();
+                    options.flat(false);
+                    options.icon(BitmapDescriptorFactory.fromResource(R.drawable.other_landmark));
+
+                    for(Loc loc : locations.getLocations()) {
+                        options.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
+                        loc.setMarker(mGoogleMap.addMarker(options));
+                    }
+                    Log.i(TAG, "location list : " + locations.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocationList> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+    }
+
+    //선택된 마커에 대한 정보 구하기
+    public void getLocationInfo(Marker marker) {
+        LocationInfo info = new LocationInfo();
+        String today =
+                new SimpleDateFormat("yyyy-mm-dd").format(new Date());
+        String name;
+        int totalPageSize;
+        int periodPageSize;
+
+        for(Loc loc : locations.getLocations()) {
+            if(loc.getMarker().toString().equals(marker.toString())) { //string으로 비교할때만 된다!
+
+                //선택된 마커의 정보 가져와서 LocationInfo형태로 저장
+                info.setName(loc.getName());
+
+                LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) {
+                        info.setTotalPageSize((Integer)response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        Log.e(TAG, t.getMessage());
+                    }
+
+                });
+
+                LocationAPI.Factory.create().getPageSizeByPeriod(loc.getLocationId(), today, today).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) {
+                        info.setPeriodPageSize((Integer)response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        Log.e(TAG, t.getMessage());
+                    }
+                });
+
+                break;
+            }
+        }
+
+        Log.i(TAG, "selected location info : " + info);
     }
 
 }
