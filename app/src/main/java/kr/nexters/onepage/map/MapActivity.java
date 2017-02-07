@@ -281,38 +281,37 @@ public class MapActivity extends BaseActivity {
     public void getLocationInfo(Marker marker) {
         LocationInfo info = new LocationInfo();
         String today =
-                new SimpleDateFormat("yyyy-mm-dd").format(new Date());
-        String name;
-        int totalPageSize;
-        int periodPageSize;
+                new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         for(Loc loc : locations.getLocations()) {
+
             if(loc.getMarker().toString().equals(marker.toString())) { //string으로 비교할때만 된다!
+                Log.i(TAG, "locationId : " + loc.getLocationId());
 
                 //선택된 마커의 정보 가져와서 LocationInfo형태로 저장
                 info.setName(loc.getName());
-
-                LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback() {
+                LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback<Integer>() {
                     @Override
-                    public void onResponse(Call call, Response response) {
-                        info.setTotalPageSize((Integer)response.body());
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        int total = response.body();
+                        info.setTotalPageSize(total);
+                        Log.i(TAG, "total : " + total);
                     }
-
                     @Override
-                    public void onFailure(Call call, Throwable t) {
+                    public void onFailure(Call<Integer> call, Throwable t) {
                         Log.e(TAG, t.getMessage());
                     }
-
                 });
 
-                LocationAPI.Factory.create().getPageSizeByPeriod(loc.getLocationId(), today, today).enqueue(new Callback() {
+                LocationAPI.Factory.create().getPageSizeByPeriod(loc.getLocationId(), today, today).enqueue(new Callback<Integer>() {
                     @Override
-                    public void onResponse(Call call, Response response) {
-                        info.setPeriodPageSize((Integer)response.body());
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        int today = response.body();
+                        info.setTotalPageSize(today);
+                        Log.i(TAG, "today : " + today);
                     }
-
                     @Override
-                    public void onFailure(Call call, Throwable t) {
+                    public void onFailure(Call<Integer> call, Throwable t) {
                         Log.e(TAG, t.getMessage());
                     }
                 });
