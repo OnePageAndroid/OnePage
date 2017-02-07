@@ -84,4 +84,9 @@
     <string name="upload_photos">Upload photos</string>
 
     <string name="write_hint">&#160; What are you doing now?</string>
+
+    <!-- MapActivity -->
+    <string name="new_page_size">New&#160;</string>
+    <string name="total_page_size">Total&#160;</string>
+
 </resources>

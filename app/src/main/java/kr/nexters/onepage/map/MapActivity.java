@@ -8,12 +8,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,15 +25,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.model.Loc;
-import kr.nexters.onepage.common.model.LocationInfo;
 import kr.nexters.onepage.common.model.LocationList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,19 +51,22 @@ public class MapActivity extends BaseActivity {
     private Marker currentMarker;
     private MarkerOptions currentOptions;
 
-    private MapInfoFragment mapInfoFragment;
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
-
     private LatLng currentLatLng;
     private LatLng lastLatLng;
 
     private LocationList locations;
 
+    //landmark box 추가
+    @BindView(R.id.tvLocationName) TextView tvLocationName;
+    @BindView(R.id.tvTodayPageSize) TextView tvTodayPageSize;
+    @BindView(R.id.tvTotalPageSize) TextView tvTotalPageSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        ButterKnife.bind(this);
 
         //MainActivity로 가는 버튼
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,20 +80,10 @@ public class MapActivity extends BaseActivity {
 
         currentOptions = new MarkerOptions();
 
-        fragmentManager = getFragmentManager();
-
-        mapInfoFragment = (MapInfoFragment)getFragmentManager().findFragmentById(R.id.mapInfoFragment);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.hide(mapInfoFragment);
-
-        //LocationAPI test
+        //LocationAPI
         //Setting marker. Get location from db
         showLocationList();
     }
-
-
 
     OnMapReadyCallback mapReadyCallBack = new OnMapReadyCallback() {
         @Override
@@ -131,8 +124,6 @@ public class MapActivity extends BaseActivity {
 
             currentMarker = googleMap.addMarker(currentOptions);
             currentOptions.visible(false); //hide last location marker
-
-
 
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
@@ -183,24 +174,12 @@ public class MapActivity extends BaseActivity {
         }
     };
 
-    private MarkerOptions createMarkerOptions(LatLng latLng, String title, String content, int resource) {
-
-        MarkerOptions newOptions = new MarkerOptions();
-
-        newOptions.position(latLng);
-        newOptions.title(title);
-        newOptions.snippet(content);
-        newOptions.icon(BitmapDescriptorFactory.fromResource(resource));
-
-        return newOptions;
-    }
-
     //Permission Check
     private void checkPermission() {
         //If permission is denied, request
         if(ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED
                 && ActivityCompat.checkSelfPermission(MapActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_DENIED ) {
-            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+//            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
         }
     }
 
@@ -231,7 +210,6 @@ public class MapActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -248,6 +226,7 @@ public class MapActivity extends BaseActivity {
         //Quit location listener
         locationManager.removeUpdates(locationListener);
     }
+
 
 
     //db에서 받아온 랜드마크 리스트 google map 에 마커 찍기
@@ -279,22 +258,23 @@ public class MapActivity extends BaseActivity {
 
     //선택된 마커에 대한 정보 구하기
     public void getLocationInfo(Marker marker) {
-        LocationInfo info = new LocationInfo();
-        String today =
-                new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Log.i(TAG, "today : " + today);
 
         for(Loc loc : locations.getLocations()) {
 
-            if(loc.getMarker().toString().equals(marker.toString())) { //string으로 비교할때만 된다!
+            //선택된 마커의 정보 가져와서 LocationInfo형태로 저장
+            if(loc.getMarker().toString().equals(marker.toString())) { //Marker string으로 비교할때만 된당
+                tvLocationName.setText(loc.getName());
                 Log.i(TAG, "locationId : " + loc.getLocationId());
+                Log.i(TAG, "locationName : " + loc.getName());
 
-                //선택된 마커의 정보 가져와서 LocationInfo형태로 저장
-                info.setName(loc.getName());
                 LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         int total = response.body();
-                        info.setTotalPageSize(total);
+
+                        tvTotalPageSize.setText(getString(R.string.total_page_size) + String.format("%,d", total));
                         Log.i(TAG, "total : " + total);
                     }
                     @Override
@@ -307,7 +287,8 @@ public class MapActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         int today = response.body();
-                        info.setPeriodPageSize(today);
+
+                        tvTodayPageSize.setText(getString(R.string.new_page_size) + String.format("%,d", today));
                         Log.i(TAG, "today : " + today);
                     }
                     @Override
@@ -315,12 +296,9 @@ public class MapActivity extends BaseActivity {
                         Log.e(TAG, t.getMessage());
                     }
                 });
-
                 break;
             }
         }
-
-        Log.i(TAG, "selected location info : " + info);
     }
 
 }
