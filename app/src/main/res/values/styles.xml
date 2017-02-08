@@ -19,10 +19,33 @@
         <item name="android:statusBarColor">@color/colorLightGray</item>
     </style>
 
+    <style name="GrayStatusBarTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorLightGray</item>
+    </style>
+
     <style name="AppTheme.TransparentStatusBar" parent="AppTheme.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    //낮은 버전은.. 어떻게해야될까요 ... @u@....
+    <style name="MapTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:background">@drawable/action_bar_gradient</item>-->
+        <!--<item name="background">@drawable/action_bar_gradient</item>-->
+        <!--<item name="android:actionBarSize"-->
+        <!--<item name="actionBarStyle">@style/MyActionBar</item>-->
+        <item name="colorPrimary">@android:color/transparent</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/action_bar_gradient</item>
+        <!-- Support library compatibility -->
+        <item name="background">@drawable/action_bar_gradient</item>
     </style>
 
 </resources>

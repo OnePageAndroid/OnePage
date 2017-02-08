@@ -2,6 +2,8 @@ package kr.nexters.onepage.common.model;
 
 import com.google.android.gms.maps.model.Marker;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 
-public class Loc {
+public class Loc implements Serializable {
     private Long locationId;
     private String address;
     private double latitude;

@@ -48,18 +48,19 @@
 
         <activity
             android:name=".map.MapActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"
+            android:label="@string/back"
+            android:theme="@style/MapTheme" />
 
         <activity
             android:name=".mypage.MyPageActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/GrayStatusBarTheme" />
 
         <activity
             android:name=".write.WriteActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/GrayStatusBarTheme" />
 
         <activity
             android:name=".region.RegionActivity"

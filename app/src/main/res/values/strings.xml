@@ -88,5 +88,6 @@
     <!-- MapActivity -->
     <string name="new_page_size">New&#160;</string>
     <string name="total_page_size">Total&#160;</string>
+    <string name="back">Back</string>
 
 </resources>

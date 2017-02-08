@@ -87,5 +87,6 @@
     <!-- MapActivity -->
     <string name="new_page_size">새로운 글&#160;</string>
     <string name="total_page_size">전체 글&#160;</string>
+    <string name="back">뒤로 가기</string>
 
 </resources>

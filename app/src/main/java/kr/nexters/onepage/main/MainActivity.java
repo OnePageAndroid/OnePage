@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.event.Events;
 import kr.nexters.onepage.common.event.RxBus;
+import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.WeatherRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
@@ -70,6 +72,7 @@ public class MainActivity extends BaseActivity {
         initLocationManager();
         initWeather();
         initToolbarPageNum();
+
     }
 
 
