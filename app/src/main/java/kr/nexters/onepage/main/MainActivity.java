@@ -3,14 +3,17 @@ package kr.nexters.onepage.main;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,18 +28,18 @@ import kr.nexters.onepage.common.event.Events;
 import kr.nexters.onepage.common.event.RxBus;
 import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.WeatherRepo;
+import kr.nexters.onepage.landmark.LandmarkActivity;
+import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
-import kr.nexters.onepage.region.RegionActivity;
 import kr.nexters.onepage.util.AppbarAnimUtil;
 import kr.nexters.onepage.util.ConvertUtil;
 import kr.nexters.onepage.write.WriteActivity;
 
-import static kr.nexters.onepage.main.PagerFragment.KEY_LAST_LOCATION;
-
 public class MainActivity extends BaseActivity {
 
+    public static final String KEY_LAST_LOCATION = "key_last_location";
     private static final int REQUEST_MAP = 1000;
 
     @BindView(R.id.appbar)
@@ -46,13 +49,22 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.layout_content_collapse)
     ViewGroup layoutCollapse;
     @BindView(R.id.layout_content_expand)
-    LinearLayout layoutExpand;
+    ViewGroup layoutExpand;
+
+    @BindView(R.id.iv_location)
+    ImageView ivLocation;
+    @BindView(R.id.iv_weather)
+    ImageView ivWeather;
+    @BindView(R.id.tv_location_name_kor_expand)
+    TextView tvLocationNameKorExpand;
+    @BindView(R.id.tv_location_name_kor_collapse)
+    TextView tvLocationNameKorCollapse;
 
     @BindView(R.id.tv_toolbar_total_page)
     TextView tvToolbarTotalPage;
 
-    @BindView(R.id.iv_empty)
-    ImageView ivEmpty;
+    @BindView(R.id.layout_empty)
+    ViewGroup layoutEmpty;
 
     LastLocationManager lastLocationManager;
     Location lastLocation;
@@ -72,9 +84,7 @@ public class MainActivity extends BaseActivity {
         initLocationManager();
         initWeather();
         initToolbarPageNum();
-
     }
-
 
     private void initAppbar() {
         appbarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -84,6 +94,7 @@ public class MainActivity extends BaseActivity {
         });
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        ivWeather.setPadding(0, getStatusBarHeight(), 0, 0);
     }
 
     // A method to find height of the status bar
@@ -98,33 +109,6 @@ public class MainActivity extends BaseActivity {
 
     private void initLocationManager() {
         lastLocationManager = new LastLocationManager(this, newLocation -> this.lastLocation = newLocation);
-    }
-
-    private void initWeather() {
-        disposables.add(WeatherRepo
-                .getSky()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        sky -> toast(sky.getName()),
-                        throwable -> toast(throwable.getLocalizedMessage())
-                )
-        );
-    }
-
-    private void initToolbarPageNum() {
-        RxBus.getInstance().toObserverable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> {
-                    int pageNum = ((Events.ToolbarPageNumEvent) event).getTotalPageNum();
-                    tvToolbarTotalPage.setText(
-                            String.format(
-                                    getResources().getString(R.string.main_toolbar_page),
-                                    ConvertUtil.integerToCommaString(pageNum)
-                            )
-                    );
-                });
     }
 
     @Override
@@ -143,7 +127,7 @@ public class MainActivity extends BaseActivity {
                             newLocationId -> {
                                 if (lastLocationId != newLocationId) {
                                     lastLocationId = newLocationId;
-                                    initFragment();
+                                    initFragment(lastLocationId);
                                 }
                             },
                             throwable -> toast(throwable.getLocalizedMessage())
@@ -151,14 +135,42 @@ public class MainActivity extends BaseActivity {
 
             );
         } else {
-            ivEmpty.setVisibility(View.VISIBLE);
+            layoutEmpty.setVisibility(View.VISIBLE);
         }
     }
 
-    private void initFragment() {
-        ivEmpty.setVisibility(View.GONE);
-        PagerFragment pagerFragment = PagerFragment.newInstance(lastLocationId);
+    private void initFragment(long locationId) {
+        layoutEmpty.setVisibility(View.GONE);
+        PagerFragment pagerFragment = PagerFragment.newInstance(locationId);
+
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
+        pagerFragment.setCallBackToolbar(new PagerFragment.CallBackToolbar() {
+            @Override
+            public void initToolbarPageNumber(int pageSize) {
+                tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageSize));
+            }
+
+            @Override
+            public void initWeatherImage(String weatherCode) {
+                int resId = ConvertUtil.WeatherCodeToResouceId(weatherCode);
+                Glide.with(getApplicationContext())
+                        .load(resId != 0 ? resId : 0)
+                        .asGif()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(ivWeather);
+            }
+
+            @Override
+            public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
+                Glide.with(getApplicationContext())
+                        .load(locationContentRepo.getUrl())
+                        .into(ivLocation);
+                tvLocationNameKorExpand.setText(locationContentRepo.getName());
+                tvLocationNameKorCollapse.setText(locationContentRepo.getName());
+            }
+        });
+
+
         replaceFragment(R.id.fragment_main, pagerFragment);
     }
 
@@ -174,9 +186,9 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_MAP);
     }
 
-    @OnClick(R.id.btn_region)
-    public void navigateToRegion() {
-        Intent intent = new Intent(this, RegionActivity.class);
+    @OnClick(R.id.btn_landmark)
+    public void navigateToLandmark() {
+        Intent intent = new Intent(this, LandmarkActivity.class);
         intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
         startActivity(intent);
     }
@@ -184,6 +196,7 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.btn_write)
     public void navigasteToWrite() {
         Intent intent = new Intent(MainActivity.this, WriteActivity.class);
+        intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
         startActivity(intent);
     }
 

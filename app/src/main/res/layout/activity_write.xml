@@ -4,86 +4,98 @@
     android:id="@+id/activity_write"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorWhite"
+    android:orientation="vertical"
     android:weightSum="1">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/writeToolbar"
+        fontPath="fonts/NotoSansKR-Regular.otf"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="@string/action_title_write"
+        android:background="#ffffff"
+        android:includeFontPadding="false"
         app:theme="@style/WriteTheme"
-        app:titleTextColor="@color/colorToolbarWrite"
-        android:background="#ffffff" />
+        app:title="@string/action_title_write"
+        app:titleTextColor="@color/colorToolbarWrite" />
 
-    <View android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/colorToolbarBorder"
         android:gravity="center_horizontal" />
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/btnCamera"
         android:layout_width="match_parent"
         android:layout_height="319.4dp"
         android:background="#fbfbfb"
-        android:id="@+id/btnCamera">
+        android:orientation="vertical">
 
         <ImageView
-            android:layout_width="match_parent"
-            app:srcCompat="@drawable/picture"
             android:id="@+id/ivWriteImage"
+            android:layout_width="match_parent"
+            android:layout_height="29.5dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_height="29.5dp"
-            android:layout_marginTop="133.5dp" />
+            android:layout_marginTop="133.5dp"
+            app:srcCompat="@drawable/picture" />
 
         <TextView
-            android:text="@string/upload_photos"
+            android:id="@+id/tvWriteLabel"
+            fontPath="fonts/NotoSansKR-DemiLight.otf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView"
+            android:layout_marginTop="6dp"
             android:gravity="center"
-            android:layout_marginTop="6dp" />
+            android:textSize="14sp"
+            android:textColor="#bebebe"
+            android:includeFontPadding="false"
+            android:text="@string/upload_photos" />
     </LinearLayout>
 
-    <View android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#ededed"
         android:gravity="center_horizontal" />
 
-    <EditText
+    <FrameLayout
         android:layout_width="match_parent"
-        android:inputType="textMultiLine"
-        android:maxLines="5"
-        android:ems="9"
-        android:id="@+id/etWriteContent"
-        android:hint="@string/write_hint"
-        android:background="@color/colorWhite"
-        android:layout_height="100dp"
-        android:layout_above="@+id/btnCamera"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_weight="0.84"
-        android:paddingLeft="19dp"
-        android:paddingTop="19dp"
-        android:textSize="16sp"
-        android:maxLength="100"
-        android:gravity="top"
-        android:textCursorDrawable="@drawable/cursor_drawable"
-        android:cursorVisible="true"
-        android:textColor="#b1b1b1" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:text="0 / 100"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvTextCount"
-        android:gravity="right"
-        android:paddingRight="16.5dp"
-        android:layout_marginBottom="59dp"
-        android:textColor="#9b9b9b" />
+        <EditText
+            android:id="@+id/etWriteContent"
+            fontPath="fonts/NotoSansKR-DemiLight.otf"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:cursorVisible="true"
+            android:ems="9"
+            android:gravity="top|left"
+            android:hint="@string/write_hint"
+            android:includeFontPadding="false"
+            android:inputType="textMultiLine"
+            android:maxLength="100"
+            android:maxLines="5"
+            android:paddingLeft="19dp"
+            android:paddingRight="19dp"
+            android:paddingTop="19dp"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="#383838"
+            android:textColorHint="#b1b1b1"
+            android:textCursorDrawable="@drawable/cursor_drawable"
+            android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/tvTextCount"
+            android:layout_width="wrap_content"
+            fontPath="fonts/Roboto-Regular.ttf"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="59dp"
+            android:paddingRight="16.5dp"
+            android:text="0 / 100"
+            android:textColor="#9b9b9b" />
+    </FrameLayout>
 </LinearLayout>

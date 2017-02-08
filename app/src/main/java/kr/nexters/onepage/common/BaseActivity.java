@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import kr.nexters.onepage.R;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by hoody on 2017-01-21.
@@ -50,6 +51,11 @@ public class BaseActivity extends AppCompatActivity {
                 gpsConnCheck();
             }
         };
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void networkConnCheck() {

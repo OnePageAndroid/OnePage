@@ -129,9 +129,21 @@ public class WeatherRepo {
     }
 
 
+    public static Flowable<Weather.Hourly> getWeatherHourly() {
+        return NetworkManager.getInstance().getWeatherApi()
+                .getWeather(1, "37.5714000000", "126.9658000000")
+                .map(res -> res.getWeather().getHourly().get(0));
+    }
+
     public static Flowable<Weather.Hourly.Sky> getSky() {
         return NetworkManager.getInstance().getWeatherApi()
                 .getWeather(1, "37.5714000000", "126.9658000000")
                 .map(res -> res.getWeather().getHourly().get(0).getSky());
+    }
+
+    public static Flowable<Weather.Hourly.Precipitation> getPrecipitation() {
+        return NetworkManager.getInstance().getWeatherApi()
+                .getWeather(1, "37.5714000000", "126.9658000000")
+                .map(res -> res.getWeather().getHourly().get(0).getPrecipitation());
     }
 }

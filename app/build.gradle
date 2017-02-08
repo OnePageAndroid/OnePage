@@ -89,5 +89,8 @@ dependencies {
 
     //Recycler Viewpager
     compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2'
+
+    //Font
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.android.support:gridlayout-v7:25.1.0'
 }

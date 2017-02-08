@@ -1,6 +1,7 @@
 package kr.nexters.onepage.common.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.NetworkManager;
+import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.util.ConvertUtil;
 
@@ -119,28 +125,69 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         TextView tvPageTotal;
         @BindView(R.id.iv_image)
         ImageView ivImg;
+        @BindView(R.id.iv_mark)
+        ImageView ivMark;
+
+        Page page;
+        boolean isMarked;
 
         public PageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             if (onLongClickPageViewHolderListener != null) {
-                itemView.setOnClickListener(v -> onLongClickPageViewHolderListener.onLongClick());
-//                itemView.setOnLongClickListener(v -> {
-//                    onLongClickPageViewHolderListener.onLongClick();
-//                    return false;
-//                });
+//                itemView.setOnClickListener(v -> onLongClickPageViewHolderListener.onLongClick());
+                itemView.setOnLongClickListener(v -> {
+                    onLongClickPageViewHolderListener.onLongClick();
+                    return false;
+                });
+
             }
         }
 
-        public void bind(Page item) {
-            tvText.setText(item.getContent());
-            tvPageCurrent.setText(ConvertUtil.integerToCommaString(item.getPageNum()));
+        public void bind(Page page) {
+            this.page = page;
+            tvText.setText(page.getContent());
+            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
             Glide.with(itemView.getContext())
-                    .load(item.getFirstImageUrl())
+                    .load(page.getFirstImageUrl())
                     .into(ivImg);
+
+            NetworkManager.getInstance().getApi()
+                    .getBookmark(page.getPageId(), PropertyManager.getInstance().getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            this::setBookmark,
+                            throwable -> Log.e("getBookmark", throwable.getLocalizedMessage())
+                    );
+        }
+
+        private void setBookmark(boolean isMarked) {
+            this.isMarked = isMarked;
+            Log.d("mark",String.valueOf(isMarked));
+
+            Glide.with(itemView.getContext())
+                    .load(isMarked ? R.drawable.bookmark_after : R.drawable.bookmark)
+                    .into(ivMark);
+        }
+
+        @OnClick(R.id.iv_mark)
+        public void onClickMark() {
+            NetworkManager.getInstance().getApi()
+                    .saveBookmark(page.getPageId(), PropertyManager.getInstance().getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            serverResponse -> {
+                                if (serverResponse.isSuccess()) {
+                                    isMarked = !isMarked;
+                                    setBookmark(isMarked);
+                                }
+                            }, throwable -> Log.e("getBookmark", throwable.getLocalizedMessage())
+                    );
         }
     }
 }

@@ -4,6 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <item android:id="@+id/menu_write"
     app:showAsAction="always|withText"
-    android:title="@string/action_menu_write"/>
+    android:title="@string/action_menu_write"
+    fontPath="fonts/NotoSansKR-Regular.otf"/>
 
 </menu>

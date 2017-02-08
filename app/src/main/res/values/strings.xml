@@ -3,7 +3,7 @@
 
     <string name="main_toolbar_label">"나는 지금"</string>
     <string name="main_toolbar_write">글 남기기</string>
-    <string name="main_toolbar_page">"%1$s 페이지가 남겨졌습니다."</string>
+    <string name="main_toolbar_page_label">" 페이지가 남겨졌습니다."</string>
 
 
 
@@ -85,9 +85,10 @@
 
     <string name="write_hint">&#160; What are you doing now?</string>
 
-    <!-- MapActivity -->
     <string name="new_page_size">New&#160;</string>
     <string name="total_page_size">Total&#160;</string>
     <string name="back">Back</string>
+
+    <string name="main_empty">아직 쓴 글이 없어요!</string>
 
 </resources>

@@ -4,6 +4,7 @@ import io.reactivex.Flowable;
 import kr.nexters.onepage.common.model.LocationList;
 import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.ServerResponse;
+import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.write.model.PageSaveResponse;
 import okhttp3.MultipartBody;
@@ -79,7 +80,6 @@ public interface APIService {
             @Query("perPageSize") int perPageSize
     );
 
-
     //Location
     //모든 랜드마크 리스트 가져오기
     @GET("location/all")
@@ -97,5 +97,25 @@ public interface APIService {
             @Query("locationId") Long locationId,
             @Query("startDate") String startDate,
             @Query("endDate") String endDate
+      
+    //지역 이미 받아오기
+    @GET("locationImage")
+    Flowable<LocationContentRepo> getFlowableLocationImageFromId(
+        @Query("locationId") long locationId,
+        @Query("weather") String weather
+    );
+
+    @GET("heart/save")
+    Flowable<Boolean> getBookmark(
+            @Query("pageId") long pageId,
+            @Query("email") String email
+    );
+
+    //좋아요
+    @FormUrlEncoded
+    @POST("heart/save")
+    Flowable<ServerResponse> saveBookmark(
+              @Field("pageId") long pageId,
+              @Field("email") String email
     );
 }

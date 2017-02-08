@@ -4,7 +4,9 @@ machine:
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
     # Java Settings
-    JAVA_OPTS: "-Xms512m -Xmx2048m"
+    JAVA_OPTS: "-Xms512m -Xmx4096m"
+    # Gradle Settings
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"'
      # AVD Settings
     ADB_INSTALL_TIMEOUT: 5000
 
@@ -24,11 +26,11 @@ dependencies:
 
   cache_directories:
     - /usr/local/android-sdk-linux/platforms/android-25
-    - /usr/local/android-sdk-linux/build-tools/25.1.0
+    - /usr/local/android-sdk-linux/build-tools/25.0.2
     - /usr/local/android-sdk-linux/extras/android/m2repository
 
   override:
-    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-21.1.2,android-21,extra-google-m2repository,extra-google-google_play_services,extra-android-support
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.2,android-25,extra-google-m2repository,extra-google-google_play_services,extra-android-support
     - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
