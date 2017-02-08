@@ -103,7 +103,7 @@ public interface APIService {
     @GET("locationImage")
     Flowable<LocationContentRepo> getFlowableLocationImageFromId(
         @Query("locationId") long locationId,
-        @Query("weather") String weather
+        @Query("dayType") String dayType
     );
 
     @GET("heart/save")

@@ -14,8 +14,8 @@ public class LocationContentRepo {
     private String name;
     private String url;
 
-    public static Flowable<LocationContentRepo> findLocationContentById(long locationId, String weather) {
+    public static Flowable<LocationContentRepo> findLocationContentById(long locationId, String dayType) {
         return NetworkManager.getInstance().getApi()
-                .getFlowableLocationImageFromId(locationId, weather);
+                .getFlowableLocationImageFromId(locationId, dayType);
     }
 }
