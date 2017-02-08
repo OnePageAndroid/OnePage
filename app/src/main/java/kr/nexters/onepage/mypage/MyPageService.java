@@ -25,9 +25,6 @@ public class MyPageService {
                 if (response.isSuccessful()) {
                     try {
                         List<Page> pages = response.body().getPages();
-                        for (int resId : resIds) {
-                            pages.add(Page.of(resId, "" + resId));
-                        }
                         addFunc.accept(pages);
                     } catch (Exception e) {
                         Log.e("indPageByUser : ", e.getMessage());
@@ -49,7 +46,6 @@ public class MyPageService {
                 if (response.isSuccessful()) {
                     try {
                         List<Page> pages = response.body().getPages();
-                        pages.add(Page.of(resIds[0], "" + resIds[0]));
                         addFunc.accept(pages);
                     } catch (Exception e) {
                         Log.e("findPageByHeart : ", e.getMessage());
