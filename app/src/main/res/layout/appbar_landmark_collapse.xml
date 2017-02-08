@@ -18,34 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="133dp">
 
-        <ImageButton
-            android:id="@+id/btn_my"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/mypage" />
 
-        <ImageButton
-            android:id="@+id/btn_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/placeholder" />
-
-        <Button
-            android:id="@+id/btn_landmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/btn_map"
-            android:text="지역"
-            android:visibility="gone" />
 
         <!--줄어들었을 때-->
         <RelativeLayout
@@ -102,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="bottom"
                     android:includeFontPadding="false"
-                    android:text="2,101"
+                    android:text="0"
                     android:textColor="#ececec"
                     android:textSize="10sp" />
 

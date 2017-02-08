@@ -1,5 +1,9 @@
 package kr.nexters.onepage.util;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
@@ -48,5 +52,10 @@ public class ConvertUtil {
             return "MORNING";
         }
         return "NIGHT";
+    }
+
+    public static int dipToPixels(Context context, float dipValue) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 }

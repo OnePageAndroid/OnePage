@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity {
 
     LastLocationManager lastLocationManager;
     Location lastLocation;
-    long lastLocationId;
+    long lastLocationId = -1L;
 
     Unbinder unbinder;
 

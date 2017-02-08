@@ -136,12 +136,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
             ButterKnife.bind(this, itemView);
 
             if (onLongClickPageViewHolderListener != null) {
-//                itemView.setOnClickListener(v -> onLongClickPageViewHolderListener.onLongClick());
-                itemView.setOnLongClickListener(v -> {
-                    onLongClickPageViewHolderListener.onLongClick();
-                    return false;
-                });
-
+                itemView.setOnClickListener(v -> onLongClickPageViewHolderListener.onLongClick());
             }
         }
 
@@ -151,9 +146,21 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
-            Glide.with(itemView.getContext())
-                    .load(page.getFirstImageUrl())
-                    .into(ivImg);
+//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            if(!page.getFirstImageUrl().isEmpty()) {
+//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 10));
+                Glide.with(itemView.getContext())
+                        .load(page.getFirstImageUrl())
+                        .placeholder(R.drawable.loading_card_img)
+                        .into(ivImg);
+            } else {
+//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 15));
+//                ivImg.setLayoutParams(lp);
+                ivImg.setVisibility(View.GONE);
+            }
+
+//            ivImg.setLayoutParams(lp);
 
             NetworkManager.getInstance().getApi()
                     .getBookmark(page.getPageId(), PropertyManager.getInstance().getId())

@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="bottom"
                     android:includeFontPadding="false"
-                    android:text="2,101"
+                    android:text="0"
                     android:textColor="#ececec"
                     android:textSize="10sp" />
 

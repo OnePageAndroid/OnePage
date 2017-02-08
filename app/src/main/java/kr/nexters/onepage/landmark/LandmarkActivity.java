@@ -76,6 +76,8 @@ public class LandmarkActivity extends BaseActivity {
         });
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     // A method to find height of the status bar
