@@ -97,6 +97,7 @@ public interface APIService {
             @Query("locationId") Long locationId,
             @Query("startDate") String startDate,
             @Query("endDate") String endDate
+    );
       
     //지역 이미 받아오기
     @GET("locationImage")

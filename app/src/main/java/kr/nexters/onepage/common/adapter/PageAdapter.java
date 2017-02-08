@@ -148,7 +148,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         public void bind(Page page) {
             this.page = page;
             tvText.setText(page.getContent());
-            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
+            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()) + 1);
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
             Glide.with(itemView.getContext())
@@ -167,7 +167,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
         private void setBookmark(boolean isMarked) {
             this.isMarked = isMarked;
-            Log.d("mark",String.valueOf(isMarked));
+            Log.d("mark", String.valueOf(isMarked));
 
             Glide.with(itemView.getContext())
                     .load(isMarked ? R.drawable.bookmark_after : R.drawable.bookmark)
