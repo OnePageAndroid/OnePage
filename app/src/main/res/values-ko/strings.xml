@@ -84,4 +84,9 @@
 
     <string name="write_hint">&#160; 지금 무엇을 하고 있나요?</string>
 
+    <!-- MapActivity -->
+    <string name="new_page_size">새로운 글&#160;</string>
+    <string name="total_page_size">전체 글&#160;</string>
+    <string name="back">뒤로 가기</string>
+
 </resources>

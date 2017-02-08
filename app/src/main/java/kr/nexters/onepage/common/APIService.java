@@ -1,6 +1,7 @@
 package kr.nexters.onepage.common;
 
 import io.reactivex.Flowable;
+import kr.nexters.onepage.common.model.LocationList;
 import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.ServerResponse;
 import kr.nexters.onepage.main.model.LocationContentRepo;
@@ -79,6 +80,24 @@ public interface APIService {
             @Query("perPageSize") int perPageSize
     );
 
+    //Location
+    //모든 랜드마크 리스트 가져오기
+    @GET("location/all")
+    Call<LocationList> getLocationList();
+
+    //랜드마크에 작성된 총 페이지 수
+    @GET("page/count/total")
+    Call<Integer> getTotalPageSize(
+            @Query("locationId") Long locationId
+    );
+
+    //해당 기간 안에 랜드마크에 작성된 총 페이지 수
+    @GET("page/count")
+    Call<Integer> getPageSizeByPeriod(
+            @Query("locationId") Long locationId,
+            @Query("startDate") String startDate,
+            @Query("endDate") String endDate
+      
     //지역 이미 받아오기
     @GET("locationImage")
     Flowable<LocationContentRepo> getFlowableLocationImageFromId(
