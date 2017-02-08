@@ -22,6 +22,7 @@ import kr.nexters.onepage.common.adapter.PageAdapter;
 import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.common.model.WeatherRepo;
 import kr.nexters.onepage.main.model.LocationContentRepo;
+import kr.nexters.onepage.util.ConvertUtil;
 
 public class PagerFragment extends BaseFragment {
 
@@ -77,14 +78,15 @@ public class PagerFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
         lastLocationId = getArguments().getLong(MainActivity.KEY_LAST_LOCATION, -1L);
-        getWeather(lastLocationId);
+        getLocationContent(lastLocationId);
+        getWeather();
         getFirstPages(lastLocationId, PAGE_SIZE);
 
         return view;
 
     }
 
-    private void getWeather(long locationId) {
+    private void getWeather() {
         disposables.add(WeatherRepo
                 .getWeatherHourly()
                 .subscribeOn(Schedulers.io())
@@ -94,16 +96,15 @@ public class PagerFragment extends BaseFragment {
                             if (callBackToolbar != null) {
                                 callBackToolbar.initWeatherImage(hourly.getSky().getCode());
                             }
-                            getLocationContent(locationId, hourly.getPrecipitation().getType().equals("0") ? "SUNNY" : "CLOUD");
                         },
                         throwable -> toast(throwable.getLocalizedMessage())
                 )
         );
     }
 
-    private void getLocationContent(long locationId, String weather) {
+    private void getLocationContent(long locationId) {
         disposables.add(
-                LocationContentRepo.findLocationContentById(locationId, weather)
+                LocationContentRepo.findLocationContentById(locationId, ConvertUtil.getDayTime())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

@@ -144,9 +144,8 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void initWeatherImage(String weatherCode) {
-                int resId = ConvertUtil.WeatherCodeToResouceId(weatherCode);
                 Glide.with(getApplicationContext())
-                        .load(resId != 0 ? resId : 0)
+                        .load(ConvertUtil.WeatherCodeToResouceId(weatherCode))
                         .asGif()
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(ivWeather);

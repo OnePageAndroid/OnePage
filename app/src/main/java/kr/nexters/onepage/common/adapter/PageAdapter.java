@@ -148,7 +148,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         public void bind(Page page) {
             this.page = page;
             tvText.setText(page.getContent());
-            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()) + 1);
+            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
             Glide.with(itemView.getContext())

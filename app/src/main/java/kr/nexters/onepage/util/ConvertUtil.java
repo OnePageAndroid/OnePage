@@ -1,6 +1,7 @@
 package kr.nexters.onepage.util;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 
 import kr.nexters.onepage.R;
 
@@ -39,5 +40,13 @@ public class ConvertUtil {
                 return R.raw.daytime_cloud;
             }
         }
+    }
+
+    public static String getDayTime() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if(6 <= hour && hour < 18) {
+            return "MORNING";
+        }
+        return "NIGHT";
     }
 }
