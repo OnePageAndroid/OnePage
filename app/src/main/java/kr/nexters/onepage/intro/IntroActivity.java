@@ -1,8 +1,7 @@
 package kr.nexters.onepage.intro;
 
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +33,9 @@ public class IntroActivity extends BaseActivity {
         introAdapter = new IntroPagerAdapter(getSupportFragmentManager());
 
         //어댑터에 프래그먼트들을 추가
-        introAdapter.add(IntroImageFragment.newInstance(R.mipmap.ic_launcher));
-        introAdapter.add(IntroImageFragment.newInstance(android.R.drawable.ic_delete));
-        introAdapter.add(IntroImageFragment.newInstance(android.R.drawable.ic_dialog_alert));
+//        introAdapter.add(IntroImageFragment.newInstance(R.mipmap.ic_launcher));
+//        introAdapter.add(IntroImageFragment.newInstance(android.R.drawable.ic_delete));
+//        introAdapter.add(IntroImageFragment.newInstance(android.R.drawable.ic_dialog_alert));
         introAdapter.add(IntroLastFragment.newInstance());
 
         introPager.setAdapter(introAdapter);

@@ -71,13 +71,6 @@ public class MapActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        //back button
-//        setSupportActionBar((Toolbar) findViewById(R.id.mapToolbar));
-//        final ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
-
         //MainActivity로 가는 버튼
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

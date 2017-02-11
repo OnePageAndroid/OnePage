@@ -9,6 +9,10 @@ public class PropertyManager {
     private SharedPreferences.Editor mEditor;
 
     private static final String KEY_ID = "key_id";
+    public static final String KEY_IS_NOT_FIRST = "key_is_first";
+
+
+    private boolean isFirst =false;
 
     private PropertyManager() {
         mPref = PreferenceManager.getDefaultSharedPreferences(OnePageApplication.getContext());
@@ -37,10 +41,17 @@ public class PropertyManager {
         return mPref.getString(KEY_ID, "");
     }
 
+    public void setBoolean(String key, boolean value) {
+        mEditor.putBoolean(key, value);
+        mEditor.apply();
+    }
+
+    public boolean getBoolean(String key) {
+        return mPref.getBoolean(key, false);
+    }
+
     public void clear() {
         mEditor.clear();
         mEditor.apply();
     }
-
-
 }
