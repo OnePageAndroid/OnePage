@@ -15,10 +15,6 @@ public class IntroActivity extends BaseActivity {
     @BindView(R.id.pager_intro)
     ViewPager introPager;
 
-    //인디케이터
-    @BindView(R.id.indicator)
-    CircleIndicator indicator;
-
     //뷰페이저 어댑터
     IntroPagerAdapter introAdapter;
 
@@ -39,6 +35,5 @@ public class IntroActivity extends BaseActivity {
         introAdapter.add(IntroLastFragment.newInstance());
 
         introPager.setAdapter(introAdapter);
-        indicator.setViewPager(introPager);
     }
 }

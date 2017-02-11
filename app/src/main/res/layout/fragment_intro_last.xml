@@ -4,16 +4,24 @@
     android:layout_height="match_parent">
 
     <!-- TODO: Update blank fragment layout -->
-    <ImageView
-        android:id="@+id/iv_intro_last"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <Button
         android:id="@+id/btnMain"
-        android:text="메인 페이지로"
+        android:text="@string/ok"
+        android:background="@drawable/shape_button_main"
+        android:textColor="@color/colorOrange"
+        android:layout_width="145dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="62.5dp" />
+
+    <ImageView
+        android:id="@+id/iv_intro_last"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:src="@drawable/coach_bg"
+        android:scaleType="centerInside"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

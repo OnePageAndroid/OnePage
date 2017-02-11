@@ -89,4 +89,7 @@
     <string name="total_page_size">전체 글&#160;</string>
     <string name="back">뒤로 가기</string>
 
+    <!-- button -->
+    <string name="ok">확인</string>
+
 </resources>

@@ -23,6 +23,10 @@
         <item name="colorPrimaryDark">@color/colorLightGray</item>
     </style>
 
+    <style name="BlackStatusBarTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorBlack</item>
+    </style>
+
     <style name="AppTheme.TransparentStatusBar" parent="AppTheme.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

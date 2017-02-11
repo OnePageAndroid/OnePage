@@ -26,8 +26,8 @@ import static kr.nexters.onepage.common.PropertyManager.KEY_IS_NOT_FIRST;
 public class IntroLastFragment extends Fragment {
 
     //버터나이프 사용
-    @BindView(R.id.iv_intro_last)
-    ImageView ivIntro;
+//    @BindView(R.id.iv_intro_last)
+//    ImageView ivIntro;
 
     Unbinder unbinder;
 

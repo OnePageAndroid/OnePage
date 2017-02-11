@@ -44,7 +44,7 @@
         <activity
             android:name=".intro.IntroActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/BlackStatusBarTheme" />
 
         <activity
             android:name=".map.MapActivity"

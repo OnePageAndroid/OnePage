@@ -91,4 +91,7 @@
 
     <string name="main_empty">아직 쓴 글이 없어요!</string>
 
+    <!-- button -->
+    <string name="ok">ok</string>
+
 </resources>

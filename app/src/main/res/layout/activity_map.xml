@@ -14,9 +14,18 @@
         class="com.google.android.gms.maps.MapFragment" />
 
     <View android:layout_width="match_parent"
+        android:id="@+id/gradiantBox1"
         android:layout_height="98.2dp"
         android:background="@drawable/gradiant"
         android:gravity="center_horizontal" />
+
+    <View android:layout_width="match_parent"
+        android:id="@+id/gradiantBox2"
+        android:background="@drawable/gradiant2"
+        android:layout_height="235dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -93,10 +102,5 @@
         android:layout_toEndOf="@+id/Bar"
         android:layout_marginLeft="5dp" />
 
-    <!--<fragment-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:name="kr.nexters.onepage.map.MapInfoFragment"-->
-        <!--android:id="@+id/mapInfoFragment" />-->
 
 </RelativeLayout>

@@ -316,7 +316,6 @@ public class WriteActivity extends UCropBaseActivity {
             if (etWriteContent.getText().length() == 0) {
                 Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
             } else {
-
                 PostPage postPage =
                         new PostPage("", PropertyManager.getInstance().getId(), saveCroppedImage(), etWriteContent.getText().toString());
                 //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!

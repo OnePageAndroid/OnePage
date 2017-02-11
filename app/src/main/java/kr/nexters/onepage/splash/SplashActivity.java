@@ -137,6 +137,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void navigateNextActivity() {
+
         if(PropertyManager.getInstance().getBoolean(KEY_IS_NOT_FIRST)) {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
         } else {
