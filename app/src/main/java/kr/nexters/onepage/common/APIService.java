@@ -106,7 +106,7 @@ public interface APIService {
         @Query("dayType") String dayType
     );
 
-    @GET("heart/save")
+    @GET("heart/status")
     Flowable<Boolean> getBookmark(
             @Query("pageId") long pageId,
             @Query("email") String email
