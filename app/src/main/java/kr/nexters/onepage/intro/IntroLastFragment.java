@@ -28,8 +28,8 @@ import static kr.nexters.onepage.common.PropertyManager.KEY_IS_NOT_FIRST;
 public class IntroLastFragment extends Fragment {
 
     //버터나이프 사용
-    @BindView(R.id.iv_intro_last)
-    ImageView ivIntro;
+//    @BindView(R.id.iv_intro_last)
+//    ImageView ivIntro;
 
     Unbinder unbinder;
 
@@ -49,9 +49,9 @@ public class IntroLastFragment extends Fragment {
         //프래그먼트에서 버터나이프를 사용하려면 onCreateView에서 이렇게 사용해야함
         unbinder = ButterKnife.bind(this, view);
 
-        Glide.with(this)
-                .load(android.R.drawable.ic_dialog_info)
-                .into(ivIntro);
+//        Glide.with(this)
+//                .load(android.R.drawable.ic_dialog_info)
+//                .into(ivIntro);
 
         return view;
     }

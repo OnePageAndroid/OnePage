@@ -30,6 +30,7 @@ import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.ServerResponse;
+import kr.nexters.onepage.intro.IntroActivity;
 import kr.nexters.onepage.main.MainActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -135,9 +136,9 @@ public class SplashActivity extends BaseActivity {
 
     private void navigateNextActivity() {
 //        if(PropertyManager.getInstance().getBoolean(KEY_IS_NOT_FIRST)) {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//            startActivity(new Intent(SplashActivity.this, MainActivity.class));
 //        } else {
-//            startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+            startActivity(new Intent(SplashActivity.this, IntroActivity.class));
 //        }
         finish();
     }

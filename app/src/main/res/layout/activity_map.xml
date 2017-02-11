@@ -14,13 +14,13 @@
         class="com.google.android.gms.maps.MapFragment" />
 
     <View android:layout_width="match_parent"
-        android:id="@+id/gradiant1"
+        android:id="@+id/gradiantBox1"
         android:layout_height="98.2dp"
         android:background="@drawable/gradiant"
         android:gravity="center_horizontal" />
 
     <View android:layout_width="match_parent"
-        android:id="@+id/gradiant2"
+        android:id="@+id/gradiantBox2"
         android:background="@drawable/gradiant2"
         android:layout_height="235dp"
         android:layout_alignParentBottom="true"
