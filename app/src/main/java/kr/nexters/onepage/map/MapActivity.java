@@ -62,7 +62,6 @@ public class MapActivity extends BaseActivity {
     private LatLng lastLatLng;
 
     private LocationList locations;
-    private Loc clickedLoc;
 
     //landmark info box 추가
     @BindView(R.id.tvLocationName) TextView tvLocationName;
