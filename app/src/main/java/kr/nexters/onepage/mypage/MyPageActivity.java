@@ -15,6 +15,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
+import kr.nexters.onepage.mypage.bookmark.BookMarkPagerFragment;
+import kr.nexters.onepage.mypage.user.UserPagerFragment;
 
 public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelectedListener {
     private final static int MY_PAGE = 1;
@@ -46,7 +48,7 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     }
 
     private void navigateMark() {
-        MarkPagerFragment pagerFragment = MarkPagerFragment.newInstance();
+        BookMarkPagerFragment pagerFragment = BookMarkPagerFragment.newInstance();
 //        pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         replaceFragment(R.id.fragment_main, pagerFragment);
     }

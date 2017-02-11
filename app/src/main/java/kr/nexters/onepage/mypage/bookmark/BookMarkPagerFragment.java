@@ -1,4 +1,4 @@
-package kr.nexters.onepage.mypage;
+package kr.nexters.onepage.mypage.bookmark;
 
 
 import android.os.Bundle;
@@ -16,21 +16,22 @@ import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
 import kr.nexters.onepage.common.PropertyManager;
-import kr.nexters.onepage.common.adapter.PageAdapter;
+import kr.nexters.onepage.mypage.user.UserPageAdapter;
+import kr.nexters.onepage.mypage.MyPageService;
 
-public class UserPagerFragment extends BaseFragment {
+public class BookMarkPagerFragment extends BaseFragment {
+    private final static int PAGE_SIZE = 5;
+
     @BindView(R.id.pager_main)
     RecyclerViewPager mainPager;
 
     private MyPageService myPageService = new MyPageService();
 
-    PageAdapter mainAdapter;
-    Unbinder unbinder;
+    private UserPageAdapter mainAdapter;
+    private Unbinder unbinder;
 
-    int PAGE_SIZE = 5;
-    boolean loading = false;
-
-    OnLongClickPageListener onLongClickPageListener;
+    private boolean loading = false;
+    private OnLongClickPageListener onLongClickPageListener;
 
     interface OnLongClickPageListener {
         void onLongClick();
@@ -40,8 +41,8 @@ public class UserPagerFragment extends BaseFragment {
         this.onLongClickPageListener = onLongClickPageListener;
     }
 
-    public static UserPagerFragment newInstance() {
-        UserPagerFragment fragment = new UserPagerFragment();
+    public static BookMarkPagerFragment newInstance() {
+        BookMarkPagerFragment fragment = new BookMarkPagerFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
         return fragment;
@@ -58,7 +59,7 @@ public class UserPagerFragment extends BaseFragment {
     }
 
     private void initPager() {
-        mainAdapter = new PageAdapter();
+        mainAdapter = new UserPageAdapter();
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mainPager.setLayoutManager(linearLayout);
         mainPager.setAdapter(mainAdapter);
@@ -80,7 +81,8 @@ public class UserPagerFragment extends BaseFragment {
 
     private void getPages(int perPageSize, boolean isReverse) {
         loading = true;
-        myPageService.findPageByUser(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
+        myPageService.findPageByHeart(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
+            loading = false;
             if (isReverse) {
                 mainAdapter.add(0, pages);
                 return;
@@ -91,7 +93,7 @@ public class UserPagerFragment extends BaseFragment {
 
     private void getFirstPages(int perPageSize) {
         //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
-        myPageService.findPageByUser(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
+        myPageService.findPageByHeart(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
             mainAdapter.add(pages);
             Log.d("PageRepo", pages.toString());
             if (mainAdapter.getItemCount() > 0) {
