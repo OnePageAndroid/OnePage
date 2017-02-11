@@ -14,8 +14,8 @@
             android:id="@+id/iv_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/main_test_img2" />
+            android:src="@drawable/loading_card_img"
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/iv_weather"

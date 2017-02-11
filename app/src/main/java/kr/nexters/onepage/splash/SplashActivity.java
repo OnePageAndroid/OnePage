@@ -36,6 +36,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static kr.nexters.onepage.common.PropertyManager.KEY_IS_NOT_FIRST;
+
 public class SplashActivity extends BaseActivity {
 
     private LocationManager locationManager;
@@ -135,11 +137,12 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void navigateNextActivity() {
-//        if(PropertyManager.getInstance().getBoolean(KEY_IS_NOT_FIRST)) {
-//            startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//        } else {
+
+        if(PropertyManager.getInstance().getBoolean(KEY_IS_NOT_FIRST)) {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        } else {
             startActivity(new Intent(SplashActivity.this, IntroActivity.class));
-//        }
+        }
         finish();
     }
 
