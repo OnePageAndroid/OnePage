@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,10 +46,6 @@ public class IntroLastFragment extends Fragment {
 
         //프래그먼트에서 버터나이프를 사용하려면 onCreateView에서 이렇게 사용해야함
         unbinder = ButterKnife.bind(this, view);
-
-        Glide.with(this)
-                .load(android.R.drawable.ic_dialog_info)
-                .into(ivIntro);
 
         return view;
     }

@@ -155,6 +155,7 @@ public class MainActivity extends BaseActivity {
             public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
                 Glide.with(getApplicationContext())
                         .load(locationContentRepo.getUrl())
+                        .placeholder(R.drawable.loading_card_img)
                         .into(ivLocation);
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
