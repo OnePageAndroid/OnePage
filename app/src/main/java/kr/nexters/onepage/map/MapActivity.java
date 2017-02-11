@@ -1,6 +1,7 @@
 package kr.nexters.onepage.map;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,8 +12,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,10 +33,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
+import kr.nexters.onepage.common.OnePageException;
+import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.LocationList;
+import kr.nexters.onepage.common.model.PostPage;
 import kr.nexters.onepage.landmark.LandmarkActivity;
 import kr.nexters.onepage.util.ConvertUtil;
+import kr.nexters.onepage.write.WriteActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,13 +77,6 @@ public class MapActivity extends BaseActivity {
         setContentView(R.layout.activity_map);
 
         ButterKnife.bind(this);
-
-        //back button
-//        setSupportActionBar((Toolbar) findViewById(R.id.mapToolbar));
-//        final ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
 
         //MainActivity로 가는 버튼
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -296,5 +296,14 @@ public class MapActivity extends BaseActivity {
         Intent intent = new Intent(this, LandmarkActivity.class);
         intent.putExtra(KEY_LAST_LOCATION, locationId);
         startActivity(intent);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
