@@ -17,7 +17,7 @@ public class LocationSearchRepo {
 
     public static Flowable<Long> getLocationId(double latitude, double longitude) {
         return NetworkManager.getInstance().getApi()
-                .getFlowableLocationsFromCoordniates(latitude, longitude)
+                .getFlowableLocationsFromCoordniates(latitude, longitude, 3000)
                 .map(repo -> repo.getLocations().get(0).getLocationId());
     }
 

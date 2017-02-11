@@ -111,7 +111,7 @@ public class LandmarkActivity extends BaseActivity {
             public void initWeatherImage(String weatherCode) {
                 int resId = ConvertUtil.WeatherCodeToResouceId(weatherCode);
                 Glide.with(getApplicationContext())
-                        .load(resId != 0 ? resId : 0)
+                        .load(resId)
                         .asGif()
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(ivWeather);
@@ -121,7 +121,7 @@ public class LandmarkActivity extends BaseActivity {
             public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
                 Glide.with(getApplicationContext())
                         .load(locationContentRepo.getUrl())
-                        .placeholder(R.drawable.loading_card_img)
+                        .placeholder(R.drawable.loading_img_landmark)
                         .into(ivLocation);
 
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());

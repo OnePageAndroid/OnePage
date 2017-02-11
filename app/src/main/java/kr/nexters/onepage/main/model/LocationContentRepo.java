@@ -12,6 +12,7 @@ import lombok.Data;
 public class LocationContentRepo {
     private long locationId;
     private String name;
+    private String englishName;
     private String url;
 
     public static Flowable<LocationContentRepo> findLocationContentById(long locationId, String dayType) {

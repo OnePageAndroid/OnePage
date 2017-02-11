@@ -14,7 +14,7 @@
             android:id="@+id/iv_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/loading_card_img"
+            android:src="@drawable/loading_img_landmark"
             android:scaleType="centerCrop" />
 
         <ImageView

@@ -1,7 +1,6 @@
 package kr.nexters.onepage.map;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,14 +31,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.common.OnePageException;
-import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.LocationList;
-import kr.nexters.onepage.common.model.PostPage;
 import kr.nexters.onepage.landmark.LandmarkActivity;
 import kr.nexters.onepage.util.ConvertUtil;
-import kr.nexters.onepage.write.WriteActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -229,10 +223,6 @@ public class MapActivity extends BaseActivity {
                     for(Loc loc : locations.getLocations()) {
                         options.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
                         loc.setMarker(mGoogleMap.addMarker(options));
-
-                        ivInfoBox.setOnClickListener(v -> {
-                            navigateToLandmark(loc.getLocationId());
-                        });
                     }
                     Log.i(TAG, "location list : " + locations.toString());
                 }
@@ -257,6 +247,10 @@ public class MapActivity extends BaseActivity {
                 tvLocationName.setText(loc.getName());
                 Log.i(TAG, "locationId : " + loc.getLocationId());
                 Log.i(TAG, "locationName : " + loc.getName());
+
+                ivInfoBox.setOnClickListener(v -> {
+                    navigateToLandmark(loc.getLocationId());
+                });
 
                 LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback<Integer>() {
                     @Override

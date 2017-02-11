@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -127,6 +128,8 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         ImageView ivImg;
         @BindView(R.id.iv_mark)
         ImageView ivMark;
+        @BindView(R.id.layout_text)
+        FrameLayout layoutText;
 
         Page page;
         boolean isMarked;
@@ -146,21 +149,17 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
-//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
             if(!page.getFirstImageUrl().isEmpty()) {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 10));
                 Glide.with(itemView.getContext())
                         .load(page.getFirstImageUrl())
                         .placeholder(R.drawable.loading_card_img)
                         .into(ivImg);
+                ivImg.setVisibility(View.VISIBLE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 10), 0, 0);
             } else {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 15));
-//                ivImg.setLayoutParams(lp);
                 ivImg.setVisibility(View.GONE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 15), 0, 0);
             }
-
-//            ivImg.setLayoutParams(lp);
 
             NetworkManager.getInstance().getApi()
                     .getBookmark(page.getPageId(), PropertyManager.getInstance().getId())

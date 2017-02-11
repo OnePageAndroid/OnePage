@@ -22,7 +22,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.landmark.LandmarkActivity;
 import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
@@ -34,7 +33,7 @@ import kr.nexters.onepage.write.WriteActivity;
 public class MainActivity extends BaseActivity {
 
     public static final String KEY_LAST_LOCATION = "key_last_location";
-    private static final int REQUEST_MAP = 1000;
+    public static final int REQUEST_WRITE = 1000;
 
     @BindView(R.id.appbar)
     AppBarLayout appbarLayout;
@@ -140,6 +139,9 @@ public class MainActivity extends BaseActivity {
             @Override
             public void initToolbarPageNumber(int pageSize) {
                 tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageSize));
+                if(pageSize == 0) {
+                    layoutEmpty.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -155,7 +157,7 @@ public class MainActivity extends BaseActivity {
             public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
                 Glide.with(getApplicationContext())
                         .load(locationContentRepo.getUrl())
-                        .placeholder(R.drawable.loading_card_img)
+                        .placeholder(R.drawable.loading_img_landmark)
                         .into(ivLocation);
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
@@ -175,13 +177,6 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.btn_map)
     public void navigateToMap() {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
-        startActivityForResult(intent, REQUEST_MAP);
-    }
-
-    @OnClick(R.id.btn_landmark)
-    public void navigateToLandmark() {
-        Intent intent = new Intent(this, LandmarkActivity.class);
-        intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
         startActivity(intent);
     }
 
@@ -189,7 +184,14 @@ public class MainActivity extends BaseActivity {
     public void navigasteToWrite() {
         Intent intent = new Intent(MainActivity.this, WriteActivity.class);
         intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_WRITE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_WRITE && resultCode == RESULT_OK) {
+            initFragment(lastLocationId);
+        }
     }
 
     @Override
