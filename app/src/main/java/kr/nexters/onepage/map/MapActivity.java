@@ -33,6 +33,7 @@ import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.LocationList;
 import kr.nexters.onepage.landmark.LandmarkActivity;
+import kr.nexters.onepage.util.ConvertUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,6 +102,8 @@ public class MapActivity extends BaseActivity {
 
             //현재 위치 button 활성화
             mGoogleMap.setMyLocationEnabled(true);
+            //구글맵 패딩 설정
+            mGoogleMap.setPadding(0, ConvertUtil.dipToPixels(getBaseContext(), 74), 0 ,0);
 
             //Check location permission
             checkPermission();
