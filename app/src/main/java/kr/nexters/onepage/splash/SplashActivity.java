@@ -118,12 +118,11 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                         if (response.isSuccessful() && response.body() != null &&response.body().isSuccess()) {
-                            Log.d(SplashActivity.class.getSimpleName(), response.body().message);
-
-                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                            startActivity(intent);
+                            navigateNextActivity();
+                        } else {
+                            Toast.makeText(SplashActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            finish();
                         }
-                        finish();
                     }
 
                     @Override
@@ -132,6 +131,15 @@ public class SplashActivity extends BaseActivity {
                         finish();
                     }
                 });
+    }
+
+    private void navigateNextActivity() {
+//        if(PropertyManager.getInstance().getBoolean(KEY_IS_NOT_FIRST)) {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//        } else {
+//            startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+//        }
+        finish();
     }
 
 

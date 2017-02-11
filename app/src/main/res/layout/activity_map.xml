@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_map"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,18 +7,6 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp">
-
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/mapToolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize"-->
-        <!--app:title="@string/back"-->
-        <!--app:theme="@style/MapTheme"/>-->
-    <!--app:style="@style/MyActionBar" />-->
-
-        <!--app:titleTextColor="@color/colorWhite"/>-->
-        <!--android:background="@color/colorOrange" />-->
-
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"

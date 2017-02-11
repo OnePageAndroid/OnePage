@@ -16,7 +16,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.main.MainActivity;
+
+import static kr.nexters.onepage.common.PropertyManager.KEY_IS_NOT_FIRST;
 
 /**
  * Created by ohjaehwan on 2017. 1. 5..
@@ -55,6 +58,7 @@ public class IntroLastFragment extends Fragment {
 
     @OnClick(R.id.btnMain)
     public void navigateToMain() {
+        PropertyManager.getInstance().setBoolean(KEY_IS_NOT_FIRST, true);
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);
         getActivity().finish();
