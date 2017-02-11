@@ -1,39 +1,48 @@
 package kr.nexters.onepage.intro;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import me.relex.circleindicator.CircleIndicator;
+import kr.nexters.onepage.common.PropertyManager;
+import kr.nexters.onepage.main.MainActivity;
+
+import static kr.nexters.onepage.common.OnePageApplication.getContext;
+import static kr.nexters.onepage.common.PropertyManager.KEY_IS_NOT_FIRST;
 
 public class IntroActivity extends BaseActivity {
 
-    //버터나이프 사용
     @BindView(R.id.pager_intro)
-    ViewPager introPager;
+    RecyclerViewPager introPager;
 
-    //뷰페이저 어댑터
-    IntroPagerAdapter introAdapter;
-
+    DummyPageAdapter dummyPageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-        //액티비티에서 버터나이프를 사용하려면 onCreate에서 이렇게 사용해야함
+
         ButterKnife.bind(this);
 
-        introAdapter = new IntroPagerAdapter(getSupportFragmentManager());
+        dummyPageAdapter = new DummyPageAdapter();
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        introPager.setLayoutManager(linearLayout);
+        introPager.setAdapter(dummyPageAdapter);
+        introPager.scrollToPosition(1);
+    }
 
-        //어댑터에 프래그먼트들을 추가
-//        introAdapter.add(IntroImageFragment.newInstance(R.mipmap.ic_launcher));
-//        introAdapter.add(IntroImageFragment.newInstance(android.R.drawable.ic_delete));
-//        introAdapter.add(IntroImageFragment.newInstance(android.R.drawable.ic_dialog_alert));
-        introAdapter.add(IntroLastFragment.newInstance());
-
-        introPager.setAdapter(introAdapter);
+    @OnClick(R.id.btn_main)
+    public void navigateToMain() {
+        PropertyManager.getInstance().setBoolean(KEY_IS_NOT_FIRST, true);
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
