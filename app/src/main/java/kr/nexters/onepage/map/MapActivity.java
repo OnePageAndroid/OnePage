@@ -50,7 +50,6 @@ import static kr.nexters.onepage.main.MainActivity.KEY_LAST_LOCATION;
 public class MapActivity extends BaseActivity {
 
     private static final String TAG = "MapActivity";
-    private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     public final static int ZOOM_LEVEL = 13;
 
     private LocationManager locationManager;
