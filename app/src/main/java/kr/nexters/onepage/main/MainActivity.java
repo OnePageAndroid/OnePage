@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity {
     private void getLocation() {
         if (lastLocation != null) {
             disposables.add(LocationSearchRepo
-                    .getLocationId(1.0, 1.0)
+                    .getLocationId(lastLocation.getLatitude(), lastLocation.getLongitude())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(

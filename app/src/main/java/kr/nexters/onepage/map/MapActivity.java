@@ -8,16 +8,11 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,27 +25,23 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import butterknife.OnClick;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.LocationList;
-
-import kr.nexters.onepage.main.MainActivity;
-import kr.nexters.onepage.write.WriteActivity;
+import kr.nexters.onepage.landmark.LandmarkActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static kr.nexters.onepage.main.MainActivity.KEY_LAST_LOCATION;
+
 public class MapActivity extends BaseActivity {
 
     private static final String TAG = "MapActivity";
-    public static final String CLICKED_LOC = "clicked_loc";
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     public final static int ZOOM_LEVEL = 13;
 
@@ -70,6 +61,7 @@ public class MapActivity extends BaseActivity {
     @BindView(R.id.tvLocationName) TextView tvLocationName;
     @BindView(R.id.tvTodayPageSize) TextView tvTodayPageSize;
     @BindView(R.id.tvTotalPageSize) TextView tvTotalPageSize;
+    @BindView(R.id.ivInfoBox) ImageView ivInfoBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,33 +194,6 @@ public class MapActivity extends BaseActivity {
         }
     }
 
-    //Action button
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_map, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        switch(id) {
-//            case R.id.action_current_loc :
-//                if(currentLatLng == null) {
-//                    Toast.makeText(MapActivity.this, getString(R.string.toast_gps_error), Toast.LENGTH_LONG).show();
-//                }
-//                else {
-//                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
-//                }
-//                return true;
-//            case android.R.id.home :
-//                finish();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -263,6 +228,10 @@ public class MapActivity extends BaseActivity {
                     for(Loc loc : locations.getLocations()) {
                         options.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
                         loc.setMarker(mGoogleMap.addMarker(options));
+
+                        ivInfoBox.setOnClickListener(v -> {
+                            navigateToLandmark(loc.getLocationId());
+                        });
                     }
                     Log.i(TAG, "location list : " + locations.toString());
                 }
@@ -287,9 +256,6 @@ public class MapActivity extends BaseActivity {
                 tvLocationName.setText(loc.getName());
                 Log.i(TAG, "locationId : " + loc.getLocationId());
                 Log.i(TAG, "locationName : " + loc.getName());
-
-                clickedLoc = loc; //랜드마크 정보 박스 클릭했을때 넘겨주기 위한 dto 저장
-                Log.i(TAG, "clicked loc : " + clickedLoc.toString());
 
                 LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback<Integer>() {
                     @Override
@@ -323,14 +289,9 @@ public class MapActivity extends BaseActivity {
         }
     }
 
-    //landmark info box 클릭 시 이벤트 처리
-    //dto 넣어서 넘겨주는건 어떨까요 값은 clickedLoc에 값은 들어있어요
-    @OnClick(R.id.ivInfoBox)
-    public void onInfoBoxClick() {
-//        Intent intent = new Intent(MapActivity.this, );
-//        intent.putExtra(CLICKED_LOC, clickedLoc);
-//        startActivity(intent);
-        Log.i(TAG, "box click");
+    private void navigateToLandmark(long locationId) {
+        Intent intent = new Intent(this, LandmarkActivity.class);
+        intent.putExtra(KEY_LAST_LOCATION, locationId);
+        startActivity(intent);
     }
-
 }

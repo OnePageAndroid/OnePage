@@ -50,6 +50,9 @@ public class LandmarkActivity extends BaseActivity {
     @BindView(R.id.tv_toolbar_total_page_expand)
     TextView tvToolbarTotalPageExpand;
 
+    @BindView(R.id.layout_empty)
+    ViewGroup layoutEmpty;
+
     Unbinder unbinder;
 
     @Override
@@ -99,6 +102,9 @@ public class LandmarkActivity extends BaseActivity {
             public void initToolbarPageNumber(int pageSize) {
                 tvToolbarTotalPageCollapse.setText(ConvertUtil.integerToCommaString(pageSize));
                 tvToolbarTotalPageExpand.setText(ConvertUtil.integerToCommaString(pageSize));
+                if(pageSize == 0) {
+                    layoutEmpty.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

@@ -34,10 +34,8 @@ import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.OnePageException;
 import kr.nexters.onepage.common.PropertyManager;
-import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.PostPage;
 import kr.nexters.onepage.common.model.ServerResponse;
-import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.write.model.PageSaveResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -102,7 +100,7 @@ public class WriteActivity extends UCropBaseActivity {
 
         locationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
         if(locationId == -1L) {
-            toast("잘못된 접근");
+            toast("위치정보가 없습니다.");
             finish();
         }
 

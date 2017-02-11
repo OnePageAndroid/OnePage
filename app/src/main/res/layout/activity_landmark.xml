@@ -28,6 +28,40 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!-- 비어있을 시 레이아웃 -->
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/layout_empty"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f7f7f7"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="108.5dp"
+                android:src="@drawable/empty_post"
+                android:visibility="visible" />
+
+            <TextView
+                fontPath="fonts/NotoSansKR-DemiLight.otf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:includeFontPadding="false"
+                android:text="@string/main_empty"
+                android:textColor="#9b9b9b"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
     <FrameLayout
         android:id="@+id/fragment_landmark"
         android:layout_width="match_parent"

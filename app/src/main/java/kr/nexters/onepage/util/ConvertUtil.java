@@ -48,9 +48,9 @@ public class ConvertUtil {
 
     public static String getDayTime() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if(6 <= hour && hour < 18) {
-            return "MORNING";
-        }
+//        if(6 <= hour && hour < 18) {
+//            return "MORNING";
+//        }
         return "NIGHT";
     }
 
