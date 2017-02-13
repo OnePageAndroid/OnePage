@@ -56,7 +56,6 @@
             android:paddingBottom="9.5dp"
             android:layout_marginLeft="10dp"
             android:includeFontPadding="false"
-            android:text="12월 31일 18:33"
             android:textColor="#777777"
             android:textSize="12sp" />
 
@@ -75,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="2,101"
+
                 android:textColor="#474747"
                 android:textSize="11sp" />
 
@@ -95,7 +94,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="2,101"
                 android:textColor="#828282"
                 android:textSize="11sp" />
 

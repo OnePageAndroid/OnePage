@@ -120,6 +120,8 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
     class PageViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_text)
         TextView tvText;
+        @BindView(R.id.tv_date)
+        TextView tvDate;
         @BindView(R.id.tv_page_current)
         TextView tvPageCurrent;
         @BindView(R.id.tv_page_total)
@@ -148,7 +150,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
             tvText.setText(page.getContent());
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
-
+            tvDate.setText(page.getCreatedAt().getDateString());
             if(!page.getFirstImageUrl().isEmpty()) {
                 Glide.with(itemView.getContext())
                         .load(page.getFirstImageUrl())
