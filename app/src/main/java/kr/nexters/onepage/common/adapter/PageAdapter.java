@@ -82,7 +82,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
     }
 
     public int getFirstPagePostion() {
-        for (int i = 0; i < pages.size(); i++) {
+        for (int i = pages.size() - 1; i >= 0; i--) {
             if (pages.get(i).getPageNum() == 0) {
                 return i;
             }
@@ -151,7 +151,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
             tvDate.setText(page.getCreatedAt().getDateString());
-            if(!page.getFirstImageUrl().isEmpty()) {
+            if (!page.getFirstImageUrl().isEmpty()) {
                 Glide.with(itemView.getContext())
                         .load(page.getFirstImageUrl())
                         .placeholder(R.drawable.loading_card_img)
