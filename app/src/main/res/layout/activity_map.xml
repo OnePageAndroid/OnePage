@@ -18,9 +18,9 @@
 
     <View android:layout_width="match_parent"
         android:id="@+id/gradiantBox1"
-        android:layout_height="98.2dp"
         android:background="@drawable/gradiant"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:layout_height="102dp" />
 
     <View android:layout_width="match_parent"
         android:id="@+id/gradiantBox2"
@@ -38,10 +38,9 @@
         android:layout_weight="1"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="63dp" />
+        android:layout_marginBottom="15dp" />
 
     <ImageView
-        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/my_place"
@@ -58,16 +57,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#d5d5d5"
-        android:textSize="10sp"
+        android:textSize="12sp"
         android:id="@+id/Bar"
         android:layout_alignBaseline="@+id/tvTodayPageSize"
         android:layout_alignBottom="@+id/tvTodayPageSize"
         android:layout_toRightOf="@+id/tvTodayPageSize"
         android:layout_toEndOf="@+id/tvTodayPageSize"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginLeft="5dp"
+        fontPath="fonts/NotoSansKR-Regular.otf" />
 
     <TextView
-        android:text="남산타워"
+        android:text="광화문광장"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvLocationName"
@@ -76,11 +76,12 @@
         android:layout_alignTop="@+id/ivInfoBox"
         android:layout_alignLeft="@+id/ivInfoBox"
         android:layout_alignStart="@+id/ivInfoBox"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="17dp" />
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="17dp"
+        fontPath="fonts/HanSansKR-Medium.otf" />
 
     <TextView
-        android:text="새로운 글"
+        android:text="새로운 글 "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvTodayPageSize"
@@ -90,8 +91,9 @@
         android:layout_alignTop="@+id/ivInfoBox"
         android:layout_alignLeft="@+id/ivInfoBox"
         android:layout_alignStart="@+id/ivInfoBox"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="17dp"/>
+        android:layout_marginTop="43.5dp"
+        android:layout_marginLeft="17dp"
+        fontPath="fonts/NotoSansKR-Regular.otf" />
 
     <TextView
         android:text="전체 글 2,000"
@@ -100,10 +102,11 @@
         android:id="@+id/tvTotalPageSize"
         android:textColor="#777777"
         android:textSize="12sp"
-        android:layout_alignBottom="@+id/Bar"
+        android:layout_alignBaseline="@+id/Bar"
         android:layout_toRightOf="@+id/Bar"
         android:layout_toEndOf="@+id/Bar"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginLeft="5dp"
+        fontPath="fonts/NotoSansKR-Regular.otf" />
 
 
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,11 +58,14 @@ public class MapActivity extends BaseActivity {
 
     private LocationList locations;
 
+    private String today;
+
     //landmark info box 추가
     @BindView(R.id.tvLocationName) TextView tvLocationName;
     @BindView(R.id.tvTodayPageSize) TextView tvTodayPageSize;
     @BindView(R.id.tvTotalPageSize) TextView tvTotalPageSize;
     @BindView(R.id.ivInfoBox) ImageView ivInfoBox;
+    @BindView(R.id.ivMyPlace) ImageView ivMyPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,8 @@ public class MapActivity extends BaseActivity {
 
         //LocationAPI
         //Setting marker. Get location from db
+        today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Log.i(TAG, "today : " + today);
         showLocationList();
     }
 
@@ -94,6 +100,7 @@ public class MapActivity extends BaseActivity {
 
             //현재 위치 button 활성화
             mGoogleMap.setMyLocationEnabled(true);
+
             //구글맵 패딩 설정
             mGoogleMap.setPadding(0, ConvertUtil.dipToPixels(getBaseContext(), 74), 0 ,0);
 
@@ -237,8 +244,7 @@ public class MapActivity extends BaseActivity {
 
     //선택된 마커에 대한 정보 구하기
     public void getLocationInfo(Marker marker) {
-        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        Log.i(TAG, "today : " + today);
+        ivMyPlace.setVisibility(View.INVISIBLE);
 
         for(Loc loc : locations.getLocations()) {
 
