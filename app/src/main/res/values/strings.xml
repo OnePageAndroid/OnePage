@@ -94,4 +94,10 @@
     <!-- button -->
     <string name="ok">ok</string>
 
+    <!-- intro -->
+    <string name="coach_mypage">내가 기록한 글과\n북마크한 글을 볼 수 있어요</string>
+    <string name="coach_map">내 주변 랜드마크를\n확인할 수 있어요</string>
+    <string name="coach_center">이 장소에 남겨진\n다양한 이야기들을 살펴보세요</string>
+    <string name="coach_bookmark">원하는 글을 북마크하세요</string>
+
 </resources>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
 
     <RelativeLayout
         android:id="@+id/layout_toolbar"
@@ -17,32 +19,6 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/intro_toolbar" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="133dp">
-
-            <ImageButton
-                android:id="@+id/btn_my"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/mypage" />
-
-            <ImageButton
-                android:id="@+id/btn_map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/placeholder" />
-
-        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_content_expand"
@@ -123,7 +99,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- 프래그먼트 -->
-        <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+        <kr.nexters.onepage.intro.DisabledRecyclerViewPager
             android:id="@+id/pager_intro"
             android:layout_width="match_parent"
             android:layout_height="414dp"
@@ -137,11 +113,118 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btn_main"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#cc000000"
+        android:gravity="center_horizontal"
+        android:id="@+id/view"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="@string/coach_bookmark"
+        android:layout_marginRight="15.5dp"
+        android:layout_marginTop="230dp"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/tvCoachBookmark"
+        android:textColor="@color/colorWhite" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/layout_toolbar"
+        app:srcCompat="@drawable/bookmark_coach"
+        android:id="@+id/ivCoachBookmark"
+        android:layout_marginTop="259.5dp"
+        android:layout_marginRight="68dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="133dp">
+
+        <ImageButton
+            android:id="@+id/btn_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/placeholder_coach" />
+
+        <TextView
+            android:text="@string/coach_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvCoachMap"
+            android:layout_below="@+id/btn_map"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15.5dp"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:text="@string/coach_mypage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvCoachMypage"
+            android:textColor="@color/colorWhite"
+            android:layout_alignBaseline="@+id/tvCoachMap"
+            android:layout_alignBottom="@+id/tvCoachMap"
+            android:layout_marginLeft="15.5dp"/>
+
+        <ImageButton
+            android:id="@+id/btn_my"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/mypage_coach"
+            android:layout_above="@+id/tvCoachMap"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp" />
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/coach"
+        android:id="@+id/imageView"
+        android:layout_alignBottom="@+id/tvCoachCenter"
+        android:layout_marginBottom="48.5dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/btn_main"
+        android:background="@drawable/shape_button_main"
+        android:layout_width="145dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="62dp"
+        android:textColor="@color/colorOrange"
+        android:text="@string/ok"
+        fontPath="HanSansKR-Medium.otf"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="@string/coach_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvCoachCenter"
+        android:textColor="@color/colorWhite"
+        android:gravity="center"
+        android:layout_below="@+id/ivCoachBookmark"
         android:layout_centerHorizontal="true"
-        android:text="확인" />
+        android:layout_marginTop="51dp" />
+
+
 </RelativeLayout>
