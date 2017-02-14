@@ -1,5 +1,7 @@
 package kr.nexters.onepage.landmark;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
@@ -11,12 +13,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
+import kr.nexters.onepage.common.ImageUtil;
 import kr.nexters.onepage.main.PagerFragment;
 import kr.nexters.onepage.main.PagerFragment.CallBackToolbar;
 import kr.nexters.onepage.main.model.LocationContentRepo;
@@ -121,8 +126,14 @@ public class LandmarkActivity extends BaseActivity {
             public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
                 Glide.with(getApplicationContext())
                         .load(locationContentRepo.getUrl())
-                        .placeholder(R.drawable.loading_img_landmark)
-                        .into(ivLocation);
+                        .asBitmap()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
+                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(resource, texture));
+                            }
+                        });
 
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
