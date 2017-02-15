@@ -19,7 +19,6 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include layout="@layout/appbar_main_expand" />
-
             <include layout="@layout/appbar_main_collapse" />
 
         </android.support.design.widget.CollapsingToolbarLayout>

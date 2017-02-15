@@ -167,11 +167,16 @@ public class MainActivity extends BaseActivity {
                 Glide.with(getApplicationContext())
                         .load(locationContentRepo.getUrl())
                         .asBitmap()
+                        .centerCrop()
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
+                                int h = ConvertUtil.dipToPixels(getBaseContext(), 241);
                                 Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
-                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(resource, texture));
+                                Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
+                                Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
+                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
                             }
                         });
 

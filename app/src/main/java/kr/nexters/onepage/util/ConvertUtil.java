@@ -1,8 +1,11 @@
 package kr.nexters.onepage.util;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -57,5 +60,14 @@ public class ConvertUtil {
     public static int dipToPixels(Context context, float dipValue) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
+
+    public static int getDisplayWidthPixels(Context context) {
+        Point size = new Point();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        display.getSize(size);
+
+        return size.x;
     }
 }

@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,6 +17,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
@@ -67,7 +67,7 @@ public class LandmarkActivity extends BaseActivity {
         unbinder = ButterKnife.bind(this);
 
         long locationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
-        if(locationId == -1L) {
+        if (locationId == -1L) {
             toast("잘못된 접근");
             finish();
         }
@@ -84,8 +84,6 @@ public class LandmarkActivity extends BaseActivity {
         });
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     // A method to find height of the status bar
@@ -107,7 +105,7 @@ public class LandmarkActivity extends BaseActivity {
             public void initToolbarPageNumber(int pageSize) {
                 tvToolbarTotalPageCollapse.setText(ConvertUtil.integerToCommaString(pageSize));
                 tvToolbarTotalPageExpand.setText(ConvertUtil.integerToCommaString(pageSize));
-                if(pageSize == 0) {
+                if (pageSize == 0) {
                     layoutEmpty.setVisibility(View.VISIBLE);
                 }
             }
@@ -115,7 +113,7 @@ public class LandmarkActivity extends BaseActivity {
             @Override
             public void initWeatherImage(String weatherCode) {
                 int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
-                if(resId != -1) {
+                if (resId != -1) {
                     Glide.with(getApplicationContext())
                             .load(resId)
                             .asGif()
@@ -132,8 +130,12 @@ public class LandmarkActivity extends BaseActivity {
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
+                                int h = ConvertUtil.dipToPixels(getBaseContext(), 241);
                                 Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
-                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(resource, texture));
+                                Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
+                                Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
+                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
                             }
                         });
 
@@ -152,12 +154,8 @@ public class LandmarkActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+    @OnClick(R.id.btn_back)
+    public void onClickBack() {
+        finish();
     }
-
 }

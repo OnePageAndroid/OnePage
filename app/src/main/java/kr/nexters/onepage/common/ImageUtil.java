@@ -1,13 +1,11 @@
 package kr.nexters.onepage.common;
 
 import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.view.View;
-import android.widget.TextView;
 
 /**
  * Created by OhJaeHwan on 2017-02-14.
@@ -27,34 +25,79 @@ public class ImageUtil {
         return newBitmap;
     }
 
-
-    public static void applyBlurMaskFilter(TextView tv, BlurMaskFilter.Blur style){
-
-        // Define the blur effect radius
-        float radius = tv.getTextSize()/10;
-
-        // Initialize a new BlurMaskFilter instance
-        BlurMaskFilter filter = new BlurMaskFilter(radius,style);
-
-        // Set the TextView layer type
-        tv.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
-        // Finally, apply the blur effect on TextView text
-        tv.getPaint().setMaskFilter(filter);
+    public static Bitmap centerCrop(final Bitmap src, final int w, final int h) {
+        return crop(src, w, h, 0.5f, 0.5f);
     }
 
-    public static void applyBlurMaskFilter(TextView tv, BlurMaskFilter.Blur style, float radius){
-
-        // Define the blur effect radius
-//        float radius = tv.getTextSize()/10;
-
-        // Initialize a new BlurMaskFilter instance
-        BlurMaskFilter filter = new BlurMaskFilter(radius,style);
-
-        // Set the TextView layer type
-        tv.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
-        // Finally, apply the blur effect on TextView text
-        tv.getPaint().setMaskFilter(filter);
+    /**
+     * Returns a new Bitmap copy with a crop effect depending on the crop anchor given. 0.5f is like
+     * {@link android.widget.ImageView.ScaleType#CENTER_CROP}. The crop anchor will be be nudged
+     * so the entire cropped bitmap will fit inside the src. May return the input bitmap if no
+     * scaling is necessary.
+     *
+     *
+     * Example of changing verticalCenterPercent:
+     *   _________            _________
+     *  |         |          |         |
+     *  |         |          |_________|
+     *  |         |          |         |/___0.3f
+     *  |---------|          |_________|\
+     *  |         |<---0.5f  |         |
+     *  |---------|          |         |
+     *  |         |          |         |
+     *  |         |          |         |
+     *  |_________|          |_________|
+     *
+     * @param src original bitmap of any size
+     * @param w desired width in px
+     * @param h desired height in px
+     * @param horizontalCenterPercent determines which part of the src to crop from. Range from 0
+     *                                .0f to 1.0f. The value determines which part of the src
+     *                                maps to the horizontal center of the resulting bitmap.
+     * @param verticalCenterPercent determines which part of the src to crop from. Range from 0
+     *                              .0f to 1.0f. The value determines which part of the src maps
+     *                              to the vertical center of the resulting bitmap.
+     * @return a copy of src conforming to the given width and height, or src itself if it already
+     *         matches the given width and height
+     */
+    public static Bitmap crop(final Bitmap src, final int w, final int h,
+                              final float horizontalCenterPercent, final float verticalCenterPercent) {
+        if (horizontalCenterPercent < 0 || horizontalCenterPercent > 1 || verticalCenterPercent < 0
+                || verticalCenterPercent > 1) {
+            throw new IllegalArgumentException(
+                    "horizontalCenterPercent and verticalCenterPercent must be between 0.0f and "
+                            + "1.0f, inclusive.");
+        }
+        final int srcWidth = src.getWidth();
+        final int srcHeight = src.getHeight();
+        // exit early if no resize/crop needed
+        if (w == srcWidth && h == srcHeight) {
+            return src;
+        }
+        final Matrix m = new Matrix();
+        final float scale = Math.max(
+                (float) w / srcWidth,
+                (float) h / srcHeight);
+        m.setScale(scale, scale);
+        final int srcCroppedW, srcCroppedH;
+        int srcX, srcY;
+        srcCroppedW = Math.round(w / scale);
+        srcCroppedH = Math.round(h / scale);
+        srcX = (int) (srcWidth * horizontalCenterPercent - srcCroppedW / 2);
+        srcY = (int) (srcHeight * verticalCenterPercent - srcCroppedH / 2);
+        // Nudge srcX and srcY to be within the bounds of src
+        srcX = Math.max(Math.min(srcX, srcWidth - srcCroppedW), 0);
+        srcY = Math.max(Math.min(srcY, srcHeight - srcCroppedH), 0);
+        final Bitmap cropped = Bitmap.createBitmap(src, srcX, srcY, srcCroppedW, srcCroppedH, m,
+                true /* filter */);
+//        if (DEBUG) LogUtils.i(PhotoManager.TAG,
+//                "IN centerCrop, srcW/H=%s/%s desiredW/H=%s/%s srcX/Y=%s/%s" +
+//                " innerW/H=%s/%s scale=%s resultW/H=%s/%s",
+//                srcWidth, srcHeight, w, h, srcX, srcY, srcCroppedW, srcCroppedH, scale,
+//                cropped.getWidth(), cropped.getHeight());
+//        if (DEBUG && (w != cropped.getWidth() || h != cropped.getHeight())) {
+//            LogUtils.e(PhotoManager.TAG, new Error(), "last center crop violated assumptions.");
+//        }
+        return cropped;
     }
 }
