@@ -96,7 +96,8 @@
         android:layout_below="@+id/layout_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/relativeLayout">
 
         <!-- 프래그먼트 -->
         <kr.nexters.onepage.intro.DisabledRecyclerViewPager
