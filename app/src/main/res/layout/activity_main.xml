@@ -50,7 +50,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="108.5dp"
+                android:layout_marginTop="129dp"
                 android:src="@drawable/empty_post"
                 android:visibility="visible" />
 
@@ -58,7 +58,7 @@
                 fontPath="fonts/NotoSansKR-DemiLight.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="24dp"
                 android:includeFontPadding="false"
                 android:text="@string/main_empty"
                 android:textColor="#9b9b9b"

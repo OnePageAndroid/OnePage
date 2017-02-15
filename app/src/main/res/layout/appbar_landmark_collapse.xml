@@ -7,6 +7,7 @@
     android:contentInsetLeft="0dp"
     android:contentInsetRight="0dp"
     android:contentInsetStart="0dp"
+    android:elevation="0dp"
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"
     app:contentInsetRight="0dp"
@@ -17,7 +18,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="133dp">
-
 
 
         <!--줄어들었을 때-->
