@@ -20,11 +20,11 @@ public class ConvertUtil {
         return df.format(number);
     }
 
-    public static int WeatherCodeToResouceId(String code) {
+    public static int findResouceIdByWeatherCode(String code) {
         switch (Integer.parseInt(code.substring(code.length()-2))) {
             case 3:
             case 7: {
-                return R.raw.daytime_cloud;
+                return R.raw.cloud;
             }
             case 4:
             case 6:
@@ -38,10 +38,10 @@ public class ConvertUtil {
             case 5:
             case 9:
             case 13: {
-                return R.raw.night_star;
+                return R.raw.snow;
             }
             default: {
-                return R.raw.daytime_cloud;
+                return -1;
             }
         }
     }

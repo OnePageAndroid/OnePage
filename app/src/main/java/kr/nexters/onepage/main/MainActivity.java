@@ -151,11 +151,14 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void initWeatherImage(String weatherCode) {
-                Glide.with(getApplicationContext())
-                        .load(ConvertUtil.WeatherCodeToResouceId(weatherCode))
-                        .asGif()
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .into(ivWeather);
+                int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
+                if(resId != -1 ) {
+                    Glide.with(getApplicationContext())
+                            .load(resId)
+                            .asGif()
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .into(ivWeather);
+                }
             }
 
             @Override

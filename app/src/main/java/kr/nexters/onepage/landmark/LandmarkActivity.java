@@ -114,12 +114,14 @@ public class LandmarkActivity extends BaseActivity {
 
             @Override
             public void initWeatherImage(String weatherCode) {
-                int resId = ConvertUtil.WeatherCodeToResouceId(weatherCode);
-                Glide.with(getApplicationContext())
-                        .load(resId)
-                        .asGif()
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .into(ivWeather);
+                int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
+                if(resId != -1) {
+                    Glide.with(getApplicationContext())
+                            .load(resId)
+                            .asGif()
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .into(ivWeather);
+                }
             }
 
             @Override
