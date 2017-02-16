@@ -127,6 +127,7 @@ public class WriteActivity extends UCropBaseActivity {
                 if (response.isSuccessful()) {
                     Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     if(page.getImage() == null) {
+                        setResult(RESULT_OK);
                         finish();
                     } else {
                         saveImage(page, response.body().getId());
@@ -167,6 +168,7 @@ public class WriteActivity extends UCropBaseActivity {
                 if (response.isSuccessful() && response.body().isSuccess()) {
                     Log.d(WriteActivity.class.getSimpleName(), response.body().message);
                     Toast.makeText(WriteActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     throw new OnePageException("페이지 이미지 저장 실패");

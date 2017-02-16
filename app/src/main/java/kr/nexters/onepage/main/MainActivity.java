@@ -1,6 +1,8 @@
 package kr.nexters.onepage.main;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +26,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.landmark.LandmarkActivity;
+import kr.nexters.onepage.common.ImageUtil;
 import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
 import kr.nexters.onepage.map.MapActivity;
@@ -34,7 +38,7 @@ import kr.nexters.onepage.write.WriteActivity;
 public class MainActivity extends BaseActivity {
 
     public static final String KEY_LAST_LOCATION = "key_last_location";
-    private static final int REQUEST_MAP = 1000;
+    public static final int REQUEST_WRITE = 1000;
 
     @BindView(R.id.appbar)
     AppBarLayout appbarLayout;
@@ -140,23 +144,43 @@ public class MainActivity extends BaseActivity {
             @Override
             public void initToolbarPageNumber(int pageSize) {
                 tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageSize));
+                if(pageSize == 0) {
+                    layoutEmpty.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void initWeatherImage(String weatherCode) {
-                Glide.with(getApplicationContext())
-                        .load(ConvertUtil.WeatherCodeToResouceId(weatherCode))
-                        .asGif()
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .into(ivWeather);
+                int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
+                if(resId != -1 ) {
+                    Glide.with(getApplicationContext())
+                            .load(resId)
+                            .asGif()
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .into(ivWeather);
+                }
             }
 
             @Override
             public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
+
                 Glide.with(getApplicationContext())
                         .load(locationContentRepo.getUrl())
-                        .placeholder(R.drawable.loading_card_img)
-                        .into(ivLocation);
+                        .asBitmap()
+                        .centerCrop()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
+                                int h = ConvertUtil.dipToPixels(getBaseContext(), 241);
+                                Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
+                                Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
+                                Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
+                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
+                            }
+                        });
+
+
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
@@ -175,13 +199,6 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.btn_map)
     public void navigateToMap() {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
-        startActivityForResult(intent, REQUEST_MAP);
-    }
-
-    @OnClick(R.id.btn_landmark)
-    public void navigateToLandmark() {
-        Intent intent = new Intent(this, LandmarkActivity.class);
-        intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
         startActivity(intent);
     }
 
@@ -189,7 +206,14 @@ public class MainActivity extends BaseActivity {
     public void navigasteToWrite() {
         Intent intent = new Intent(MainActivity.this, WriteActivity.class);
         intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_WRITE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_WRITE && resultCode == RESULT_OK) {
+            initFragment(lastLocationId);
+        }
     }
 
     @Override

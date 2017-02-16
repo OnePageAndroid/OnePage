@@ -68,7 +68,8 @@ public interface APIService {
     @GET("location/search/coordinates")
     Flowable<LocationSearchRepo> getFlowableLocationsFromCoordniates(
             @Query("latitude") double latitude,
-            @Query("longitude") double longitude
+            @Query("longitude") double longitude,
+            @Query("meter") double meter
     );
 
 

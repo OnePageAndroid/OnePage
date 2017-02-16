@@ -1,8 +1,11 @@
 package kr.nexters.onepage.util;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -20,11 +23,11 @@ public class ConvertUtil {
         return df.format(number);
     }
 
-    public static int WeatherCodeToResouceId(String code) {
+    public static int findResouceIdByWeatherCode(String code) {
         switch (Integer.parseInt(code.substring(code.length()-2))) {
             case 3:
             case 7: {
-                return R.raw.daytime_cloud;
+                return R.raw.cloud;
             }
             case 4:
             case 6:
@@ -38,24 +41,33 @@ public class ConvertUtil {
             case 5:
             case 9:
             case 13: {
-                return R.raw.night_star;
+                return R.raw.snow;
             }
             default: {
-                return R.raw.daytime_cloud;
+                return -1;
             }
         }
     }
 
     public static String getDayTime() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-//        if(6 <= hour && hour < 18) {
-//            return "MORNING";
-//        }
+        if(6 <= hour && hour < 18) {
+            return "MORNING";
+        }
         return "NIGHT";
     }
 
     public static int dipToPixels(Context context, float dipValue) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
+
+    public static int getDisplayWidthPixels(Context context) {
+        Point size = new Point();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        display.getSize(size);
+
+        return size.x;
     }
 }

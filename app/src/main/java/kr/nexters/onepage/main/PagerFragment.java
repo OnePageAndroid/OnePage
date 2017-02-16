@@ -49,9 +49,7 @@ public class PagerFragment extends BaseFragment {
 
     public interface CallBackToolbar {
         void initToolbarPageNumber(int pageSize);
-
         void initWeatherImage(String weatherCode);
-
         void initToolbarLocationContent(LocationContentRepo locationContentRepo);
     }
 

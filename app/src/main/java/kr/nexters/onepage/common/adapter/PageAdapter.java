@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,9 +34,6 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
     private int totalPageSize;
 
-    public PageAdapter() {
-    }
-
     public PageAdapter(int totalPageSize) {
         this.totalPageSize = totalPageSize;
     }
@@ -44,7 +42,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         void onLongClick();
     }
 
-    OnLongClickPageViewHolderListener onLongClickPageViewHolderListener;
+    private OnLongClickPageViewHolderListener onLongClickPageViewHolderListener;
 
     public void setOnLongClickPageViewHolderListener(OnLongClickPageViewHolderListener onLongClickPageViewHolderListener) {
         this.onLongClickPageViewHolderListener = onLongClickPageViewHolderListener;
@@ -71,17 +69,8 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         notifyItemRangeInserted(position, items.size());
     }
 
-    public void clear() {
-        pages.clear();
-        notifyDataSetChanged();
-    }
-
-    public Page getPage(int position) {
-        return pages.get(position);
-    }
-
     public int getFirstPagePostion() {
-        for (int i = 0; i < pages.size(); i++) {
+        for (int i = pages.size() - 1; i >= 0; i--) {
             if (pages.get(i).getPageNum() == 0) {
                 return i;
             }
@@ -119,6 +108,8 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
     class PageViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_text)
         TextView tvText;
+        @BindView(R.id.tv_date)
+        TextView tvDate;
         @BindView(R.id.tv_page_current)
         TextView tvPageCurrent;
         @BindView(R.id.tv_page_total)
@@ -127,6 +118,8 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         ImageView ivImg;
         @BindView(R.id.iv_mark)
         ImageView ivMark;
+        @BindView(R.id.layout_text)
+        FrameLayout layoutText;
 
         Page page;
         boolean isMarked;
@@ -145,22 +138,18 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
             tvText.setText(page.getContent());
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
-
-//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            if(!page.getFirstImageUrl().isEmpty()) {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 10));
+            tvDate.setText(page.getCreatedAt().getDateString());
+            if (!page.getFirstImageUrl().isEmpty()) {
                 Glide.with(itemView.getContext())
                         .load(page.getFirstImageUrl())
                         .placeholder(R.drawable.loading_card_img)
                         .into(ivImg);
+                ivImg.setVisibility(View.VISIBLE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 10), 0, 0);
             } else {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 15));
-//                ivImg.setLayoutParams(lp);
                 ivImg.setVisibility(View.GONE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 15), 0, 0);
             }
-
-//            ivImg.setLayoutParams(lp);
 
             NetworkManager.getInstance().getApi()
                     .getBookmark(page.getPageId(), PropertyManager.getInstance().getId())
@@ -174,7 +163,6 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
         private void setBookmark(boolean isMarked) {
             this.isMarked = isMarked;
-            Log.d("mark", String.valueOf(isMarked));
 
             Glide.with(itemView.getContext())
                     .load(isMarked ? R.drawable.bookmark_after : R.drawable.bookmark)
@@ -193,7 +181,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
                                     isMarked = !isMarked;
                                     setBookmark(isMarked);
                                 }
-                            }, throwable -> Log.e("getBookmark", throwable.getLocalizedMessage())
+                            }, throwable -> Log.e("saveBookmark", throwable.getLocalizedMessage())
                     );
         }
     }

@@ -1,7 +1,6 @@
 package kr.nexters.onepage.map;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,9 +12,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,14 +32,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.common.OnePageException;
-import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Loc;
 import kr.nexters.onepage.common.model.LocationList;
-import kr.nexters.onepage.common.model.PostPage;
 import kr.nexters.onepage.landmark.LandmarkActivity;
 import kr.nexters.onepage.util.ConvertUtil;
-import kr.nexters.onepage.write.WriteActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,11 +58,14 @@ public class MapActivity extends BaseActivity {
 
     private LocationList locations;
 
+    private String today;
+
     //landmark info box 추가
     @BindView(R.id.tvLocationName) TextView tvLocationName;
     @BindView(R.id.tvTodayPageSize) TextView tvTodayPageSize;
     @BindView(R.id.tvTotalPageSize) TextView tvTotalPageSize;
     @BindView(R.id.ivInfoBox) ImageView ivInfoBox;
+    @BindView(R.id.ivMyPlace) ImageView ivMyPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +88,8 @@ public class MapActivity extends BaseActivity {
 
         //LocationAPI
         //Setting marker. Get location from db
+        today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Log.i(TAG, "today : " + today);
         showLocationList();
     }
 
@@ -100,6 +100,7 @@ public class MapActivity extends BaseActivity {
 
             //현재 위치 button 활성화
             mGoogleMap.setMyLocationEnabled(true);
+
             //구글맵 패딩 설정
             mGoogleMap.setPadding(0, ConvertUtil.dipToPixels(getBaseContext(), 74), 0 ,0);
 
@@ -229,10 +230,6 @@ public class MapActivity extends BaseActivity {
                     for(Loc loc : locations.getLocations()) {
                         options.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
                         loc.setMarker(mGoogleMap.addMarker(options));
-
-                        ivInfoBox.setOnClickListener(v -> {
-                            navigateToLandmark(loc.getLocationId());
-                        });
                     }
                     Log.i(TAG, "location list : " + locations.toString());
                 }
@@ -247,8 +244,7 @@ public class MapActivity extends BaseActivity {
 
     //선택된 마커에 대한 정보 구하기
     public void getLocationInfo(Marker marker) {
-        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        Log.i(TAG, "today : " + today);
+        ivMyPlace.setVisibility(View.INVISIBLE);
 
         for(Loc loc : locations.getLocations()) {
 
@@ -257,6 +253,10 @@ public class MapActivity extends BaseActivity {
                 tvLocationName.setText(loc.getName());
                 Log.i(TAG, "locationId : " + loc.getLocationId());
                 Log.i(TAG, "locationName : " + loc.getName());
+
+                ivInfoBox.setOnClickListener(v -> {
+                    navigateToLandmark(loc.getLocationId());
+                });
 
                 LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback<Integer>() {
                     @Override
