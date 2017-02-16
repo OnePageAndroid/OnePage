@@ -34,9 +34,6 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
     private int totalPageSize;
 
-    public PageAdapter() {
-    }
-
     public PageAdapter(int totalPageSize) {
         this.totalPageSize = totalPageSize;
     }
@@ -45,7 +42,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         void onLongClick();
     }
 
-    OnLongClickPageViewHolderListener onLongClickPageViewHolderListener;
+    private OnLongClickPageViewHolderListener onLongClickPageViewHolderListener;
 
     public void setOnLongClickPageViewHolderListener(OnLongClickPageViewHolderListener onLongClickPageViewHolderListener) {
         this.onLongClickPageViewHolderListener = onLongClickPageViewHolderListener;
@@ -70,15 +67,6 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
     public void add(int position, List<Page> items) {
         this.pages.addAll(position, items);
         notifyItemRangeInserted(position, items.size());
-    }
-
-    public void clear() {
-        pages.clear();
-        notifyDataSetChanged();
-    }
-
-    public Page getPage(int position) {
-        return pages.get(position);
     }
 
     public int getFirstPagePostion() {
@@ -175,7 +163,6 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
         private void setBookmark(boolean isMarked) {
             this.isMarked = isMarked;
-            Log.d("mark", String.valueOf(isMarked));
 
             Glide.with(itemView.getContext())
                     .load(isMarked ? R.drawable.bookmark_after : R.drawable.bookmark)
@@ -194,7 +181,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
                                     isMarked = !isMarked;
                                     setBookmark(isMarked);
                                 }
-                            }, throwable -> Log.e("getBookmark", throwable.getLocalizedMessage())
+                            }, throwable -> Log.e("saveBookmark", throwable.getLocalizedMessage())
                     );
         }
     }

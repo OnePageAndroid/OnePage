@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ececec">
+    android:background="#f3f3f3"
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -37,7 +37,6 @@
         android:id="@+id/layout_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f7f7f7"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -49,7 +48,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="129dp"
+                android:layout_marginTop="80dp"
                 android:src="@drawable/empty_post"
                 android:visibility="visible" />
 
@@ -57,11 +56,11 @@
                 fontPath="fonts/NotoSansKR-DemiLight.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="18dp"
                 android:includeFontPadding="false"
                 android:text="@string/main_empty"
                 android:textColor="#9b9b9b"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
