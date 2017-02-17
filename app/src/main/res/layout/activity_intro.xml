@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/layout_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="241dp"
+        android:layout_height="265dp"
         android:orientation="vertical"
         app:layout_collapseMode="parallax">
 

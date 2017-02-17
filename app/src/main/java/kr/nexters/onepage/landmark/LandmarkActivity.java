@@ -131,7 +131,7 @@ public class LandmarkActivity extends BaseActivity {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                                 int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
-                                int h = ConvertUtil.dipToPixels(getBaseContext(), 241);
+                                int h = ConvertUtil.dipToPixels(getBaseContext(), 265);
                                 Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
                                 Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
                                 Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
