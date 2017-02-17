@@ -120,10 +120,12 @@ public class WriteActivity extends UCropBaseActivity {
         saveCall.enqueue(new Callback<PageSaveResponse>() {
             @Override
             public void onResponse(Call<PageSaveResponse> call, Response<PageSaveResponse> response) {
-                Log.d(WriteActivity.class.getSimpleName(), "page code : " + response.code());
+                dismissProgress();
                 if (response.isSuccessful()) {
-                    Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     if(page.getImage() == null) {
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
                         setResult(RESULT_OK);
                         finish();
                     } else {
@@ -159,17 +161,15 @@ public class WriteActivity extends UCropBaseActivity {
         saveImageCall.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-
-                Log.d(WriteActivity.class.getSimpleName(), "image code : " + response.code());
-
+                dismissProgress();
                 if (response.isSuccessful() && response.body().isSuccess()) {
                     Log.d(WriteActivity.class.getSimpleName(), response.body().message);
-                    Toast.makeText(WriteActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
                 } else {
                     throw new OnePageException("페이지 이미지 저장 실패");
                 }
+
             }
 
             @Override
@@ -319,12 +319,10 @@ public class WriteActivity extends UCropBaseActivity {
                         new PostPage(String.valueOf(locationId), PropertyManager.getInstance().getId(), saveCroppedImage(), etWriteContent.getText().toString());
                 //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
                 try {
-                    progressDialog = ProgressDialog.show(WriteActivity.this, "페이지 저장", "페이지 저장중");
+                    progressDialog = ProgressDialog.show(WriteActivity.this, null, "글 저장 중");
                     savePage(postPage);
                 } catch (OnePageException oe) {
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
+                    dismissProgress();
                 }
             }
         } else if (item.getItemId() == android.R.id.home) {
@@ -336,5 +334,12 @@ public class WriteActivity extends UCropBaseActivity {
     @OnTextChanged(value=R.id.etWriteContent, callback = OnTextChanged.Callback.TEXT_CHANGED)
     public void onTextChangedTvTextCount(CharSequence s) {
         tvTextCount.setText(s.length()+" / 100");
+    }
+
+
+    private void dismissProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }
