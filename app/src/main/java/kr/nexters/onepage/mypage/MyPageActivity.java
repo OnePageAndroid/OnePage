@@ -62,6 +62,7 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
         }
         myPageTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         myPageTabLayout.addOnTabSelectedListener(this);
+        myPageTabLayout.setScrollPosition(0, 0f, true);
     }
 
     private void initActionBar() {
