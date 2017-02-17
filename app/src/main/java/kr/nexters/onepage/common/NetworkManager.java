@@ -8,6 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkManager {
     // where my server lives.
     public static final String SERVER = "http://138.197.194.138:8089/OnePage/api/v1/";
+    public static final String LOCAL_SERVER = "http://localhost:8080/api/v1/";
     private static final String SERVER_WEATHER ="http://apis.skplanetx.com/";
     private Retrofit client;
     private Retrofit weatherClient;

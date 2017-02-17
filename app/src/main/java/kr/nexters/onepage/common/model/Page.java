@@ -21,6 +21,7 @@ public class Page {
     private String content;
     private List<PageImage> images = Lists.newArrayList();
     private int pageNum;
+    private PageDate createdAt;
 
     public static Page of(int resId, String content) {
         return Page.builder()

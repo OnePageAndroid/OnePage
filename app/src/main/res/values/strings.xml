@@ -89,7 +89,8 @@
     <string name="total_page_size">Total&#160;</string>
     <string name="back">Back</string>
 
-    <string name="main_empty">아직 쓴 글이 없어요!</string>
+    <string name="main_empty">아직 남겨진 글이 없어요! 첫 글을 남겨보세요</string>
+    <string name="landmark_empty">아직 쓴 글이 없어요!</string>
 
     <!-- button -->
     <string name="ok">ok</string>
