@@ -19,6 +19,9 @@ public class MyPageService {
     private MyPageAPI myPageAPI = MyPageAPI.Factory.create();
 
     public void findPageByUser(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+        if(addFunc == null) {
+            return;
+        }
         myPageAPI.findPageByUser(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
             @Override
             public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
@@ -40,6 +43,9 @@ public class MyPageService {
     }
 
     public void findPageByHeart(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+        if(addFunc == null) {
+            return;
+        }
         myPageAPI.findPageByHeart(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
             @Override
             public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {

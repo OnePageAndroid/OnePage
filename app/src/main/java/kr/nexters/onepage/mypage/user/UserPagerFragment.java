@@ -10,12 +10,15 @@ import android.view.ViewGroup;
 
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
 import kr.nexters.onepage.common.PropertyManager;
+import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.mypage.MyPageService;
 
 public class UserPagerFragment extends BaseFragment {
@@ -53,12 +56,12 @@ public class UserPagerFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initPager();
+        getFirstPages(PAGE_SIZE);
         return view;
     }
 
-    private void initPager() {
-        mainAdapter = new UserPageAdapter();
+    private void initPager(List<Page> pages) {
+        mainAdapter = new UserPageAdapter(pages.size());
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mainPager.setLayoutManager(linearLayout);
         mainPager.setAdapter(mainAdapter);
@@ -74,8 +77,7 @@ public class UserPagerFragment extends BaseFragment {
         if(onLongClickPageListener != null) {
             mainAdapter.setOnLongClickPageViewHolderListener(() -> onLongClickPageListener.onLongClick());
         }
-
-        getFirstPages(PAGE_SIZE);
+        mainAdapter.add(pages);
     }
 
     private void getPages(int perPageSize, boolean isReverse) {
@@ -93,7 +95,7 @@ public class UserPagerFragment extends BaseFragment {
     private void getFirstPages(int perPageSize) {
         //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
         myPageService.findPageByUser(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
-            mainAdapter.add(pages);
+            initPager(pages);
             Log.d("PageRepo", pages.toString());
             if (mainAdapter.getItemCount() > 0) {
                 mainPager.scrollToPosition(mainAdapter.getFirstPagePostion());
