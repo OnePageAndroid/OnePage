@@ -12,7 +12,7 @@ public class PostPage {
     public PostPage() {
     }
 
-    public PostPage( String locationId, String email, File image, String content) {
+    public PostPage(String locationId, String email, File image, String content) {
         this.content = content;
         this.email = email;
         this.image = image;

@@ -112,17 +112,14 @@ public class WriteActivity extends UCropBaseActivity {
     }
 
     private void savePage(PostPage page) {
-
         Call<PageSaveResponse> saveCall = NetworkManager.getInstance().getApi().savePage(
                 locationId,
                 PropertyManager.getInstance().getId(),
                 page.getContent()
         );
-
         saveCall.enqueue(new Callback<PageSaveResponse>() {
             @Override
             public void onResponse(Call<PageSaveResponse> call, Response<PageSaveResponse> response) {
-
                 Log.d(WriteActivity.class.getSimpleName(), "page code : " + response.code());
                 if (response.isSuccessful()) {
                     Toast.makeText(WriteActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -319,13 +316,13 @@ public class WriteActivity extends UCropBaseActivity {
                 Toast.makeText(WriteActivity.this, getString(R.string.toast_write_check_blank), Toast.LENGTH_LONG).show();
             } else {
                 PostPage postPage =
-                        new PostPage("", PropertyManager.getInstance().getId(), saveCroppedImage(), etWriteContent.getText().toString());
+                        new PostPage(String.valueOf(locationId), PropertyManager.getInstance().getId(), saveCroppedImage(), etWriteContent.getText().toString());
                 //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
                 try {
                     progressDialog = ProgressDialog.show(WriteActivity.this, "페이지 저장", "페이지 저장중");
                     savePage(postPage);
                 } catch (OnePageException oe) {
-                    if(progressDialog!=null && progressDialog.isShowing()) {
+                    if (progressDialog != null && progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
                 }
