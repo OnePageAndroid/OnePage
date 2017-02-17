@@ -4,15 +4,18 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,6 +60,7 @@ public class WriteActivity extends UCropBaseActivity {
 
     private static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
+    private static final int REQUEST_SAVE_RESULT = 400;
     private static final int PERMISSION_REQUEST_CAMERA = 1001;
     private static final int REQUEST_CAMERA = 100;
     private static final int REQUEST_GALLERY = 200;
@@ -103,6 +107,13 @@ public class WriteActivity extends UCropBaseActivity {
             toast("위치정보가 없습니다.");
             finish();
         }
+
+        // Changes the height to the specified width size.
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        ViewGroup.LayoutParams params = btnCamera.getLayoutParams();
+        params.height = size.x;
+        btnCamera.setLayoutParams(params);
 
     }
 
@@ -221,10 +232,11 @@ public class WriteActivity extends UCropBaseActivity {
 
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 handleCropResult(data);
-            } else if (requestCode == ResultActivity.REQUEST_SAVE_RESULT) { //show crop image
+            } else if (requestCode == REQUEST_SAVE_RESULT) { //show crop image
                 imageUri = data.getData();
                 tvWriteLabel.setVisibility(View.INVISIBLE);
                 ivWriteImage.setVisibility(View.INVISIBLE);
+
                 btnCamera.setBackground(BitmapDrawable.createFromPath(imageUri.getPath()));
             }
         }
@@ -265,7 +277,10 @@ public class WriteActivity extends UCropBaseActivity {
     public void handleCropResult(@NonNull Intent result) {
         final Uri resultUri = UCrop.getOutput(result);
         if (resultUri != null) {
-            ResultActivity.startWithUri(WriteActivity.this, resultUri);
+            imageUri = resultUri;
+            tvWriteLabel.setVisibility(View.INVISIBLE);
+            ivWriteImage.setVisibility(View.INVISIBLE);
+            btnCamera.setBackground(BitmapDrawable.createFromPath(imageUri.getPath()));
         } else {
             Toast.makeText(WriteActivity.this, R.string.toast_cannot_retrieve_cropped_image, Toast.LENGTH_SHORT).show();
         }

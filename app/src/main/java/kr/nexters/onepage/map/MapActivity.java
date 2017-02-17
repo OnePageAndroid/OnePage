@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,13 +51,15 @@ public class MapActivity extends BaseActivity {
     private LocationManager locationManager;
     public GoogleMap mGoogleMap;
     private MapFragment mapFragment;
-    private Marker currentMarker;
-    private MarkerOptions currentOptions;
+//    private Marker currentMarker;
+//    private MarkerOptions currentOptions;
 
     private LatLng currentLatLng;
     private LatLng lastLatLng;
 
     private LocationList locations;
+
+    private long currentLocationId;
 
     private String today;
 
@@ -84,7 +87,9 @@ public class MapActivity extends BaseActivity {
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(mapReadyCallBack);
 
-        currentOptions = new MarkerOptions();
+//        currentOptions = new MarkerOptions();
+
+        currentLocationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
 
         //LocationAPI
         //Setting marker. Get location from db
@@ -132,11 +137,11 @@ public class MapActivity extends BaseActivity {
             }
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
 
-            currentOptions.position(lastLatLng);
-            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_landmark));
-
-            currentMarker = googleMap.addMarker(currentOptions);
-            currentOptions.visible(false); //hide last location marker
+//            currentOptions.position(lastLatLng);
+//            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_landmark));
+//
+//            currentMarker = googleMap.addMarker(currentOptions);
+//            currentOptions.visible(false); //hide last location marker
 
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
@@ -166,7 +171,7 @@ public class MapActivity extends BaseActivity {
             }
 
             //marker
-            currentMarker.setPosition(currentLatLng);
+//            currentMarker.setPosition(currentLatLng);
 
             Log.i("Current Loc", String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
         }
@@ -223,11 +228,21 @@ public class MapActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     locations = response.body();
 
+                    MarkerOptions currOptions = new MarkerOptions();
+                    currOptions.flat(false);
+                    currOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_landmark));
+
                     MarkerOptions options = new MarkerOptions();
                     options.flat(false);
                     options.icon(BitmapDescriptorFactory.fromResource(R.drawable.other_landmark));
 
                     for(Loc loc : locations.getLocations()) {
+                        if(loc.getLocationId().equals(currentLocationId)) {
+                            currOptions.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
+                            loc.setMarker(mGoogleMap.addMarker(currOptions));
+                            getLocationInfo(loc.getMarker()); //setting init box info
+                            return ;
+                        }
                         options.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
                         loc.setMarker(mGoogleMap.addMarker(options));
                     }

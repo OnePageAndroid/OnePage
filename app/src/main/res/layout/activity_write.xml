@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_write"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:ignore="MissingPrefix"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/writeToolbar"
@@ -23,6 +27,12 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/colorToolbarBorder"
+        android:gravity="center_horizontal" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ededed"
         android:gravity="center_horizontal" />
 
     <LinearLayout
@@ -54,12 +64,6 @@
             android:text="@string/upload_photos" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#ededed"
-        android:gravity="center_horizontal" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -68,7 +72,6 @@
             android:id="@+id/etWriteContent"
             fontPath="fonts/NotoSansKR-DemiLight.otf"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:background="@color/colorWhite"
             android:cursorVisible="true"
             android:ems="9"
@@ -76,6 +79,8 @@
             android:hint="@string/write_hint"
             android:includeFontPadding="false"
             android:inputType="textMultiLine"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
             android:maxLength="100"
             android:maxLines="5"
             android:paddingLeft="19dp"
@@ -85,7 +90,8 @@
             android:textColor="#383838"
             android:textColorHint="#b1b1b1"
             android:textCursorDrawable="@drawable/cursor_drawable"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_height="60dp" />
 
         <TextView
             android:id="@+id/tvTextCount"

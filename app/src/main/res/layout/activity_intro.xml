@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/intro_toolbar" />
+            android:src="@drawable/gwanghwamun_artwork" />
 
         <LinearLayout
             android:id="@+id/layout_content_expand"
@@ -207,8 +207,8 @@
     <Button
         android:id="@+id/btn_main"
         android:background="@drawable/shape_button_main"
-        android:layout_width="145dp"
-        android:layout_height="45dp"
+        android:layout_width="153dp"
+        android:layout_height="47dp"
         android:layout_marginBottom="62dp"
         android:textColor="@color/colorOrange"
         android:text="@string/ok"
@@ -223,9 +223,9 @@
         android:id="@+id/tvCoachCenter"
         android:textColor="@color/colorWhite"
         android:gravity="center"
-        android:layout_below="@+id/ivCoachBookmark"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="51dp" />
+        android:layout_marginBottom="78.5dp"
+        android:layout_above="@+id/btn_main"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

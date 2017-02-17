@@ -10,6 +10,7 @@ import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
  * Created by hoody on 2017-02-14.
  */
 
+//To fix ViewPager
 public class DisabledRecyclerViewPager extends RecyclerViewPager {
 
     private boolean isPagingEnabled = true;

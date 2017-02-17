@@ -1,7 +1,9 @@
 package kr.nexters.onepage.mypage;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
+import kr.nexters.onepage.intro.IntroActivity;
 import kr.nexters.onepage.mypage.bookmark.BookMarkPagerFragment;
 import kr.nexters.onepage.mypage.user.UserPagerFragment;
 
@@ -25,7 +28,7 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
     @BindView(R.id.tab_mypage)
     TabLayout myPageTabLayout;
 
-    @BindView(R.id.toolbar)
+    @BindView(R.id.mypageToolbar)
     Toolbar toolbar;
 
     List<TabLayout.Tab> tabs = Lists.newArrayList();
@@ -55,8 +58,8 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
 
     private void initTab() {
         tabs = ImmutableList.of(
-                myPageTabLayout.newTab().setTag(MY_PAGE).setText("마이페이지"),
-                myPageTabLayout.newTab().setTag(BOOK_MARK).setText("북마크"));
+                myPageTabLayout.newTab().setTag(MY_PAGE).setText(getString(R.string.mypage_write)),
+                myPageTabLayout.newTab().setTag(BOOK_MARK).setText(getString(R.string.mypage_bookmark)));
         for(TabLayout.Tab tab : tabs) {
             myPageTabLayout.addTab(tab);
         }
@@ -68,7 +71,6 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     @Override
