@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OnePage</string>
+    <string name="app_name">onepage</string>
 
     <string name="main_toolbar_label">"나는 지금"</string>
     <string name="main_toolbar_write">글 남기기</string>
