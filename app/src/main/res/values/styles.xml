@@ -16,7 +16,12 @@
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/colorLightGray</item>
         <item name="actionMenuTextColor">@color/colorOrange</item>
+        <item name="actionMenuTextAppearance">@style/WriteMenuTextSizeStyle</item>
         <item name="android:statusBarColor">@color/colorLightGray</item>
+    </style>
+
+    <style name="WriteMenuTextSizeStyle">
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="GrayStatusBarTheme" parent="AppTheme.NoActionBar">

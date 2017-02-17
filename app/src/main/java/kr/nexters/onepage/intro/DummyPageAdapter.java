@@ -30,7 +30,7 @@ public class DummyPageAdapter extends RecyclerView.Adapter<DummyPageAdapter.Dumm
 
     @Override
     public void onBindViewHolder(DummyPageViewHolder holder, int position) {
-        int resId[] = {R.drawable.img_01, R.drawable.img_01, R.drawable.img_01};
+        int resId[] = {R.drawable.img_001, R.drawable.img_001, R.drawable.img_001};
         String resStrs[] = {"꺼지지 않는 광화문의 불빛", "꺼지지 않는 광화문의 불빛", "꺼지지 않는 광화문의 불빛"};
 
         Glide.with(holder.itemView.getContext())
