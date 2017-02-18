@@ -68,19 +68,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/tvTextCount"
+            android:layout_width="wrap_content"
+            fontPath="fonts/Roboto-Regular.ttf"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="30dp"
+            android:paddingRight="16.5dp"
+            android:text="0 / 100"
+            android:textColor="#9b9b9b" />
+
         <EditText
+            android:autoText="false"
             android:id="@+id/etWriteContent"
             fontPath="fonts/NotoSansKR-DemiLight.otf"
             android:layout_width="match_parent"
-            android:background="@color/colorWhite"
+            android:background="@null"
             android:cursorVisible="true"
             android:ems="9"
             android:gravity="top|left"
             android:hint="@string/write_hint"
             android:includeFontPadding="false"
-            android:inputType="textMultiLine"
-            android:scrollbarStyle="insideInset"
-            android:scrollbars="vertical"
             android:maxLength="100"
             android:maxLines="5"
             android:paddingLeft="19dp"
@@ -88,20 +97,10 @@
             android:paddingTop="19dp"
             android:lineSpacingMultiplier="1.2"
             android:textColor="#383838"
-            android:textColorHint="#b1b1b1"
+            android:textColorHint="#bebebe"
             android:textCursorDrawable="@drawable/cursor_drawable"
-            android:textSize="16sp"
-            android:layout_height="60dp" />
+            android:textSize="15sp"
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/tvTextCount"
-            android:layout_width="wrap_content"
-            fontPath="fonts/Roboto-Regular.ttf"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="59dp"
-            android:paddingRight="16.5dp"
-            android:text="0 / 100"
-            android:textColor="#9b9b9b" />
     </FrameLayout>
 </LinearLayout>

@@ -127,7 +127,7 @@
     <TextView
         android:text="@string/coach_bookmark"
         android:layout_marginRight="15.5dp"
-        android:layout_marginTop="230dp"
+        android:layout_marginTop="254dp"
         android:layout_alignParentRight="true"
         android:paddingBottom="50dp"
         android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
         android:layout_alignRight="@id/layout_toolbar"
         app:srcCompat="@drawable/bookmark_coach"
         android:id="@+id/ivCoachBookmark"
-        android:layout_marginTop="259.5dp"
+        android:layout_marginTop="283.5dp"
         android:layout_marginRight="68dp" />
 
     <RelativeLayout
@@ -209,7 +209,7 @@
         android:background="@drawable/shape_button_main"
         android:layout_width="153dp"
         android:layout_height="47dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginBottom="38dp"
         android:textColor="@color/colorOrange"
         android:text="@string/ok"
         fontPath="HanSansKR-Medium.otf"

@@ -122,14 +122,14 @@ public class MapActivity extends BaseActivity {
             Log.i("bestProvider", bestProvider);
 
             //5초 간격, 3미터 이상 이동시 update
-            locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
-            //locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
+//            locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
 
             //TODO 메인인텐트에서 받아온 위치 정보로 현재위치 표시하기
 
             //last location
-            Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
-            //Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+//            Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             if(lastLocation == null) {
                 lastLatLng = new LatLng(37.5759879,126.97692289999998); //마지막 위치가 없을 경우 광화문으로
             } else {
