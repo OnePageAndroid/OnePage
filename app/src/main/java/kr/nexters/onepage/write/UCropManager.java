@@ -56,16 +56,6 @@ public class UCropManager {
 
         options.setCompressionQuality(100);
 
-        /*
-        If you want to configure how gestures work for all UCropActivity tabs
-        //options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.ROTATE, UCropActivity.ALL);
-
-        /*
-        This sets max size for bitmap that will be decoded from source Uri.
-        More size - more memory allocation, default implementation uses screen diagonal.
-        options.setMaxBitmapSize(640);
-        */
-
         //Tune everything (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 
         // Color palette

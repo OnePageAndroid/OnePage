@@ -199,6 +199,7 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.btn_map)
     public void navigateToMap() {
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
         startActivity(intent);
     }
 

@@ -14,8 +14,6 @@
     <color name="colorToolbarBorder">#d5d5d5</color>
     <!-- toolbar color -->
     <color name="colorToolbarWrite">#656465</color>
-
-
     <color name="colorImageBackground">#fbfbfb</color>
 
 </resources>

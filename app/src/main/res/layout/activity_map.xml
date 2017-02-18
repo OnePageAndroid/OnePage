@@ -67,7 +67,6 @@
         fontPath="fonts/NotoSansKR-Regular.otf" />
 
     <TextView
-        android:text="광화문광장"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvLocationName"
@@ -81,7 +80,7 @@
         fontPath="fonts/HanSansKR-Medium.otf" />
 
     <TextView
-        android:text="새로운 글 "
+        android:text="@string/today_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvTodayPageSize"
@@ -96,7 +95,7 @@
         fontPath="fonts/NotoSansKR-Regular.otf" />
 
     <TextView
-        android:text="전체 글 2,000"
+        android:text="@string/total_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvTotalPageSize"

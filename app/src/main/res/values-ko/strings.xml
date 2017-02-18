@@ -8,6 +8,7 @@
 
     <!-- action bar title -->
     <string name="action_title_write">글 남기기</string>
+    <string name="action_title_mypage">마이 페이지</string>
 
     <!-- action bar menu -->
     <string name="action_menu_current_loc">현재위치</string>
@@ -91,5 +92,13 @@
 
     <!-- button -->
     <string name="ok">확인</string>
+
+    <!-- My Page -->
+    <string name="mypage_write">내가 쓴 글</string>
+    <string name="mypage_bookmark">북마크한 글</string>
+
+    <!-- Map -->
+    <string name="today_page">새로운 글 0</string>
+    <string name="total_page">전체 글 0</string>
 
 </resources>

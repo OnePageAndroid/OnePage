@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_image"
-            android:layout_width="275dp"
+            android:layout_width="match_parent"
             android:layout_height="275dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -37,12 +37,13 @@
                 android:layout_height="82dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:includeFontPadding="false"
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="4"
                 android:padding="0dp"
-                android:text="sadfasfd asdfsadf sadf sadfasdf sadfsad fasdf sadf asdfsa dfasdf asdf as dfsa f asdf safdasfd asdf asfdasdfasfd sadfasfd asdfsadf sadf "
+                android:text="temp"
                 android:textColor="#393939"
                 android:textSize="14sp" />
         </FrameLayout>
