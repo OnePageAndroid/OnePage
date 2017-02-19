@@ -23,12 +23,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <View android:layout_width="match_parent"
+            android:id="@+id/mainGradiantBox"
+            android:background="@drawable/gradiant2"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:scaleType="centerCrop"
-            android:src="@drawable/app_bar_shadow" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/app_bar_shadow" />-->
 
     </FrameLayout>
 
@@ -36,8 +45,10 @@
         android:id="@+id/layout_content_expand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TextView
             fontPath="fonts/NotoSansKR-DemiLight.otf"

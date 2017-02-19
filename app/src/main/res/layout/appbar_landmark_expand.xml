@@ -22,12 +22,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:scaleType="centerCrop"
-            android:src="@drawable/app_bar_shadow" />
+        <View android:layout_width="match_parent"
+            android:id="@+id/landmarkGradiantBox"
+            android:background="@drawable/gradiant2"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/app_bar_shadow" />-->
 
     </FrameLayout>
 

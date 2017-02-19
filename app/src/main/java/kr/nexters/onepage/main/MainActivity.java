@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.squareup.otto.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,9 +27,11 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
+import kr.nexters.onepage.common.BusProvider;
 import kr.nexters.onepage.common.ImageUtil;
 import kr.nexters.onepage.main.model.LocationContentRepo;
 import kr.nexters.onepage.main.model.LocationSearchRepo;
+import kr.nexters.onepage.main.model.PageRefreshEvent;
 import kr.nexters.onepage.map.MapActivity;
 import kr.nexters.onepage.mypage.MyPageActivity;
 import kr.nexters.onepage.util.AppbarAnimUtil;
@@ -77,6 +80,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
+        BusProvider.register(this);
 
         initAppbar();
         initLocationManager();
@@ -219,8 +223,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        BusProvider.unRegister(this);
         disposables.clear();
         unbinder.unbind();
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void pageRefresh(PageRefreshEvent event) {
+        initFragment(lastLocationId);
     }
 }

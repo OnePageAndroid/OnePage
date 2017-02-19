@@ -19,6 +19,7 @@ import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.mypage.MyPageService;
 import kr.nexters.onepage.mypage.user.UserPageAdapter;
 
@@ -30,19 +31,10 @@ public class BookMarkPagerFragment extends BaseFragment {
 
     private MyPageService myPageService = new MyPageService();
 
-    private UserPageAdapter mainAdapter;
+    private BookMarkPageAdapter mainAdapter;
     private Unbinder unbinder;
 
     private boolean loading = false;
-    private OnLongClickPageListener onLongClickPageListener;
-
-    interface OnLongClickPageListener {
-        void onLongClick();
-    }
-
-    public void setOnLongClickPageListener(OnLongClickPageListener onLongClickPageListener) {
-        this.onLongClickPageListener = onLongClickPageListener;
-    }
 
     public static BookMarkPagerFragment newInstance() {
         BookMarkPagerFragment fragment = new BookMarkPagerFragment();
@@ -61,8 +53,8 @@ public class BookMarkPagerFragment extends BaseFragment {
         return view;
     }
 
-    private void initPager(List<Page> pages) {
-        mainAdapter = new UserPageAdapter(pages.size());
+    private void initPager(PageRepo pageRepo) {
+        mainAdapter = new BookMarkPageAdapter(pageRepo.getTotalSize());
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mainPager.setLayoutManager(linearLayout);
         mainPager.setAdapter(mainAdapter);
@@ -74,30 +66,29 @@ public class BookMarkPagerFragment extends BaseFragment {
                 getPages(PAGE_SIZE, true);
             }
         });
+        mainAdapter.add(pageRepo.getPages());
 
-        if(onLongClickPageListener != null) {
-            mainAdapter.setOnLongClickPageViewHolderListener(() -> onLongClickPageListener.onLongClick());
-        }
-        mainAdapter.add(pages);
+        mainAdapter.setOnMarkClickListener(() -> getFirstPages(PAGE_SIZE));
+
     }
 
     private void getPages(int perPageSize, boolean isReverse) {
         loading = true;
-        myPageService.findPageByHeart(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
+        myPageService.findPageByHeart(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pageRepo) -> {
             loading = false;
             if (isReverse) {
-                mainAdapter.add(0, pages);
+                mainAdapter.add(0, pageRepo.getPages());
                 return;
             }
-            mainAdapter.add(pages);
+            mainAdapter.add(pageRepo.getPages());
         });
     }
 
     private void getFirstPages(int perPageSize) {
         //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
-        myPageService.findPageByHeart(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
-            initPager(pages);
-            Log.d("PageRepo", pages.toString());
+        myPageService.findPageByHeart(PropertyManager.getKeyId(), -2, perPageSize, (pageRepo) -> {
+            initPager(pageRepo);
+            Log.d("PageRepo", pageRepo.toString());
             if (mainAdapter.getItemCount() > 0) {
                 mainPager.scrollToPosition(mainAdapter.getFirstPagePostion());
             }

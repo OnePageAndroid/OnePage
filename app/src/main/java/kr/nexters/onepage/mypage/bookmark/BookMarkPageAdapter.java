@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.mypage.MyPageService;
 import kr.nexters.onepage.util.ConvertUtil;
 
 /**
@@ -33,21 +35,18 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
 
     private int totalPageSize;
 
-    public BookMarkPageAdapter() {
+    interface OnMarkClickListener {
+        void clickMark();
+    }
+
+    private OnMarkClickListener onMarkClickListener;
+
+    public void setOnMarkClickListener(OnMarkClickListener onMarkClickListener) {
+        this.onMarkClickListener = onMarkClickListener;
     }
 
     public BookMarkPageAdapter(int totalPageSize) {
         this.totalPageSize = totalPageSize;
-    }
-
-    public interface OnLongClickPageViewHolderListener {
-        void onLongClick();
-    }
-
-    OnLongClickPageViewHolderListener onLongClickPageViewHolderListener;
-
-    public void setOnLongClickPageViewHolderListener(OnLongClickPageViewHolderListener onLongClickPageViewHolderListener) {
-        this.onLongClickPageViewHolderListener = onLongClickPageViewHolderListener;
     }
 
     @Override
@@ -74,10 +73,6 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
     public void clear() {
         pages.clear();
         notifyDataSetChanged();
-    }
-
-    public Page getPage(int position) {
-        return pages.get(position);
     }
 
     public int getFirstPagePostion() {
@@ -127,6 +122,8 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
         ImageView ivImg;
         @BindView(R.id.iv_mark)
         ImageView ivMark;
+        @BindView(R.id.layout_text)
+        FrameLayout layoutText;
 
         Page page;
         boolean isMarked;
@@ -134,10 +131,6 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
         public PageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-            if (onLongClickPageViewHolderListener != null) {
-                itemView.setOnClickListener(v -> onLongClickPageViewHolderListener.onLongClick());
-            }
         }
 
         public void bind(Page page) {
@@ -146,21 +139,17 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
-//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            if(!page.getFirstImageUrl().isEmpty()) {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 10));
+            if (!page.getFirstImageUrl().isEmpty()) {
                 Glide.with(itemView.getContext())
                         .load(page.getFirstImageUrl())
                         .placeholder(R.drawable.loading_card_img)
                         .into(ivImg);
+                ivImg.setVisibility(View.VISIBLE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 10), 0, 0);
             } else {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 15));
-//                ivImg.setLayoutParams(lp);
                 ivImg.setVisibility(View.GONE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 15), 0, 0);
             }
-
-//            ivImg.setLayoutParams(lp);
 
             NetworkManager.getInstance().getApi()
                     .getBookmark(page.getPageId(), PropertyManager.getInstance().getId())
@@ -174,7 +163,6 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
 
         private void setBookmark(boolean isMarked) {
             this.isMarked = isMarked;
-            Log.d("mark", String.valueOf(isMarked));
 
             Glide.with(itemView.getContext())
                     .load(isMarked ? R.drawable.bookmark_after : R.drawable.bookmark)
@@ -192,8 +180,11 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
                                 if (serverResponse.isSuccess()) {
                                     isMarked = !isMarked;
                                     setBookmark(isMarked);
+                                    if(onMarkClickListener != null) {
+                                        onMarkClickListener.clickMark();
+                                    }
                                 }
-                            }, throwable -> Log.e("getBookmark", throwable.getLocalizedMessage())
+                            }, throwable -> Log.e("saveBookmark", throwable.getLocalizedMessage())
                     );
         }
     }
