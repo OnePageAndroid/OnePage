@@ -113,6 +113,8 @@ public class WriteActivity extends UCropBaseActivity {
         getWindowManager().getDefaultDisplay().getSize(size);
         ViewGroup.LayoutParams params = btnCamera.getLayoutParams();
         params.height = size.x;
+        Log.i(TAG, "width : " + size.x);
+        Log.i(TAG, "height : " + params.height);
         btnCamera.setLayoutParams(params);
 
     }
@@ -349,6 +351,9 @@ public class WriteActivity extends UCropBaseActivity {
     @OnTextChanged(value=R.id.etWriteContent, callback = OnTextChanged.Callback.TEXT_CHANGED)
     public void onTextChangedTvTextCount(CharSequence s) {
         tvTextCount.setText(s.length()+" / 100");
+        if(s.length() == 100) {
+            Toast.makeText(WriteActivity.this, getString(R.string.text_count_toast), Toast.LENGTH_LONG).show();
+        }
     }
 
 

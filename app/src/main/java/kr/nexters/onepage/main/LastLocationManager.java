@@ -61,11 +61,13 @@ public class LastLocationManager {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || !locationManager.isProviderEnabled(bestProvider)) {
+                || !locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
             return;
         }
+//        locationManager.requestLocationUpdates(bestProvider, 0, 0, mLocationListener);
 
-        locationManager.requestLocationUpdates(bestProvider, 0, 0, mLocationListener);
+        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, mLocationListener);
+
 
         if(onReceiveLastLocationListener != null) {
             onReceiveLastLocationListener.onReceive(locationManager.getLastKnownLocation(bestProvider));
