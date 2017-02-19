@@ -82,7 +82,7 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
 
     public int getFirstPagePostion() {
         for (int i = 0; i < pages.size(); i++) {
-            if (pages.get(i).getPageNum() == 0) {
+            if (pages.get(i).getPageIndex() == 0) {
                 return i;
             }
         }
@@ -93,14 +93,14 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
         if (pages.size() <= 0) {
             return 0;
         }
-        return pages.get(0).getPageNum();
+        return pages.get(0).getPageIndex();
     }
 
     private int getLastPageNum() {
         if (pages.size() <= 0) {
             return 0;
         }
-        return pages.get(pages.size() - 1).getPageNum();
+        return pages.get(pages.size() - 1).getPageIndex();
     }
 
     public int getLoadPageNum(boolean isReverse) {
@@ -143,7 +143,7 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
         public void bind(Page page) {
             this.page = page;
             tvText.setText(page.getContent());
-            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
+            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
 //            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

@@ -71,7 +71,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
     public int getFirstPagePostion() {
         for (int i = pages.size() - 1; i >= 0; i--) {
-            if (pages.get(i).getPageNum() == 0) {
+            if (pages.get(i).getPageIndex() == 0) {
                 return i;
             }
         }
@@ -82,14 +82,14 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         if (pages.size() <= 0) {
             return 0;
         }
-        return pages.get(0).getPageNum();
+        return pages.get(0).getPageIndex();
     }
 
     private int getLastPageNum() {
         if (pages.size() <= 0) {
             return 0;
         }
-        return pages.get(pages.size() - 1).getPageNum();
+        return pages.get(pages.size() - 1).getPageIndex();
     }
 
     public int getLoadPageNum(boolean isReverse) {
@@ -136,7 +136,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         public void bind(Page page) {
             this.page = page;
             tvText.setText(page.getContent());
-            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
+            tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
             tvDate.setText(page.getCreatedAt().getDateString());
             if (!page.getFirstImageUrl().isEmpty()) {

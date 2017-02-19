@@ -16,11 +16,13 @@ import lombok.NoArgsConstructor;
 public class Page {
     private Long pageId;
     private String locationName;
+    private String locationEngName;
     private String locationAddress;
     private String email;
     private String content;
     private List<PageImage> images = Lists.newArrayList();
     private int pageNum;
+    private int pageIndex;
     private PageDate createdAt;
 
     public static Page of(int resId, String content) {

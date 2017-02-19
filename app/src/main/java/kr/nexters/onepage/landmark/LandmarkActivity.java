@@ -47,6 +47,8 @@ public class LandmarkActivity extends BaseActivity {
     ImageView ivWeather;
     @BindView(R.id.tv_location_name_kor_expand)
     TextView tvLocationNameKorExpand;
+    @BindView(R.id.tv_location_name_eng_expand)
+    TextView tvLocationNameEngExpand;
     @BindView(R.id.tv_location_name_kor_collapse)
     TextView tvLocationNameKorCollapse;
 
@@ -139,6 +141,7 @@ public class LandmarkActivity extends BaseActivity {
                             }
                         });
 
+                tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
