@@ -17,8 +17,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
+import kr.nexters.onepage.common.BusProvider;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.common.model.PageRepo;
+import kr.nexters.onepage.main.model.PageRefreshEvent;
 import kr.nexters.onepage.mypage.MyPageService;
 
 public class UserPagerFragment extends BaseFragment {
@@ -33,15 +36,6 @@ public class UserPagerFragment extends BaseFragment {
     private Unbinder unbinder;
 
     private boolean loading = false;
-    private OnLongClickPageListener onLongClickPageListener;
-
-    interface OnLongClickPageListener {
-        void onLongClick();
-    }
-
-    public void setOnLongClickPageListener(OnLongClickPageListener onLongClickPageListener) {
-        this.onLongClickPageListener = onLongClickPageListener;
-    }
 
     public static UserPagerFragment newInstance() {
         UserPagerFragment fragment = new UserPagerFragment();
@@ -60,8 +54,8 @@ public class UserPagerFragment extends BaseFragment {
         return view;
     }
 
-    private void initPager(List<Page> pages) {
-        mainAdapter = new UserPageAdapter(pages.size());
+    private void initPager(PageRepo pageRepo) {
+        mainAdapter = new UserPageAdapter(pageRepo.getTotalSize());
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mainPager.setLayoutManager(linearLayout);
         mainPager.setAdapter(mainAdapter);
@@ -74,15 +68,18 @@ public class UserPagerFragment extends BaseFragment {
             }
         });
 
-        if(onLongClickPageListener != null) {
-            mainAdapter.setOnLongClickPageViewHolderListener(() -> onLongClickPageListener.onLongClick());
-        }
-        mainAdapter.add(pages);
+        mainAdapter.setOnDeleteClickListener(() -> {
+            getFirstPages(PAGE_SIZE);
+            BusProvider.post(new PageRefreshEvent());
+        });
+
+        mainAdapter.add(pageRepo.getPages());
     }
 
     private void getPages(int perPageSize, boolean isReverse) {
         loading = true;
-        myPageService.findPageByUser(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pages) -> {
+        myPageService.findPageByUser(PropertyManager.getKeyId(), mainAdapter.getLoadPageNum(isReverse), perPageSize, (pageRepo) -> {
+            List<Page> pages = pageRepo.getPages();
             loading = false;
             if (isReverse) {
                 mainAdapter.add(0, pages);
@@ -94,9 +91,9 @@ public class UserPagerFragment extends BaseFragment {
 
     private void getFirstPages(int perPageSize) {
         //첫번째 페이지가 중앙에 와야되서 첫 페이지를 -2로 가져옴
-        myPageService.findPageByUser(PropertyManager.getKeyId(), -2, perPageSize, (pages) -> {
-            initPager(pages);
-            Log.d("PageRepo", pages.toString());
+        myPageService.findPageByUser(PropertyManager.getKeyId(), -2, perPageSize, (pageRepo) -> {
+            initPager(pageRepo);
+            Log.d("PageRepo", pageRepo.toString());
             if (mainAdapter.getItemCount() > 0) {
                 mainPager.scrollToPosition(mainAdapter.getFirstPagePostion());
             }

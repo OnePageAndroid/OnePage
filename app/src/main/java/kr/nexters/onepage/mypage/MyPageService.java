@@ -2,11 +2,8 @@ package kr.nexters.onepage.mypage;
 
 import android.util.Log;
 
-import java.util.List;
-
 import io.reactivex.functions.Consumer;
 import kr.nexters.onepage.R;
-import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.common.model.PageRepo;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,7 +15,7 @@ public class MyPageService {
             android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
     private MyPageAPI myPageAPI = MyPageAPI.Factory.create();
 
-    public void findPageByUser(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+    public void findPageByUser(String email, Integer pageNumber, Integer perPageSize, Consumer<PageRepo> addFunc) {
         if(addFunc == null) {
             return;
         }
@@ -27,8 +24,8 @@ public class MyPageService {
             public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
                 if (response.isSuccessful()) {
                     try {
-                        List<Page> pages = response.body().getPages();
-                        addFunc.accept(pages);
+                        PageRepo pageRepo = response.body();
+                        addFunc.accept(pageRepo);
                     } catch (Exception e) {
                         Log.e("indPageByUser : ", e.getMessage());
                     }
@@ -42,7 +39,7 @@ public class MyPageService {
         });
     }
 
-    public void findPageByHeart(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+    public void findPageByHeart(String email, Integer pageNumber, Integer perPageSize, Consumer<PageRepo> addFunc) {
         if(addFunc == null) {
             return;
         }
@@ -51,8 +48,8 @@ public class MyPageService {
             public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
                 if (response.isSuccessful()) {
                     try {
-                        List<Page> pages = response.body().getPages();
-                        addFunc.accept(pages);
+                        PageRepo pageRepo = response.body();
+                        addFunc.accept(pageRepo);
                     } catch (Exception e) {
                         Log.e("findPageByHeart : ", e.getMessage());
                     }

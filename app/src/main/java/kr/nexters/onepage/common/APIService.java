@@ -120,4 +120,12 @@ public interface APIService {
               @Field("pageId") long pageId,
               @Field("email") String email
     );
+
+
+    //페이지 삭제
+    @GET("page/remove")
+    Flowable<ServerResponse> deletePageById(
+            @Query("pageId") long pageId
+    );
+
 }

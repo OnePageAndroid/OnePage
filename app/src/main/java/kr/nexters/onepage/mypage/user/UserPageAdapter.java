@@ -1,9 +1,11 @@
 package kr.nexters.onepage.mypage.user;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +16,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.NetworkManager;
+import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.util.ConvertUtil;
 
@@ -24,21 +31,18 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
 
     private int totalPageSize;
 
-    public UserPageAdapter() {
-    }
-
     public UserPageAdapter(int totalPageSize) {
         this.totalPageSize = totalPageSize;
     }
 
-    public interface OnLongClickPageViewHolderListener {
-        void onLongClick();
+    interface OnDeleteClickListener {
+        void clickDelete();
     }
 
-    OnLongClickPageViewHolderListener onLongClickPageViewHolderListener;
+    private OnDeleteClickListener onDeleteClickListener;
 
-    public void setOnLongClickPageViewHolderListener(OnLongClickPageViewHolderListener onLongClickPageViewHolderListener) {
-        this.onLongClickPageViewHolderListener = onLongClickPageViewHolderListener;
+    public void setOnDeleteClickListener(OnDeleteClickListener onDeleteClickListener) {
+        this.onDeleteClickListener = onDeleteClickListener;
     }
 
     @Override
@@ -116,15 +120,15 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
         TextView tvPageTotal;
         @BindView(R.id.iv_image)
         ImageView ivImg;
+        @BindView(R.id.iv_delete)
+        ImageView ivMark;
+        @BindView(R.id.layout_text)
+        FrameLayout layoutText;
         Page page;
 
         public PageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-            if (onLongClickPageViewHolderListener != null) {
-                itemView.setOnClickListener(v -> onLongClickPageViewHolderListener.onLongClick());
-            }
         }
 
         public void bind(Page page) {
@@ -133,19 +137,34 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum() + 1));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 
-//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             if (!page.getFirstImageUrl().isEmpty()) {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 10));
                 Glide.with(itemView.getContext())
                         .load(page.getFirstImageUrl())
                         .placeholder(R.drawable.loading_card_img)
                         .into(ivImg);
+                ivImg.setVisibility(View.VISIBLE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 10), 0, 0);
             } else {
-//                lp.setMargins(0, 0, 0, ConvertUtil.dipToPixels(itemView.getContext(), 15));
-//                ivImg.setLayoutParams(lp);
                 ivImg.setVisibility(View.GONE);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 15), 0, 0);
             }
-//            ivImg.setLayoutParams(lp);
+        }
+
+        @OnClick(R.id.iv_delete)
+        public void onClickDelete() {
+            NetworkManager.getInstance().getApi().deletePageById(page.getPageId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            serverResponse -> {
+                                if (serverResponse.isSuccess()) {
+                                    if(onDeleteClickListener != null) {
+                                        onDeleteClickListener.clickDelete();
+                                    }
+                                }
+                            }, throwable -> Log.e("deletePage", throwable.getLocalizedMessage())
+                    );
+
         }
     }
 }
