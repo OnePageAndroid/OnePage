@@ -1,17 +1,16 @@
 <resources>
     <string name="app_name">onepage</string>
 
-    <string name="main_toolbar_label">"나는 지금"</string>
-    <string name="main_toolbar_write">글 남기기</string>
-    <string name="main_toolbar_page_label">" 페이지가 남겨졌습니다."</string>
+    <!-- main toolbar -->
+    <string name="main_toolbar_label">I am now</string>
+    <string name="main_toolbar_write">Writing</string>
+    <string name="main_toolbar_page_label">" pages have been created."</string>
 
-
-
-    <!-- action bar title -->
+    <!-- write toolbar -->
     <string name="action_title_write">Writing Guestbook</string>
     <string name="action_title_mypage">My Page</string>
 
-    <!-- action bar button -->
+    <!-- map toolbar -->
     <string name="action_menu_current_loc">Current Location</string>
     <string name="action_menu_write">save</string>
 
@@ -19,18 +18,51 @@
     <string name="chooser_gallery">Choose an image</string>
 
     <!-- toast message -->
-    <string name="toast_write_check_blank">Enter content.</string>
-
+    <string name="toast_write_check_blank">Enter your contents.</string>
     <string name="toast_gps_error">GPS Received error.</string>
+    <string name="toast_location_error">No location information.</string>
+    <string name="toast_save_page_error">Failed to save page.</string>
+    <string name="toast_save_image_error">Failed to save image.</string>
 
     <!-- alert message -->
     <string name="alert_network">Check your network connection.</string>
 
-    <string name="alert_gps">Check your gps.</string>
+    <string name="alert_gps">Check your gps connection.</string>
 
     <string name="cancel">cancel</string>
     <string name="retry">retry</string>
 
+    <!-- activity -->
+    <string name="upload_photos">Upload photos</string>
+    <string name="write_hint">&#160; What are you doing now?</string>
+
+    <!-- MapActivity -->
+    <string name="new_page_size">New&#160;</string>
+    <string name="total_page_size">Total&#160;</string>
+    <string name="back">Back</string>
+    <string name="main_empty">No page has been written yet. Write first!</string>
+    <string name="landmark_empty">No page has been written yet!</string>
+
+    <!-- intro -->
+    <string name="coach_mypage">you can see your pages \n and bookmarked pages</string>
+    <string name="coach_map">You can find \n a nearby landmark.</string>
+    <string name="coach_center">Look at the various stories \n in this landmark</string>
+    <string name="coach_bookmark">You can bookmark the page</string>
+
+    <!-- My Page -->
+    <string name="mypage_write">My page</string>
+    <string name="mypage_bookmark">Bookmarked</string>
+
+    <!-- Map -->
+    <string name="today_page">Today page 0</string>
+    <string name="total_page">Total page 0</string>
+
+    <!-- write -->
+    <string name="text_count_toast">You can write up to 100 characters.</string>
+    <string name="saving_page">Saving page</string>
+
+    <!-- button -->
+    <string name="ok">ok</string>
 
     <!-- uCrop strings -->
     <string name="label_sample">sample</string>
@@ -79,38 +111,5 @@
 
     <string name="ucrop_error_input_data_is_absent">Both input and output Uri must be specified</string>
     <string name="ucrop_mutate_exception_hint">Therefore, override color resource (ucrop_color_toolbar_widget) in your app to make it work on pre-L devices</string>
-
-
-    <!-- activity -->
-    <string name="upload_photos">Upload photos</string>
-
-    <string name="write_hint">&#160; What are you doing now?</string>
-
-    <string name="new_page_size">New&#160;</string>
-    <string name="total_page_size">Total&#160;</string>
-    <string name="back">Back</string>
-
-    <string name="main_empty">아직 남겨진 글이 없어요! 첫 글을 남겨보세요</string>
-    <string name="landmark_empty">아직 쓴 글이 없어요!</string>
-
-    <!-- button -->
-    <string name="ok">ok</string>
-
-    <!-- intro -->
-    <string name="coach_mypage">내가 기록한 글과\n북마크한 글을 볼 수 있어요</string>
-    <string name="coach_map">내 주변 랜드마크를\n확인할 수 있어요</string>
-    <string name="coach_center">이 장소에 남겨진\n다양한 이야기들을 살펴보세요</string>
-    <string name="coach_bookmark">원하는 글을 북마크하세요</string>
-
-    <!-- My Page -->
-    <string name="mypage_write">My page</string>
-    <string name="mypage_bookmark">Bookmarked</string>
-
-    <!-- Map -->
-    <string name="today_page">Today page 0</string>
-    <string name="total_page">Total page 0</string>
-
-    <!-- write -->
-    <string name="text_count_toast">You can write up to 100 characters.</string>
 
 </resources>

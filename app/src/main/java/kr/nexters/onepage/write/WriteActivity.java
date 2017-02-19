@@ -59,7 +59,6 @@ public class WriteActivity extends UCropBaseActivity {
     private static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
     private static final int REQUEST_SAVE_RESULT = 400;
-    private static final int PERMISSION_REQUEST_CAMERA = 1001;
     private static final int REQUEST_CAMERA = 100;
     private static final int REQUEST_GALLERY = 200;
 
@@ -102,7 +101,7 @@ public class WriteActivity extends UCropBaseActivity {
 
         locationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
         if(locationId == -1L) {
-            toast("위치정보가 없습니다.");
+            toast(getString(R.string.toast_location_error));
             finish();
         }
 
@@ -114,7 +113,6 @@ public class WriteActivity extends UCropBaseActivity {
         Log.i(TAG, "width : " + size.x);
         Log.i(TAG, "height : " + params.height);
         btnCamera.setLayoutParams(params);
-
     }
 
     @OnClick(R.id.btnCamera)
@@ -143,7 +141,7 @@ public class WriteActivity extends UCropBaseActivity {
                         saveImage(page, response.body().getId());
                     }
                 } else {
-                    throw new OnePageException("페이지 저장 실패");
+                    throw new OnePageException(getString(R.string.toast_save_page_error));
                 }
             }
 
@@ -178,7 +176,7 @@ public class WriteActivity extends UCropBaseActivity {
                     setResult(RESULT_OK);
                     finish();
                 } else {
-                    Toast.makeText(WriteActivity.this, "페이지 이미지 저장 실패", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WriteActivity.this, getString(R.string.toast_save_image_error), Toast.LENGTH_LONG).show();
                     Log.e("saveImageCall : ", response.message());
                 }
             }
@@ -309,11 +307,8 @@ public class WriteActivity extends UCropBaseActivity {
                 } catch (Exception e) {
                     Log.e(TAG, imageUri.toString(), e);
                 }
-            } else {
-                Toast.makeText(WriteActivity.this, getString(R.string.toast_unexpected_error), Toast.LENGTH_SHORT).show();
             }
         }
-
         return savedImg;
     }
 
@@ -332,9 +327,8 @@ public class WriteActivity extends UCropBaseActivity {
             } else {
                 PostPage postPage =
                         new PostPage(String.valueOf(locationId), PropertyManager.getInstance().getId(), saveCroppedImage(), etWriteContent.getText().toString());
-                //MainActivity에서 표시된 장소명을 putExtra로 전달한다음에 getExtra로 꺼내서 넣으면 될듯..!
                 try {
-                    progressDialog = ProgressDialog.show(WriteActivity.this, null, "글 저장 중");
+                    progressDialog = ProgressDialog.show(WriteActivity.this, null, getString(R.string.saving_page));
                     savePage(postPage);
                 } catch (OnePageException oe) {
                     dismissProgress();
@@ -353,7 +347,6 @@ public class WriteActivity extends UCropBaseActivity {
             Toast.makeText(WriteActivity.this, getString(R.string.text_count_toast), Toast.LENGTH_LONG).show();
         }
     }
-
 
     private void dismissProgress() {
         if (progressDialog != null && progressDialog.isShowing()) {
