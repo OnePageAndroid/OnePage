@@ -104,7 +104,7 @@ public class LandmarkActivity extends BaseActivity {
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         pagerFragment.setCallBackToolbar(new CallBackToolbar() {
             @Override
-            public void initToolbarPageNumber(int pageSize) {
+            public void initToolbarPageIndex(int pageSize) {
                 tvToolbarTotalPageCollapse.setText(ConvertUtil.integerToCommaString(pageSize));
                 tvToolbarTotalPageExpand.setText(ConvertUtil.integerToCommaString(pageSize));
                 if (pageSize == 0) {
@@ -141,7 +141,7 @@ public class LandmarkActivity extends BaseActivity {
                             }
                         });
 
-                tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
+                tvLocationNameEngExpand.setText(locationContentRepo.getEngName());
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }

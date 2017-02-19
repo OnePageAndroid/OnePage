@@ -48,7 +48,7 @@ public class PagerFragment extends BaseFragment {
     }
 
     public interface CallBackToolbar {
-        void initToolbarPageNumber(int pageSize);
+        void initToolbarPageIndex(int pageSize);
         void initWeatherImage(String weatherCode);
         void initToolbarLocationContent(LocationContentRepo locationContentRepo);
     }
@@ -125,7 +125,7 @@ public class PagerFragment extends BaseFragment {
                 .subscribe(
                         pageRepo -> {
                             if (callBackToolbar != null) {
-                                callBackToolbar.initToolbarPageNumber(pageRepo.getTotalSize());
+                                callBackToolbar.initToolbarPageIndex(pageRepo.getTotalSize());
                             }
                             initPager(pageRepo);
                         },

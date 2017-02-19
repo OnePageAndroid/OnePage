@@ -12,8 +12,8 @@ import lombok.Data;
 
 @Data
 public class PageRepo {
-    private int pageNumber;
     private List<Page> pages;
+    private int pageIndex;
     private int perPageSize;
     private int resultCount;
     private int totalSize;

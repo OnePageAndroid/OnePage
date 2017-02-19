@@ -18,11 +18,11 @@ public class MyPageService {
             android.R.drawable.ic_dialog_dialer, android.R.drawable.ic_dialog_email};
     private MyPageAPI myPageAPI = MyPageAPI.Factory.create();
 
-    public void findPageByUser(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+    public void findPageByUser(String email, Integer pageIndex, Integer perPageSize, Consumer<List<Page>> addFunc) {
         if(addFunc == null) {
             return;
         }
-        myPageAPI.findPageByUser(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
+        myPageAPI.findPageByUser(email, pageIndex, perPageSize).enqueue(new Callback<PageRepo>() {
             @Override
             public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
                 if (response.isSuccessful()) {
@@ -42,11 +42,11 @@ public class MyPageService {
         });
     }
 
-    public void findPageByHeart(String email, Integer pageNumber, Integer perPageSize, Consumer<List<Page>> addFunc) {
+    public void findPageByHeart(String email, Integer pageIndex, Integer perPageSize, Consumer<List<Page>> addFunc) {
         if(addFunc == null) {
             return;
         }
-        myPageAPI.findPageByHeart(email, pageNumber, perPageSize).enqueue(new Callback<PageRepo>() {
+        myPageAPI.findPageByHeart(email, pageIndex, perPageSize).enqueue(new Callback<PageRepo>() {
             @Override
             public void onResponse(Call<PageRepo> call, Response<PageRepo> response) {
                 if (response.isSuccessful()) {

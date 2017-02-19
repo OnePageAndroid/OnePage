@@ -142,7 +142,7 @@ public class MainActivity extends BaseActivity {
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         pagerFragment.setCallBackToolbar(new PagerFragment.CallBackToolbar() {
             @Override
-            public void initToolbarPageNumber(int pageSize) {
+            public void initToolbarPageIndex(int pageSize) {
                 tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageSize));
                 if(pageSize == 0) {
                     layoutEmpty.setVisibility(View.VISIBLE);

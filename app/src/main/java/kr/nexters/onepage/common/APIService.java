@@ -57,7 +57,7 @@ public interface APIService {
     @GET("page/location")
     Call<PageRepo> getPagesFromLocation(
             @Query("locationId") long locationId,
-            @Query("pageNumber") int pageNumber,
+            @Query("pageIndex") int pageIndex,
             @Query("perPageSize") int perPageSize
     );
 
@@ -77,7 +77,7 @@ public interface APIService {
     @GET("page/location")
     Flowable<PageRepo> getFlowablePagesFromLocation(
             @Query("locationId") long locationId,
-            @Query("pageNumber") int pageNumber,
+            @Query("pageIndex") int pageIndex,
             @Query("perPageSize") int perPageSize
     );
 

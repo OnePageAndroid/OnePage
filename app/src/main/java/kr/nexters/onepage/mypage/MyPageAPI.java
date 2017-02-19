@@ -13,14 +13,14 @@ public interface MyPageAPI {
     @GET("page/user")
     Call<PageRepo> findPageByUser(
             @Query("email") String email,
-            @Query("pageNumber") Integer pageNumber,
+            @Query("pageIndex") Integer pageIndex,
             @Query("perPageSize") Integer perPageSize
     );
 
     @GET("page/heart")
     Call<PageRepo> findPageByHeart(
             @Query("email") String email,
-            @Query("pageNumber") Integer pageNumber,
+            @Query("pageIndex") Integer pageIndex,
             @Query("perPageSize") Integer perPageSize
     );
 
