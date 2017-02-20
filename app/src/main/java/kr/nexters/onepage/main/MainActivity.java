@@ -95,6 +95,7 @@ public class MainActivity extends BaseActivity {
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         ivWeather.setPadding(0, getStatusBarHeight(), 0, 0);
+        ivWeather.setAlpha(0.5f);
     }
 
     // A method to find height of the status bar
