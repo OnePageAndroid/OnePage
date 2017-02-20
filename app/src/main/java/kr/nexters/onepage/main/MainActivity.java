@@ -56,6 +56,8 @@ public class MainActivity extends BaseActivity {
     ImageView ivLocation;
     @BindView(R.id.iv_weather)
     ImageView ivWeather;
+    @BindView(R.id.tv_location_name_eng_expand)
+    TextView tvLocationNameEngExpand;
     @BindView(R.id.tv_location_name_kor_expand)
     TextView tvLocationNameKorExpand;
     @BindView(R.id.tv_location_name_kor_collapse)
@@ -184,8 +186,7 @@ public class MainActivity extends BaseActivity {
                                 ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
                             }
                         });
-
-
+                tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
