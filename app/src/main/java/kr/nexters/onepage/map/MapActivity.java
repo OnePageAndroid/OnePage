@@ -87,8 +87,7 @@ public class MapActivity extends BaseActivity {
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(mapReadyCallBack);
 
-//        currentOptions = new MarkerOptions();
-
+        //get current location from MainActivity
         currentLocationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
 
         //LocationAPI
@@ -128,20 +127,14 @@ public class MapActivity extends BaseActivity {
             //TODO 메인인텐트에서 받아온 위치 정보로 현재위치 표시하기
 
             //last location
-//            Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
-            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
+//            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             if(lastLocation == null) {
                 lastLatLng = new LatLng(37.5759879,126.97692289999998); //마지막 위치가 없을 경우 광화문으로
             } else {
                 lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
             }
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
-
-//            currentOptions.position(lastLatLng);
-//            currentOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_landmark));
-//
-//            currentMarker = googleMap.addMarker(currentOptions);
-//            currentOptions.visible(false); //hide last location marker
 
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
@@ -170,25 +163,19 @@ public class MapActivity extends BaseActivity {
                 flg = 1;
             }
 
-            //marker
-//            currentMarker.setPosition(currentLatLng);
-
-            Log.i("Current Loc", String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+            Log.i(TAG, "Current Loc" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-
         }
     };
 
