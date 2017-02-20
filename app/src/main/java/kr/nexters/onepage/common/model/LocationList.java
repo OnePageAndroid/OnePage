@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class LocationList {
     private List<Loc> locations;
     private int resultCount;

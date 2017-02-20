@@ -10,10 +10,12 @@ import lombok.Data;
 
 @Data
 public class LocationContentRepo {
-    private long locationId;
-    private String name;
-    private String engName;
+    private Long locationId;
+    private String objectkey;
     private String url;
+    private String name;
+    private String englishName;
+    private String dayType;
 
     public static Flowable<LocationContentRepo> findLocationContentById(long locationId, String dayType) {
         return NetworkManager.getInstance().getApi()

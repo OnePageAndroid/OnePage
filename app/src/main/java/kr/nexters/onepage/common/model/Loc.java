@@ -13,12 +13,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
 public class Loc implements Serializable {
     private Long locationId;
     private String address;
     private double latitude;
     private double longitude;
     private String name;
+    private String engName;
     private Marker marker;
 }

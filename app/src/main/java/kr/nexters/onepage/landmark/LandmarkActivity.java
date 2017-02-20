@@ -140,8 +140,7 @@ public class LandmarkActivity extends BaseActivity {
                                 ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
                             }
                         });
-
-                tvLocationNameEngExpand.setText(locationContentRepo.getEngName());
+                tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
