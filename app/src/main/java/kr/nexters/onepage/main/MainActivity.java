@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -61,6 +60,8 @@ public class MainActivity extends BaseActivity {
     TextView tvLocationNameEngExpand;
     @BindView(R.id.tv_location_name_kor_expand)
     TextView tvLocationNameKorExpand;
+    @BindView(R.id.tv_location_name_eng_collapse)
+    TextView tvLocationNameEngCollapse;
     @BindView(R.id.tv_location_name_kor_collapse)
     TextView tvLocationNameKorCollapse;
 
@@ -191,6 +192,7 @@ public class MainActivity extends BaseActivity {
                         });
                 tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
+                tvLocationNameEngCollapse.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
         });
