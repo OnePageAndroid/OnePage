@@ -46,7 +46,7 @@
         android:layout_alignParentStart="true">
 
         <TextView
-            fontPath="fonts/NotoSansKR-DemiLight.otf"
+            fontPath="fonts/NotoSansKR-Regular.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="19.5dp"

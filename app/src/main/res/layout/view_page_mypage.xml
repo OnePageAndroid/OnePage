@@ -31,7 +31,7 @@
 
             <TextView
                 android:id="@+id/tv_text"
-                fontPath="fonts/NotoSansKR-DemiLight.otf"
+                fontPath="fonts/NotoSansKR-Regular.otf"
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
                 android:layout_gravity="center_horizontal"
@@ -49,7 +49,7 @@
 
         <TextView
             android:id="@+id/tv_date"
-            fontPath="fonts/NotoSansKR-DemiLight.otf"
+            fontPath="fonts/NotoSansKR-Regular.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -81,7 +81,7 @@
 
             <TextView
                 android:id="@+id/tv_slash"
-                fontPath="fonts/Roboto-Light.ttf"
+                fontPath="fonts/Roboto-Regular.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"

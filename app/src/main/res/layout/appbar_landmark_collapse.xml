@@ -88,7 +88,7 @@
 
                 <TextView
                     android:id="@+id/tv_toolbar_total_page_label"
-                    fontPath="fonts/NotoSansKR-DemiLight.otf"
+                    fontPath="fonts/NotoSansKR-Regular.otf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="bottom"

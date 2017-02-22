@@ -53,7 +53,7 @@
                 android:visibility="visible" />
 
             <TextView
-                fontPath="fonts/NotoSansKR-DemiLight.otf"
+                fontPath="fonts/NotoSansKR-Regular.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
