@@ -37,8 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:paddingRight="20dp"
-            android:paddingTop="15dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/placeholder" />
 
         <!--줄어들었을 때-->
