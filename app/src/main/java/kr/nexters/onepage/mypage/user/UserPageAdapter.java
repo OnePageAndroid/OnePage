@@ -21,7 +21,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.NetworkManager;
-import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.util.ConvertUtil;
 
@@ -124,6 +123,9 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
         ImageView ivMark;
         @BindView(R.id.layout_text)
         FrameLayout layoutText;
+        @BindView(R.id.tv_location)
+        TextView tvLocation;
+
         Page page;
 
         public PageViewHolder(View itemView) {
@@ -134,6 +136,7 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
         public void bind(Page page) {
             this.page = page;
             tvText.setText(page.getContent());
+            tvLocation.setText(page.getLocationName());
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
 

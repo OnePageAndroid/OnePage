@@ -1,5 +1,6 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,13 +14,14 @@
     app:contentInsetRight="0dp"
     app:contentInsetStart="0dp"
     app:layout_collapseMode="pin"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    tools:ignore="MissingPrefix">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="133dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_my"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +31,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/mypage" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,6 +74,7 @@
                     android:layout_marginLeft="18dp"
                     android:includeFontPadding="false"
                     android:textColor="#d5d5d5"
+                    android:alpha="0.8"
                     android:textSize="10sp" />
             </LinearLayout>
 

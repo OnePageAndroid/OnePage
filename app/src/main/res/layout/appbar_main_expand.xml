@@ -76,6 +76,7 @@
             android:layout_marginLeft="20dp"
             android:includeFontPadding="false"
             android:textColor="#d5d5d5"
+            android:alpha="0.8"
             android:textSize="11sp" />
 
 
