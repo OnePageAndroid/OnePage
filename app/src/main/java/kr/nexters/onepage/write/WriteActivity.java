@@ -105,14 +105,6 @@ public class WriteActivity extends UCropBaseActivity {
             finish();
         }
 
-        // Changes the height to the specified width size.
-        Point size = new Point();
-        getWindowManager().getDefaultDisplay().getSize(size);
-        ViewGroup.LayoutParams params = btnCamera.getLayoutParams();
-        params.height = size.x;
-        Log.i(TAG, "width : " + size.x);
-        Log.i(TAG, "height : " + params.height);
-        btnCamera.setLayoutParams(params);
     }
 
     @OnClick(R.id.btnCamera)

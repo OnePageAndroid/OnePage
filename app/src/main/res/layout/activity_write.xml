@@ -35,34 +35,40 @@
         android:background="#ededed"
         android:gravity="center_horizontal" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/btnCamera"
         android:layout_width="match_parent"
-        android:layout_height="319.4dp"
         android:background="#fbfbfb"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/ivWriteImage"
-            android:layout_width="match_parent"
-            android:layout_height="29.5dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="133.5dp"
-            app:srcCompat="@drawable/picture" />
-
-        <TextView
-            android:id="@+id/tvWriteLabel"
-            fontPath="fonts/NotoSansKR-DemiLight.otf"
-            android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="370dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="#bebebe"
-            android:includeFontPadding="false"
-            android:text="@string/upload_photos" />
-    </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+            <ImageView
+                android:id="@+id/ivWriteImage"
+                android:layout_width="match_parent"
+                android:layout_height="29.5dp"
+                app:srcCompat="@drawable/picture" />
+
+            <TextView
+                android:id="@+id/tvWriteLabel"
+                fontPath="fonts/NotoSansKR-DemiLight.otf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="#bebebe"
+                android:includeFontPadding="false"
+                android:text="@string/upload_photos"
+                android:layout_below="@+id/ivWriteImage"
+                android:layout_marginTop="6dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -103,4 +109,5 @@
             android:layout_height="match_parent" />
 
     </FrameLayout>
+
 </LinearLayout>

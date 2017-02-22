@@ -51,6 +51,8 @@ public class LandmarkActivity extends BaseActivity {
     TextView tvLocationNameEngExpand;
     @BindView(R.id.tv_location_name_kor_collapse)
     TextView tvLocationNameKorCollapse;
+    @BindView(R.id.tv_location_name_eng_collapse)
+    TextView tvLocationNameEngCollapse;
 
     @BindView(R.id.tv_toolbar_total_page)
     TextView tvToolbarTotalPageCollapse;
@@ -114,7 +116,7 @@ public class LandmarkActivity extends BaseActivity {
 
             @Override
             public void initWeatherImage(String weatherCode) {
-                ivWeather.setAlpha(0.5f);
+                ivWeather.setAlpha(0.3f);
                 int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
                 if (resId != -1) {
                     Glide.with(getApplicationContext())
@@ -143,6 +145,7 @@ public class LandmarkActivity extends BaseActivity {
                         });
                 tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
+                tvLocationNameEngCollapse.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
         });

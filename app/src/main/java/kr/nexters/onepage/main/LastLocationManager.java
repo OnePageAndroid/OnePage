@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 /**
  * Created by ohjaehwan on 2017. 1. 24..
@@ -70,7 +71,15 @@ public class LastLocationManager {
 
 
         if(onReceiveLastLocationListener != null) {
-            onReceiveLastLocationListener.onReceive(locationManager.getLastKnownLocation(bestProvider));
+            Location lastLoc = locationManager.getLastKnownLocation(bestProvider);
+
+            if(lastLoc == null) {
+                criteria.setAccuracy(Criteria.ACCURACY_COARSE); // Use network Provider
+                String provider = locationManager.getBestProvider(criteria, true);
+                lastLoc = locationManager.getLastKnownLocation(provider);
+                Log.i("Main", "getLastLocation" + lastLoc.getLatitude() + " / " + lastLoc.getLongitude());
+            }
+            onReceiveLastLocationListener.onReceive(lastLoc);
         }
 
     }

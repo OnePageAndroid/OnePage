@@ -60,6 +60,8 @@ public class MainActivity extends BaseActivity {
     TextView tvLocationNameEngExpand;
     @BindView(R.id.tv_location_name_kor_expand)
     TextView tvLocationNameKorExpand;
+    @BindView(R.id.tv_location_name_eng_collapse)
+    TextView tvLocationNameEngCollapse;
     @BindView(R.id.tv_location_name_kor_collapse)
     TextView tvLocationNameKorCollapse;
 
@@ -97,7 +99,7 @@ public class MainActivity extends BaseActivity {
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         ivWeather.setPadding(0, getStatusBarHeight(), 0, 0);
-        ivWeather.setAlpha(0.5f);
+        ivWeather.setAlpha(0.3f);
     }
 
     // A method to find height of the status bar
@@ -190,6 +192,7 @@ public class MainActivity extends BaseActivity {
                         });
                 tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorExpand.setText(locationContentRepo.getName());
+                tvLocationNameEngCollapse.setText(locationContentRepo.getEnglishName());
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
         });

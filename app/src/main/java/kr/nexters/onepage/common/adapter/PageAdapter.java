@@ -69,6 +69,10 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
         notifyItemRangeInserted(position, items.size());
     }
 
+    public int getTotalPageSize() {
+        return totalPageSize;
+    }
+
     public int getFirstPagePostion() {
         for (int i = pages.size() - 1; i >= 0; i--) {
             if (pages.get(i).getPageIndex() == 0) {
