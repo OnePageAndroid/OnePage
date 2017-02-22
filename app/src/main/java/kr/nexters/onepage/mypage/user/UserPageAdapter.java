@@ -55,6 +55,10 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
         holder.bind(pages.get(position));
     }
 
+    public int getTotalPageSize() {
+        return totalPageSize;
+    }
+
     public void add(List<Page> items) {
         this.pages.addAll(items);
         notifyDataSetChanged();

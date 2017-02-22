@@ -95,7 +95,8 @@ public class PagerFragment extends BaseFragment {
                                 callBackToolbar.initWeatherImage(hourly.getSky().getCode());
                             }
                         },
-                        throwable -> toast(throwable.getLocalizedMessage())
+                        throwable -> Log.e("weather", throwable.getLocalizedMessage())
+//                        throwable -> toast(throwable.getLocalizedMessage())
                 )
         );
     }

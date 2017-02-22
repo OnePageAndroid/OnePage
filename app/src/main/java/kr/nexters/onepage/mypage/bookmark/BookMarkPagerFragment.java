@@ -10,18 +10,14 @@ import android.view.ViewGroup;
 
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseFragment;
 import kr.nexters.onepage.common.PropertyManager;
-import kr.nexters.onepage.common.model.Page;
 import kr.nexters.onepage.common.model.PageRepo;
 import kr.nexters.onepage.mypage.MyPageService;
-import kr.nexters.onepage.mypage.user.UserPageAdapter;
 
 public class BookMarkPagerFragment extends BaseFragment {
     private final static int PAGE_SIZE = 5;
@@ -60,10 +56,12 @@ public class BookMarkPagerFragment extends BaseFragment {
         mainPager.setAdapter(mainAdapter);
 
         mainPager.addOnPageChangedListener((prePosotion, curPosition) -> {
-            if (!loading && curPosition >= mainAdapter.getItemCount() - 2) {
-                getPages(PAGE_SIZE, false);
-            } else if (!loading && curPosition <= 1) {
-                getPages(PAGE_SIZE, true);
+            if(mainAdapter.getTotalPageSize() > 3) {
+                if (!loading && curPosition >= mainAdapter.getItemCount() - 2) {
+                    getPages(PAGE_SIZE, false);
+                } else if (!loading && curPosition <= 1) {
+                    getPages(PAGE_SIZE, true);
+                }
             }
         });
         mainAdapter.add(pageRepo.getPages());
