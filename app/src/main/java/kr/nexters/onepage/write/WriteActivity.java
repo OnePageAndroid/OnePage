@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -121,12 +120,8 @@ public class WriteActivity extends UCropBaseActivity {
         saveCall.enqueue(new Callback<PageSaveResponse>() {
             @Override
             public void onResponse(Call<PageSaveResponse> call, Response<PageSaveResponse> response) {
-                dismissProgress();
                 if (response.isSuccessful()) {
                     if(page.getImage() == null) {
-                        if (progressDialog != null && progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
                         setResult(RESULT_OK);
                         finish();
                     } else {
@@ -162,7 +157,6 @@ public class WriteActivity extends UCropBaseActivity {
         saveImageCall.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-                dismissProgress();
                 if (response.isSuccessful() && response.body().isSuccess()) {
                     Log.d(WriteActivity.class.getSimpleName(), response.body().message);
                     setResult(RESULT_OK);
@@ -170,6 +164,7 @@ public class WriteActivity extends UCropBaseActivity {
                 } else {
                     Toast.makeText(WriteActivity.this, getString(R.string.toast_save_image_error), Toast.LENGTH_LONG).show();
                     Log.e("saveImageCall : ", response.message());
+                    dismissProgress();
                 }
             }
 
