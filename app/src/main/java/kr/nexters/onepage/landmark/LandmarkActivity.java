@@ -116,7 +116,7 @@ public class LandmarkActivity extends BaseActivity {
 
             @Override
             public void initWeatherImage(String weatherCode) {
-                ivWeather.setAlpha(0.5f);
+                ivWeather.setAlpha(0.3f);
                 int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
                 if (resId != -1) {
                     Glide.with(getApplicationContext())
