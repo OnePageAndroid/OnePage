@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="133dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_my"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/mypage" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
