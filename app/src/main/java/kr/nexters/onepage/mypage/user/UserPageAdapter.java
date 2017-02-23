@@ -127,8 +127,6 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
         TextView tvPageTotal;
         @BindView(R.id.iv_image)
         ImageView ivImg;
-        @BindView(R.id.iv_delete)
-        ImageView ivMark;
         @BindView(R.id.layout_text)
         FrameLayout layoutText;
         @BindView(R.id.tv_location)
