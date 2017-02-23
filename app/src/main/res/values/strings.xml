@@ -52,6 +52,9 @@
     <!-- My Page -->
     <string name="mypage_write">My page</string>
     <string name="mypage_bookmark">Bookmarked</string>
+    <string name="mypage_empty">No page has been written yet!</string>
+    <string name="mypage_bookmark_empty">No page has been marked yet!!</string>
+    <string name="mypage_delete">Are you sure you want to delete this page?</string>
 
     <!-- Map -->
     <string name="today_page">Today page 0</string>

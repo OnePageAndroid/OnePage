@@ -1,9 +1,7 @@
 package kr.nexters.onepage.mypage;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -17,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
-import kr.nexters.onepage.intro.IntroActivity;
 import kr.nexters.onepage.mypage.bookmark.BookMarkPagerFragment;
 import kr.nexters.onepage.mypage.user.UserPagerFragment;
 
@@ -46,13 +43,11 @@ public class MyPageActivity extends BaseActivity implements TabLayout.OnTabSelec
 
     private void navigateMyPage() {
         UserPagerFragment pagerFragment = UserPagerFragment.newInstance();
-//        pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         replaceFragment(R.id.fragment_main, pagerFragment);
     }
 
     private void navigateMark() {
         BookMarkPagerFragment pagerFragment = BookMarkPagerFragment.newInstance();
-//        pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         replaceFragment(R.id.fragment_main, pagerFragment);
     }
 

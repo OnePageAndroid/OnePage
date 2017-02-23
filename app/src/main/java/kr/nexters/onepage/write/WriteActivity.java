@@ -31,11 +31,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BusProvider;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.OnePageException;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.PostPage;
 import kr.nexters.onepage.common.model.ServerResponse;
+import kr.nexters.onepage.main.model.PageRefreshEvent;
 import kr.nexters.onepage.write.model.PageSaveResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -99,7 +101,7 @@ public class WriteActivity extends UCropBaseActivity {
         }
 
         locationId = getIntent().getLongExtra(KEY_LAST_LOCATION, -1L);
-        if(locationId == -1L) {
+        if (locationId == -1L) {
             toast(getString(R.string.toast_location_error));
             finish();
         }
@@ -121,8 +123,8 @@ public class WriteActivity extends UCropBaseActivity {
             @Override
             public void onResponse(Call<PageSaveResponse> call, Response<PageSaveResponse> response) {
                 if (response.isSuccessful()) {
-                    if(page.getImage() == null) {
-                        setResult(RESULT_OK);
+                    if (page.getImage() == null) {
+                        BusProvider.post(new PageRefreshEvent());
                         finish();
                     } else {
                         saveImage(page, response.body().getId());
@@ -159,7 +161,7 @@ public class WriteActivity extends UCropBaseActivity {
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 if (response.isSuccessful() && response.body().isSuccess()) {
                     Log.d(WriteActivity.class.getSimpleName(), response.body().message);
-                    setResult(RESULT_OK);
+                    BusProvider.post(new PageRefreshEvent());
                     uCropManager.deleteSaveImgFile(file);
                     finish();
                 } else {
@@ -328,10 +330,10 @@ public class WriteActivity extends UCropBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnTextChanged(value=R.id.etWriteContent, callback = OnTextChanged.Callback.TEXT_CHANGED)
+    @OnTextChanged(value = R.id.etWriteContent, callback = OnTextChanged.Callback.TEXT_CHANGED)
     public void onTextChangedTvTextCount(CharSequence s) {
-        tvTextCount.setText(s.length()+" / 100");
-        if(s.length() == 100) {
+        tvTextCount.setText(s.length() + " / 100");
+        if (s.length() == 100) {
             Toast.makeText(WriteActivity.this, getString(R.string.text_count_toast), Toast.LENGTH_LONG).show();
         }
     }
