@@ -132,9 +132,7 @@ public class MainActivity extends BaseActivity {
                                 if (lastLocationId != newLocationId) {
                                     lastLocationId = newLocationId;
                                     initFragment(lastLocationId);
-                                    return;
                                 }
-                                initFragment(lastLocationId);
                             },
                             throwable -> toast(throwable.getLocalizedMessage())
                     )
