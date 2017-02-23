@@ -112,7 +112,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initLocationManager() {
-        lastLocationManager = new LastLocationManager(this, newLocation -> this.lastLocation = newLocation);
+        lastLocationManager = new LastLocationManager(this, newLocation -> {
+            this.lastLocation = newLocation;
+            if(lastLocationId == -1L) {
+                getLocation();
+            }
+        });
     }
 
     @Override
