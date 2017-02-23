@@ -1,5 +1,7 @@
 package kr.nexters.onepage.mypage.user;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +22,10 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BusProvider;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.main.model.PageRefreshEvent;
 import kr.nexters.onepage.util.ConvertUtil;
 
 
@@ -159,19 +163,28 @@ public class UserPageAdapter extends RecyclerView.Adapter<UserPageAdapter.PageVi
 
         @OnClick(R.id.iv_delete)
         public void onClickDelete() {
-            NetworkManager.getInstance().getApi().deletePageById(page.getPageId())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            serverResponse -> {
-                                if (serverResponse.isSuccess()) {
-                                    if(onDeleteClickListener != null) {
-                                        onDeleteClickListener.clickDelete();
-                                    }
-                                }
-                            }, throwable -> Log.e("deletePage", throwable.getLocalizedMessage())
-                    );
 
+            Context context = itemView.getContext();
+
+            new AlertDialog.Builder(context)
+                    .setMessage(context.getString(R.string.mypage_delete))
+                    .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
+                        NetworkManager.getInstance().getApi().deletePageById(page.getPageId())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        serverResponse -> {
+                                            if (serverResponse.isSuccess()) {
+                                                if(onDeleteClickListener != null) {
+                                                    onDeleteClickListener.clickDelete();
+                                                    BusProvider.post(new PageRefreshEvent());
+                                                }
+                                            }
+                                        }, throwable -> Log.e("deletePage", throwable.getLocalizedMessage())
+                                );
+                    })
+                    .setNegativeButton(context.getString(R.string.cancel), null)
+                    .show();
         }
     }
 }

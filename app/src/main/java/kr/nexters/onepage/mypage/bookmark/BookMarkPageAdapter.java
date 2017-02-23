@@ -20,9 +20,11 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BusProvider;
 import kr.nexters.onepage.common.NetworkManager;
 import kr.nexters.onepage.common.PropertyManager;
 import kr.nexters.onepage.common.model.Page;
+import kr.nexters.onepage.main.model.PageRefreshEvent;
 import kr.nexters.onepage.util.ConvertUtil;
 
 /**
@@ -188,6 +190,7 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
                                     setBookmark(isMarked);
                                     if(onMarkClickListener != null) {
                                         onMarkClickListener.clickMark();
+                                        BusProvider.post(new PageRefreshEvent());
                                     }
                                 }
                             }, throwable -> Log.e("saveBookmark", throwable.getLocalizedMessage())
