@@ -38,6 +38,7 @@ public class DummyPageAdapter extends RecyclerView.Adapter<DummyPageAdapter.Dumm
                 .into(holder.ivImg);
 
         holder.tvText.setText(resStrs[position]);
+        holder.tvText.setPadding(0, 25, 0, 0);
     }
 
     @Override
