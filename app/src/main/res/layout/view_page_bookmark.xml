@@ -6,6 +6,7 @@
     android:layout_gravity="center"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
+    android:background="#fafafa"
     app:cardCornerRadius="2dp"
     app:cardUseCompatPadding="true"
     tools:ignore="MissingPrefix">
@@ -37,7 +38,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:includeFontPadding="false"
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="4"
@@ -60,30 +60,36 @@
             android:textColor="#777777"
             android:textSize="12sp" />
 
-        <ImageView
-            android:id="@id/iv_location"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/pin"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
             android:layout_toRightOf="@+id/tv_date"
-            android:paddingBottom="9.5dp"
-            />
+            android:orientation="horizontal"
+            android:paddingBottom="11dp">
 
-        <TextView
-            android:id="@+id/tv_location"
-            fontPath="fonts/NotoSansKR-DemiLight.otf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:includeFontPadding="false"
-            android:layout_toRightOf="@+id/iv_location"
-            android:paddingBottom="9.5dp"
-            android:text="test"
-            android:textColor="#777777"
-            android:textSize="12sp" />
+
+            <ImageView
+                android:id="@id/iv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/pin" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_gravity="center_vertical"
+                fontPath="fonts/NotoSansKR-DemiLight.otf"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:includeFontPadding="false"
+                android:text="test"
+                android:textColor="#777777"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -15,12 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -51,15 +51,18 @@ public class MapActivity extends BaseActivity {
     private LocationManager locationManager;
     public GoogleMap mGoogleMap;
     private MapFragment mapFragment;
-//    private Marker currentMarker;
-//    private MarkerOptions currentOptions;
 
     private LatLng currentLatLng;
     private LatLng lastLatLng;
 
     private LocationList locations;
 
-    private long currentLocationId;
+    private MarkerOptions landmarkOptions;
+
+    private Marker clickedMarker;
+    private BitmapDescriptor clickedMarkerIcon, landmarkMarkerIcon;
+
+    private Long currentLocationId;
 
     private String today;
 
@@ -74,7 +77,6 @@ public class MapActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
         ButterKnife.bind(this);
 
         //MainActivity로 가는 버튼
@@ -92,9 +94,11 @@ public class MapActivity extends BaseActivity {
 
         //LocationAPI
         //Setting marker. Get location from db
-        today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        Log.i(TAG, "today : " + today);
         showLocationList();
+
+        today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        clickedMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.clicked_landmark);
+        landmarkMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.other_landmark);
     }
 
     OnMapReadyCallback mapReadyCallBack = new OnMapReadyCallback() {
@@ -118,30 +122,43 @@ public class MapActivity extends BaseActivity {
             criteria.setAltitudeRequired(false);
 
             String bestProvider = locationManager.getBestProvider(criteria, true);
-            Log.i("bestProvider", bestProvider);
 
+            //////////////////////////////////////////////////////////////////////////////////////
             //5초 간격, 3미터 이상 이동시 update
 //            locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 10000, 10, locationListener);
 
-            //TODO 메인인텐트에서 받아온 위치 정보로 현재위치 표시하기
-
-            //last location
+            //get last location
             Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
-//            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+            //If can't use GPS provider, use NETWORK provider
             if(lastLocation == null) {
-                lastLatLng = new LatLng(37.5759879,126.97692289999998); //마지막 위치가 없을 경우 광화문으로
+                criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+                bestProvider = locationManager.getBestProvider(criteria, true);
+                lastLocation = locationManager.getLastKnownLocation(bestProvider);
+            }
+
+            //If can't get lastLocation, set it to default location.
+            if(lastLocation == null) {
+                lastLatLng = new LatLng(37.5759879,126.97692289999998); //Gwanghwamun
             } else {
                 lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
             }
+
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
 
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    //마커로 해당 LocationInfo 불러오기
-                    Log.i(TAG, marker.toString());
-                    getLocationInfo(marker);
+                    if(clickedMarker != null && clickedMarker != marker) {
+                        clickedMarker.setIcon(landmarkMarkerIcon);
+                    }
+
+                    clickedMarker = marker;
+                    marker.setIcon(clickedMarkerIcon);
+
+                    //Getting clicked marker's location info
+                    showLocationInfo(marker);
+
                     return true;
                 }
             });
@@ -158,7 +175,6 @@ public class MapActivity extends BaseActivity {
             currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
             if(flg == 0) {
-                Log.i(TAG, "flag : " + flg);
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
                 flg = 1;
             }
@@ -192,7 +208,6 @@ public class MapActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        //callBack 메소드와 연결, 준비가 다 끝난 후 map을 불러옴
         mapFragment.getMapAsync(mapReadyCallBack);
     }
 
@@ -215,23 +230,18 @@ public class MapActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     locations = response.body();
 
-                    MarkerOptions currOptions = new MarkerOptions();
-                    currOptions.flat(false);
-                    currOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.my_landmark));
-
-                    MarkerOptions options = new MarkerOptions();
-                    options.flat(false);
-                    options.icon(BitmapDescriptorFactory.fromResource(R.drawable.other_landmark));
+                    landmarkOptions = getMarkerOptions(R.drawable.other_landmark);
 
                     for(Loc loc : locations.getLocations()) {
-                        if(loc.getLocationId().equals(currentLocationId)) {
-                            currOptions.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
-                            loc.setMarker(mGoogleMap.addMarker(currOptions));
-                            getLocationInfo(loc.getMarker()); //setting init box info
+                        if(isCurrentLoc(loc.getLocationId())) { //Current LandMarker
+                            landmarkOptions.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
+                            clickedMarker = mGoogleMap.addMarker(landmarkOptions);
+                            loc.setMarker(clickedMarker);
+                            showLocationInfo(loc.getMarker()); //setting init box info
                             return ;
                         }
-                        options.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
-                        loc.setMarker(mGoogleMap.addMarker(options));
+                        landmarkOptions.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
+                        loc.setMarker(mGoogleMap.addMarker(landmarkOptions));
                     }
                     Log.i(TAG, "location list : " + locations.toString());
                 }
@@ -244,17 +254,20 @@ public class MapActivity extends BaseActivity {
         });
     }
 
-    //선택된 마커에 대한 정보 구하기
-    public void getLocationInfo(Marker marker) {
-        ivMyPlace.setVisibility(View.INVISIBLE);
+    //Show clicked marker's info
+    public void showLocationInfo(Marker marker) {
 
         for(Loc loc : locations.getLocations()) {
 
             //선택된 마커의 정보 가져와서 LocationInfo형태로 저장
-            if(loc.getMarker().toString().equals(marker.toString())) { //Marker string으로 비교할때만 된당
+            if(loc.getMarker().toString().equals(marker.toString())) {
                 tvLocationName.setText(loc.getName());
-                Log.i(TAG, "locationId : " + loc.getLocationId());
-                Log.i(TAG, "locationName : " + loc.getName());
+                if(isCurrentLoc(loc.getLocationId())) {
+                    ivMyPlace.setVisibility(View.VISIBLE);
+                    marker.setIcon(clickedMarkerIcon);
+                } else {
+                    ivMyPlace.setVisibility(View.INVISIBLE);
+                }
 
                 ivInfoBox.setOnClickListener(v -> {
                     navigateToLandmark(loc.getLocationId());
@@ -264,9 +277,7 @@ public class MapActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         int total = response.body();
-
                         tvTotalPageSize.setText(getString(R.string.total_page_size) + String.format("%,d", total));
-                        Log.i(TAG, "total : " + total);
                     }
                     @Override
                     public void onFailure(Call<Integer> call, Throwable t) {
@@ -278,9 +289,7 @@ public class MapActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         int today = response.body();
-
                         tvTodayPageSize.setText(getString(R.string.new_page_size) + String.format("%,d", today));
-                        Log.i(TAG, "today : " + today);
                     }
                     @Override
                     public void onFailure(Call<Integer> call, Throwable t) {
@@ -298,6 +307,19 @@ public class MapActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    private MarkerOptions getMarkerOptions(int icon) {
+        MarkerOptions options = new MarkerOptions();
+        options.flat(false);
+        options.icon(BitmapDescriptorFactory.fromResource(icon));
+        return options;
+    }
+
+    private boolean isCurrentLoc(Long locationId) {
+        if(locationId.equals(currentLocationId)) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

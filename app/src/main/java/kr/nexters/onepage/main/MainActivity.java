@@ -41,7 +41,6 @@ import kr.nexters.onepage.write.WriteActivity;
 public class MainActivity extends BaseActivity {
 
     public static final String KEY_LAST_LOCATION = "key_last_location";
-    public static final int REQUEST_WRITE = 1000;
 
     @BindView(R.id.appbar)
     AppBarLayout appbarLayout;
@@ -113,7 +112,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initLocationManager() {
-        lastLocationManager = new LastLocationManager(this, newLocation -> this.lastLocation = newLocation);
+        lastLocationManager = new LastLocationManager(this, newLocation -> {
+            this.lastLocation = newLocation;
+            if(lastLocationId == -1L) {
+                getLocation();
+            }
+        });
     }
 
     @Override
@@ -133,9 +137,7 @@ public class MainActivity extends BaseActivity {
                                 if (lastLocationId != newLocationId) {
                                     lastLocationId = newLocationId;
                                     initFragment(lastLocationId);
-                                    return;
                                 }
-                                initFragment(lastLocationId);
                             },
                             throwable -> toast(throwable.getLocalizedMessage())
                     )
@@ -218,16 +220,8 @@ public class MainActivity extends BaseActivity {
     public void navigasteToWrite() {
         Intent intent = new Intent(MainActivity.this, WriteActivity.class);
         intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
-        startActivityForResult(intent, REQUEST_WRITE);
+        startActivity(intent);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_WRITE && resultCode == RESULT_OK) {
-            initFragment(lastLocationId);
-        }
-    }
-
     @Override
     protected void onDestroy() {
         BusProvider.unRegister(this);

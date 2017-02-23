@@ -39,8 +39,8 @@
     <string name="new_page_size">새로운 글&#160;</string>
     <string name="total_page_size">전체 글&#160;</string>
     <string name="back">뒤로 가기</string>
-    <string name="main_empty">아직 남겨진 글이 없어요! 첫 글을 남겨보세요</string>
-    <string name="landmark_empty">아직 쓴 글이 없어요!</string>
+    <string name="main_empty">아직 남겨진 글이 없어요, 첫 글을 남겨보세요!</string>
+    <string name="landmark_empty">아직 남겨진 글이 없어요!</string>
 
     <!-- intro -->
     <string name="coach_mypage">내가 기록한 글과\n북마크한 글을 볼 수 있어요</string>
@@ -51,6 +51,9 @@
     <!-- My Page -->
     <string name="mypage_write">내가 쓴 글</string>
     <string name="mypage_bookmark">북마크한 글</string>
+    <string name="mypage_empty">아직 쓴 글이 없어요!</string>
+    <string name="mypage_bookmark_empty">아직 북마크한 글이 없어요!</string>
+    <string name="mypage_delete">삭제 하시겠습니까?</string>
 
     <!-- Map -->
     <string name="today_page">새로운 글 0</string>
