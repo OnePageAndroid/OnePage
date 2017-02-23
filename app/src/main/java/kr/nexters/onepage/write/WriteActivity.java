@@ -162,6 +162,7 @@ public class WriteActivity extends UCropBaseActivity {
                 if (response.isSuccessful() && response.body().isSuccess()) {
                     Log.d(WriteActivity.class.getSimpleName(), response.body().message);
                     BusProvider.post(new PageRefreshEvent());
+                    uCropManager.deleteSaveImgFile(file);
                     finish();
                 } else {
                     Toast.makeText(WriteActivity.this, getString(R.string.toast_save_image_error), Toast.LENGTH_LONG).show();

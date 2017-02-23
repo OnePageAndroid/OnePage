@@ -49,6 +49,14 @@ public class UCropManager {
         return saveFile;
     }
 
+    public boolean deleteSaveImgFile(File file) {
+        if(file != null) {
+            file.delete();
+            return true;
+        }
+        return false;
+    }
+
     //add customizing
     public UCrop advancedConfig(@NonNull UCrop uCrop, Context context) {
 
