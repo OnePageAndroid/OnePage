@@ -40,7 +40,7 @@
     <string name="new_page_size">New&#160;</string>
     <string name="total_page_size">Total&#160;</string>
     <string name="back">Back</string>
-    <string name="main_empty">No page has been written yet. Write first!</string>
+    <string name="main_empty">No page has been written yet,\nWrite first!</string>
     <string name="landmark_empty">No page has been written yet!</string>
 
     <!-- intro -->

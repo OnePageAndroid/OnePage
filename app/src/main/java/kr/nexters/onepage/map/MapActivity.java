@@ -52,7 +52,6 @@ public class MapActivity extends BaseActivity {
     public GoogleMap mGoogleMap;
     private MapFragment mapFragment;
 
-    private LatLng currentLatLng;
     private LatLng lastLatLng;
 
     private LocationList locations;
@@ -123,10 +122,6 @@ public class MapActivity extends BaseActivity {
 
             String bestProvider = locationManager.getBestProvider(criteria, true);
 
-            //////////////////////////////////////////////////////////////////////////////////////
-            //5초 간격, 3미터 이상 이동시 update
-//            locationManager.requestLocationUpdates(bestProvider, 10000, 10, locationListener);
-
             //get last location
             Location lastLocation = locationManager.getLastKnownLocation(bestProvider);
 
@@ -165,36 +160,6 @@ public class MapActivity extends BaseActivity {
         }
     };
 
-    //위치정보 수신, 현재 위치 파악
-    LocationListener locationListener = new LocationListener() {
-        int flg = 0; //for check first received location
-
-        @Override
-        public void onLocationChanged(Location location) {
-
-            currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-            if(flg == 0) {
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL));
-                flg = 1;
-            }
-
-            Log.i(TAG, "Current Loc" + String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-    };
-
     //Permission Check
     private void checkPermission() {
         //If permission is denied, request
@@ -203,24 +168,6 @@ public class MapActivity extends BaseActivity {
 //            ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        mapFragment.getMapAsync(mapReadyCallBack);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //Check location permission
-        checkPermission();
-        //Quit location listener
-        locationManager.removeUpdates(locationListener);
-    }
-
-
 
     //db에서 받아온 랜드마크 리스트 google map 에 마커 찍기
     public void showLocationList() {
