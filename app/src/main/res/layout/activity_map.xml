@@ -65,7 +65,7 @@
         android:layout_toRightOf="@+id/tvTodayPageSize"
         android:layout_toEndOf="@+id/tvTodayPageSize"
         android:layout_marginLeft="5dp"
-        fontPath="fonts/NotoSansKR-Regular.otf" />
+        fontPath="fonts/HanSansKR-Regular.otf" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
         android:layout_alignStart="@+id/ivInfoBox"
         android:layout_marginTop="43.5dp"
         android:layout_marginLeft="17dp"
-        fontPath="fonts/NotoSansKR-Regular.otf" />
+        fontPath="fonts/HanSansKR-Regular.otf" />
 
     <TextView
         android:text="@string/total_page"
@@ -106,7 +106,7 @@
         android:layout_toRightOf="@+id/Bar"
         android:layout_toEndOf="@+id/Bar"
         android:layout_marginLeft="5dp"
-        fontPath="fonts/NotoSansKR-Regular.otf" />
+        fontPath="fonts/HanSansKR-Regular.otf" />
 
 
 </RelativeLayout>

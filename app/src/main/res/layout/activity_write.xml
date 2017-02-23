@@ -6,15 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:ignore="MissingPrefix"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    tools:ignore="MissingPrefix">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/writeToolbar"
-        fontPath="fonts/NotoSansKR-Regular.otf"
+        fontPath="fonts/HanSansKR-Regular.otf"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#ffffff"
@@ -38,14 +38,16 @@
     <RelativeLayout
         android:id="@+id/btnCamera"
         android:layout_width="match_parent"
+        android:layout_height="370dp"
         android:background="#fbfbfb"
-        android:orientation="vertical"
-        android:layout_height="370dp">
+        android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true">
+
             <ImageView
                 android:id="@+id/ivWriteImage"
                 android:layout_width="match_parent"
@@ -54,18 +56,18 @@
 
             <TextView
                 android:id="@+id/tvWriteLabel"
-                fontPath="fonts/NotoSansKR-Regular.otf"
+                fontPath="fonts/HanSansKR-Regular.otf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="14sp"
-                android:textColor="#bebebe"
-                android:includeFontPadding="false"
-                android:text="@string/upload_photos"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_below="@+id/ivWriteImage"
                 android:layout_marginTop="6dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/upload_photos"
+                android:textColor="#bebebe"
+                android:textSize="14sp" />
         </RelativeLayout>
 
     </RelativeLayout>
@@ -76,8 +78,8 @@
 
         <TextView
             android:id="@+id/tvTextCount"
-            android:layout_width="wrap_content"
             fontPath="fonts/Roboto-Regular.ttf"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
             android:layout_marginBottom="30dp"
@@ -86,27 +88,26 @@
             android:textColor="#9b9b9b" />
 
         <EditText
-            android:autoText="false"
             android:id="@+id/etWriteContent"
-            fontPath="fonts/NotoSansKR-Regular.otf"
+            fontPath="fonts/HanSansKR-Regular.otf"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@null"
             android:cursorVisible="true"
-            android:ems="9"
             android:gravity="top|left"
             android:hint="@string/write_hint"
+            android:imeOptions="actionDone"
             android:includeFontPadding="false"
+            android:inputType="text"
             android:maxLength="100"
-            android:maxLines="5"
+            android:maxLines="4"
             android:paddingLeft="19dp"
             android:paddingRight="19dp"
             android:paddingTop="19dp"
-            android:lineSpacingMultiplier="1.2"
             android:textColor="#383838"
             android:textColorHint="#bebebe"
             android:textCursorDrawable="@drawable/cursor_drawable"
-            android:textSize="15sp"
-            android:layout_height="match_parent" />
+            android:textSize="15sp" />
 
     </FrameLayout>
 

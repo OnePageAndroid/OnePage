@@ -16,7 +16,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/mypageToolbar"
-            fontPath="fonts/NotoSansKR-Regular.otf"
+            fontPath="fonts/HanSansKR-Regular.otf"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#ffffff"

@@ -32,14 +32,13 @@
 
             <TextView
                 android:id="@+id/tv_text"
-                fontPath="fonts/NotoSansKR-Regular.otf"
+                fontPath="fonts/HanSansKR-Regular.otf"
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:includeFontPadding="false"
-                android:lineSpacingMultiplier="1.2"
                 android:maxLines="4"
                 android:padding="0dp"
                 android:text=""
@@ -50,7 +49,7 @@
 
         <TextView
             android:id="@+id/tv_date"
-            fontPath="fonts/NotoSansKR-Regular.otf"
+            fontPath="fonts/HanSansKR-Regular.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

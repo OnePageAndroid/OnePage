@@ -56,7 +56,7 @@
 
                 <TextView
                     android:id="@+id/tv_location_name_kor_collapse"
-                    fontPath="fonts/NotoSansKR-Regular.otf"
+                    fontPath="fonts/HanSansKR-Regular.otf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
@@ -101,7 +101,7 @@
 
                 <TextView
                     android:id="@+id/tv_toolbar_total_page_label"
-                    fontPath="fonts/NotoSansKR-Regular.otf"
+                    fontPath="fonts/HanSansKR-Regular.otf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="bottom"

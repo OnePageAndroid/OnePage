@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static java.lang.Integer.MAX_VALUE;
 import static kr.nexters.onepage.main.MainActivity.KEY_LAST_LOCATION;
 
 /**
@@ -90,6 +92,9 @@ public class WriteActivity extends UCropBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write);
 
+        getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+        getWindow().getAttributes().height = WindowManager.LayoutParams.MATCH_PARENT;
+
         ButterKnife.bind(this);
 
         uCropManager = new UCropManager();
@@ -105,6 +110,9 @@ public class WriteActivity extends UCropBaseActivity {
             toast(getString(R.string.toast_location_error));
             finish();
         }
+
+        etWriteContent.setHorizontallyScrolling(false);
+        etWriteContent.setMaxLines(Integer.MAX_VALUE);
 
     }
 
