@@ -57,7 +57,6 @@ public class MapActivity extends BaseActivity {
 
     private LocationList locations;
 
-    private MarkerOptions clickedOptions;
     private MarkerOptions landmarkOptions;
 
     private Marker clickedMarker;
@@ -100,7 +99,7 @@ public class MapActivity extends BaseActivity {
         today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         clickedMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.clicked_landmark);
         landmarkMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.other_landmark);
-
+        clickedMarker = null;
     }
 
     OnMapReadyCallback mapReadyCallBack = new OnMapReadyCallback() {
@@ -151,7 +150,7 @@ public class MapActivity extends BaseActivity {
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    if(clickedMarker != marker) {
+                    if(clickedMarker != null && clickedMarker != marker) {
                         clickedMarker.setIcon(landmarkMarkerIcon);
                     }
 
