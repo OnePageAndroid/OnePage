@@ -21,6 +21,16 @@
         android:layout_width="match_parent"
         android:layout_height="133dp">
 
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/back" />
+
         <!--줄어들었을 때-->
         <RelativeLayout
             android:id="@+id/layout_content_collapse"
@@ -71,7 +81,7 @@
                 <TextView
                     android:id="@+id/tv_toolbar_total_page"
                     fontPath="fonts/Roboto-Bold.ttf"
-                    android:paddingTop="1dp"
+                    android:paddingTop="1.5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
