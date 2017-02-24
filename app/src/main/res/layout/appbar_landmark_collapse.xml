@@ -21,16 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="133dp">
 
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="20.5dp"
-            android:layout_marginTop="19.5dp"
-            android:background="@drawable/back" />
-
         <!--줄어들었을 때-->
         <RelativeLayout
             android:id="@+id/layout_content_collapse"

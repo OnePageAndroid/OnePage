@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +19,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import kr.nexters.onepage.R;
 import kr.nexters.onepage.common.BaseActivity;
@@ -141,6 +141,8 @@ public class LandmarkActivity extends BaseActivity {
         });
         AppbarAnimUtil.getInstance().startAlphaAnimation(layoutCollapse, 0, View.INVISIBLE);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ivWeather.setAlpha(0.1f);
     }
 
@@ -168,8 +170,11 @@ public class LandmarkActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @OnClick(R.id.btn_back)
-    public void onClickBack() {
-        finish();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
