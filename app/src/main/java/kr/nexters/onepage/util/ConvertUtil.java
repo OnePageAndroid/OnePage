@@ -70,4 +70,8 @@ public class ConvertUtil {
 
         return size.x;
     }
+
+    public static String replaceSpace(String str) {
+        return str.replace(" ", "\u00A0");
+    }
 }

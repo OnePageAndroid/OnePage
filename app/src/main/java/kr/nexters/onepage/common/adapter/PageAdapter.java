@@ -139,7 +139,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
 
         public void bind(Page page) {
             this.page = page;
-            tvText.setText(page.getContent());
+            tvText.setText(ConvertUtil.replaceSpace(page.getContent()));
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
             tvDate.setText(page.getCreatedAt().getDateString());
@@ -149,7 +149,7 @@ public class PageAdapter extends RecyclerView.Adapter<PageAdapter.PageViewHolder
                         .placeholder(R.drawable.loading_card_img)
                         .into(ivImg);
                 ivImg.setVisibility(View.VISIBLE);
-                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 10), 0, 0);
+                layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 8), 0, 0);
             } else {
                 ivImg.setVisibility(View.GONE);
                 layoutText.setPadding(0, ConvertUtil.dipToPixels(itemView.getContext(), 15), 0, 0);

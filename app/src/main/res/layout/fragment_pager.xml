@@ -5,10 +5,10 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/pager_main"
             android:layout_width="match_parent"
-            android:layout_height="414dp"
+            android:layout_height="420dp"
             android:clipToPadding="false"
             android:paddingEnd="42.5dp"
             android:paddingLeft="42.5dp"

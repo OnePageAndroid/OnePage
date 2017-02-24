@@ -1,5 +1,8 @@
 package kr.nexters.onepage.common;
 
+import android.app.Activity;
+import android.widget.Toast;
+
 public class BackPressCloseHandler {
 
     private long backKeyPressedTime = 0;

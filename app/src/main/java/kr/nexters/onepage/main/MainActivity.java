@@ -26,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import kr.nexters.onepage.R;
+import kr.nexters.onepage.common.BackPressCloseHandler;
 import kr.nexters.onepage.common.BaseActivity;
 import kr.nexters.onepage.common.BusProvider;
 import kr.nexters.onepage.common.ImageUtil;
@@ -76,6 +77,8 @@ public class MainActivity extends BaseActivity {
 
     Unbinder unbinder;
 
+    BackPressCloseHandler backPressCloseHandler;
+
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     @Override
@@ -85,6 +88,7 @@ public class MainActivity extends BaseActivity {
         unbinder = ButterKnife.bind(this);
         BusProvider.register(this);
 
+        backPressCloseHandler = new BackPressCloseHandler(this);
         initAppbar();
         initLocationManager();
     }
@@ -228,6 +232,11 @@ public class MainActivity extends BaseActivity {
         disposables.clear();
         unbinder.unbind();
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
     }
 
     @Subscribe

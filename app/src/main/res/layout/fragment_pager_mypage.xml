@@ -7,7 +7,7 @@
         android:id="@+id/pager_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:clipToPadding="false"
         android:paddingEnd="42.5dp"
         android:paddingLeft="42.5dp"
