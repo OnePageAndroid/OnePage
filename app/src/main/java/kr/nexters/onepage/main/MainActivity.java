@@ -184,12 +184,14 @@ public class MainActivity extends BaseActivity {
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
-                                int h = ConvertUtil.dipToPixels(getBaseContext(), 265);
-                                Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
-                                Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
-                                Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
-                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
+                                if(ivLocation != null) {
+                                    int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
+                                    int h = ConvertUtil.dipToPixels(getBaseContext(), 265);
+                                    Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
+                                    Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
+                                    Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
+                                    ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
+                                }
                             }
                         });
                 tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());

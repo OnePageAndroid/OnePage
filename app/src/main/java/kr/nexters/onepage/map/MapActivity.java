@@ -65,6 +65,10 @@ public class MapActivity extends BaseActivity {
 
     private String today;
 
+    //save last camera position
+    private static LatLng lastCameraLatLng;
+    private static float lastCameraZoom;
+
     //landmark info box 추가
     @BindView(R.id.tvLocationName) TextView tvLocationName;
     @BindView(R.id.tvTodayPageSize) TextView tvTodayPageSize;
@@ -139,7 +143,12 @@ public class MapActivity extends BaseActivity {
                 lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
             }
 
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
+            //To show last camera position, zoom level
+            if(lastCameraLatLng == null) {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
+            } else {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastCameraLatLng, lastCameraZoom));
+            }
 
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
@@ -185,11 +194,13 @@ public class MapActivity extends BaseActivity {
                             clickedMarker = mGoogleMap.addMarker(landmarkOptions);
                             loc.setMarker(clickedMarker);
                             showLocationInfo(loc.getMarker()); //setting init box info
-                            return ;
                         }
-                        landmarkOptions.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
-                        loc.setMarker(mGoogleMap.addMarker(landmarkOptions));
+                        else {
+                            landmarkOptions.position(new LatLng(loc.getLatitude(), loc.getLongitude()));
+                            loc.setMarker(mGoogleMap.addMarker(landmarkOptions));
+                        }
                     }
+                    Log.i(TAG, "count : " + locations.getLocations().size());
                     Log.i(TAG, "location list : " + locations.toString());
                 }
             }
@@ -274,5 +285,15 @@ public class MapActivity extends BaseActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //test
+        lastCameraZoom = mGoogleMap.getCameraPosition().zoom;
+        lastCameraLatLng = mGoogleMap.getCameraPosition().target;
+        Log.i(TAG, "last camera position : " + lastCameraLatLng.toString());
+        Log.i(TAG, "last camera zoom : " + String.valueOf(lastCameraZoom));
     }
 }

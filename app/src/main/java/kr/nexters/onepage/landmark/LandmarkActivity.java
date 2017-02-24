@@ -150,8 +150,6 @@ public class LandmarkActivity extends BaseActivity {
                 tvLocationNameKorCollapse.setText(locationContentRepo.getName());
             }
         });
-
-
         replaceFragment(R.id.fragment_landmark, pagerFragment);
     }
 
