@@ -49,7 +49,7 @@
         android:orientation="vertical">
 
         <TextView
-            fontPath="fonts/NotoSansKR-Regular.otf"
+            fontPath="fonts/HanSansKR-Regular.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="19.5dp"
@@ -60,7 +60,7 @@
 
         <TextView
             android:id="@+id/tv_location_name_kor_expand"
-            fontPath="fonts/NotoSansKR-Regular.otf"
+            fontPath="fonts/HanSansKR-Regular.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -106,7 +106,7 @@
 
             <TextView
                 android:id="@+id/tv_toolbar_total_page_label_expand"
-                fontPath="fonts/NotoSansKR-Regular.otf"
+                fontPath="fonts/HanSansKR-Regular.otf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"

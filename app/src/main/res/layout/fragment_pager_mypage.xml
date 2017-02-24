@@ -32,7 +32,7 @@
 
         <TextView
             android:id="@+id/tv_empty"
-            fontPath="fonts/NotoSansKR-Regular.otf"
+            fontPath="fonts/HanSansKR-Regular.otf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"

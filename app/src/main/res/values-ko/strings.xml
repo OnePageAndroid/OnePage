@@ -39,7 +39,7 @@
     <string name="new_page_size">새로운 글&#160;</string>
     <string name="total_page_size">전체 글&#160;</string>
     <string name="back">뒤로 가기</string>
-    <string name="main_empty">아직 남겨진 글이 없어요,\n첫 글을 남겨보세요!</string>
+    <string name="main_empty">아직 남겨진 글이 없어요! 첫 글을 남겨보세요</string>
     <string name="landmark_empty">아직 남겨진 글이 없어요!</string>
 
     <!-- intro -->
