@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20.5dp"
+            android:layout_marginTop="19.5dp"
             android:background="@drawable/mypage" />
 
         <ImageView
@@ -37,8 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginRight="20.5dp"
+            android:layout_marginTop="19.5dp"
             android:background="@drawable/placeholder" />
 
         <!--줄어들었을 때-->
