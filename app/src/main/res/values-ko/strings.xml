@@ -6,6 +6,7 @@
     <string name="main_toolbar_label">나는 지금</string>
     <string name="main_toolbar_write">글 남기기</string>
     <string name="main_toolbar_page_label">" 페이지가 남겨졌습니다."</string>
+    <string name="main_backpress">"\'뒤로\'버튼을 한번 더 누르시면 종료됩니다."</string>
 
     <!-- write toolbar -->
     <string name="action_title_write">글 남기기</string>

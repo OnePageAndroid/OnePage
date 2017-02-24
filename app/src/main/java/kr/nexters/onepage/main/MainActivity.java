@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -118,7 +119,7 @@ public class MainActivity extends BaseActivity {
     private void initLocationManager() {
         lastLocationManager = new LastLocationManager(this, newLocation -> {
             this.lastLocation = newLocation;
-            if(lastLocationId == -1L) {
+            if (lastLocationId == -1L) {
                 getLocation();
             }
         });
@@ -158,55 +159,64 @@ public class MainActivity extends BaseActivity {
 
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
         pagerFragment.setCallBackToolbar(new PagerFragment.CallBackToolbar() {
-            @Override
-            public void initToolbarPageIndex(int pageSize) {
-                tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageSize));
-                if(pageSize == 0) {
-                    layoutEmpty.setVisibility(View.VISIBLE);
+                    @Override
+                    public void initToolbarPageIndex(int pageSize) {
+                        tvToolbarTotalPage.setText(ConvertUtil.integerToCommaString(pageSize));
+                        if (pageSize == 0) {
+                            layoutEmpty.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void initWeatherImage(String weatherCode) {
+                        int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
+                        if (resId != -1) {
+                            Glide.with(getApplicationContext())
+                                    .load(resId)
+                                    .asGif()
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(ivWeather);
+                        }
+                    }
+
+                    @Override
+                    public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
+
+
+                        Glide.with(getApplicationContext())
+                                .load(locationContentRepo.getUrl())
+                                .asBitmap()
+                                .centerCrop()
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        if (ivLocation != null) {
+                                            int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
+                                            int h = ConvertUtil.dipToPixels(getBaseContext(), 265);
+                                            Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
+                                            Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
+                                            Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
+                                            Bitmap bitmap = ImageUtil.multiplyBitmap(cropResource, cropTexture);
+                                            try {
+                                                ivLocation.setImageBitmap(bitmap);
+                                            } catch (Exception e) {
+                                                Log.e("location error", "message : " + e.getMessage());
+                                            }
+                                        }
+                                    }
+                                });
+                        tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
+                        tvLocationNameKorExpand.setText(locationContentRepo.getName());
+                        tvLocationNameEngCollapse.setText(locationContentRepo.getEnglishName());
+                        tvLocationNameKorCollapse.setText(locationContentRepo.getName());
+                    }
                 }
-            }
 
-            @Override
-            public void initWeatherImage(String weatherCode) {
-                int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
-                if(resId != -1 ) {
-                    Glide.with(getApplicationContext())
-                            .load(resId)
-                            .asGif()
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .into(ivWeather);
-                }
-            }
-
-            @Override
-            public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
-
-                Glide.with(getApplicationContext())
-                        .load(locationContentRepo.getUrl())
-                        .asBitmap()
-                        .centerCrop()
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                if(ivLocation != null) {
-                                    int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
-                                    int h = ConvertUtil.dipToPixels(getBaseContext(), 265);
-                                    Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
-                                    Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
-                                    Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
-                                    ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
-                                }
-                            }
-                        });
-                tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
-                tvLocationNameKorExpand.setText(locationContentRepo.getName());
-                tvLocationNameEngCollapse.setText(locationContentRepo.getEnglishName());
-                tvLocationNameKorCollapse.setText(locationContentRepo.getName());
-            }
-        });
+        );
 
 
         replaceFragment(R.id.fragment_main, pagerFragment);
+
     }
 
     @OnClick(R.id.btn_my)
@@ -228,6 +238,7 @@ public class MainActivity extends BaseActivity {
         intent.putExtra(KEY_LAST_LOCATION, lastLocationId);
         startActivity(intent);
     }
+
     @Override
     protected void onDestroy() {
         BusProvider.unRegister(this);

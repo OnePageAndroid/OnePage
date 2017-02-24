@@ -5,6 +5,7 @@
     <string name="main_toolbar_label">I am now</string>
     <string name="main_toolbar_write">Writing</string>
     <string name="main_toolbar_page_label">" pages have been created."</string>
+    <string name="main_backpress">"Press \'Back\' button again to exit."</string>
 
     <!-- write toolbar -->
     <string name="action_title_write">Writing Guestbook</string>

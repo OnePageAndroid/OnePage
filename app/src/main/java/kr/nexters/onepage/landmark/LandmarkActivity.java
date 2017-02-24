@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -64,6 +65,58 @@ public class LandmarkActivity extends BaseActivity {
 
     Unbinder unbinder;
 
+    CallBackToolbar callBackToolbar = new CallBackToolbar() {
+        @Override
+        public void initToolbarPageIndex(int pageSize) {
+            tvToolbarTotalPageCollapse.setText(ConvertUtil.integerToCommaString(pageSize));
+            tvToolbarTotalPageExpand.setText(ConvertUtil.integerToCommaString(pageSize));
+            if (pageSize == 0) {
+                layoutEmpty.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void initWeatherImage(String weatherCode) {
+            ivWeather.setAlpha(0.3f);
+            int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
+            if (resId != -1) {
+                Glide.with(getApplicationContext())
+                        .load(resId)
+                        .asGif()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(ivWeather);
+            }
+        }
+
+        @Override
+        public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
+
+            Glide.with(getApplicationContext())
+                    .load(locationContentRepo.getUrl())
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
+                            int h = ConvertUtil.dipToPixels(getBaseContext(), 265);
+                            Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
+                            Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
+                            Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
+                            Bitmap bitmap = ImageUtil.multiplyBitmap(cropResource, cropTexture);
+                            try {
+                                ivLocation.setImageBitmap(bitmap);
+                            } catch (Exception e) {
+                                Log.e("location error", "message : " + e.getMessage());
+                            }
+                        }
+                    });
+            tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
+            tvLocationNameKorExpand.setText(locationContentRepo.getName());
+            tvLocationNameEngCollapse.setText(locationContentRepo.getEnglishName());
+            tvLocationNameKorCollapse.setText(locationContentRepo.getName());
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,51 +158,7 @@ public class LandmarkActivity extends BaseActivity {
         PagerFragment pagerFragment = PagerFragment.newInstance(locationId);
 
         pagerFragment.setOnLongClickPageListener(() -> appbarLayout.setExpanded(false, true));
-        pagerFragment.setCallBackToolbar(new CallBackToolbar() {
-            @Override
-            public void initToolbarPageIndex(int pageSize) {
-                tvToolbarTotalPageCollapse.setText(ConvertUtil.integerToCommaString(pageSize));
-                tvToolbarTotalPageExpand.setText(ConvertUtil.integerToCommaString(pageSize));
-                if (pageSize == 0) {
-                    layoutEmpty.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void initWeatherImage(String weatherCode) {
-                ivWeather.setAlpha(0.3f);
-                int resId = ConvertUtil.findResouceIdByWeatherCode(weatherCode);
-                if (resId != -1) {
-                    Glide.with(getApplicationContext())
-                            .load(resId)
-                            .asGif()
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .into(ivWeather);
-                }
-            }
-
-            @Override
-            public void initToolbarLocationContent(LocationContentRepo locationContentRepo) {
-                Glide.with(getApplicationContext())
-                        .load(locationContentRepo.getUrl())
-                        .asBitmap()
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                int w = ConvertUtil.getDisplayWidthPixels(getBaseContext());
-                                int h = ConvertUtil.dipToPixels(getBaseContext(), 265);
-                                Bitmap texture = BitmapFactory.decodeResource(getResources(), R.drawable.page_texture);
-                                Bitmap cropTexture = ImageUtil.centerCrop(texture, w, h);
-                                Bitmap cropResource = ImageUtil.centerCrop(resource, w, h);
-                                ivLocation.setImageBitmap(ImageUtil.multiplyBitmap(cropResource, cropTexture));
-                            }
-                        });
-                tvLocationNameEngExpand.setText(locationContentRepo.getEnglishName());
-                tvLocationNameKorExpand.setText(locationContentRepo.getName());
-                tvLocationNameEngCollapse.setText(locationContentRepo.getEnglishName());
-                tvLocationNameKorCollapse.setText(locationContentRepo.getName());
-            }
-        });
+        pagerFragment.setCallBackToolbar(callBackToolbar);
         replaceFragment(R.id.fragment_landmark, pagerFragment);
     }
 

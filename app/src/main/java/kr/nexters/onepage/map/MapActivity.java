@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +41,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static kr.nexters.onepage.main.MainActivity.KEY_LAST_LOCATION;
+import static kr.nexters.onepage.map.MapStorage.lastCameraLatLng;
+import static kr.nexters.onepage.map.MapStorage.lastCameraZoom;
 
 public class MapActivity extends BaseActivity {
 
@@ -66,8 +67,6 @@ public class MapActivity extends BaseActivity {
     private String today;
 
     //save last camera position
-    private static LatLng lastCameraLatLng;
-    private static float lastCameraZoom;
 
     //landmark info box 추가
     @BindView(R.id.tvLocationName) TextView tvLocationName;
@@ -144,7 +143,7 @@ public class MapActivity extends BaseActivity {
             }
 
             //To show last camera position, zoom level
-            if(lastCameraLatLng == null) {
+            if(MapStorage.lastCameraLatLng == null) {
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, ZOOM_LEVEL));
             } else {
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastCameraLatLng, lastCameraZoom));

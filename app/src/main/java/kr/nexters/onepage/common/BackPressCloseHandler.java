@@ -3,6 +3,8 @@ package kr.nexters.onepage.common;
 import android.app.Activity;
 import android.widget.Toast;
 
+import kr.nexters.onepage.map.MapStorage;
+
 public class BackPressCloseHandler {
 
     private long backKeyPressedTime = 0;
@@ -21,6 +23,7 @@ public class BackPressCloseHandler {
             return;
         }
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            MapStorage.lastCameraLatLng = null;
             activity.finish();
             toast.cancel();
         }

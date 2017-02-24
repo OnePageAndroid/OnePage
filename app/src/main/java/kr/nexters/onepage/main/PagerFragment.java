@@ -186,6 +186,7 @@ public class PagerFragment extends BaseFragment {
     public void onDestroyView() {
         unbinder.unbind();
         disposables.clear();
+        callBackToolbar = null;
         super.onDestroyView();
     }
 }
