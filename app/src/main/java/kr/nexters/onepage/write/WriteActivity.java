@@ -342,7 +342,7 @@ public class WriteActivity extends UCropBaseActivity {
     public void onTextChangedTvTextCount(CharSequence s) {
         tvTextCount.setText(s.length() + " / 100");
         if (s.length() == 100) {
-            Toast.makeText(WriteActivity.this, getString(R.string.text_count_toast), Toast.LENGTH_LONG).show();
+            Toast.makeText(WriteActivity.this, getString(R.string.text_count_toast), Toast.LENGTH_SHORT).show();
         }
     }
 

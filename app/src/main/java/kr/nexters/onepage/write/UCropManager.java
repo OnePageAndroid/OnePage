@@ -23,7 +23,7 @@ public class UCropManager {
 
         uCrop = uCrop.withAspectRatio(1, 1);
 
-        uCrop.withMaxResultSize(800, 800);
+        uCrop.withMaxResultSize(700, 700);
 
         return advancedConfig(uCrop, context); //customizing
     }
