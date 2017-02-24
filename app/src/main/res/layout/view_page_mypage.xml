@@ -43,7 +43,7 @@
                 android:maxLines="4"
                 android:text="temp"
                 android:textColor="#393939"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </FrameLayout>
 
 

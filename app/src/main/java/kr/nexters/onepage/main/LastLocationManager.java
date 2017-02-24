@@ -64,10 +64,8 @@ public class LastLocationManager {
                 || !locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
             return;
         }
-//        locationManager.requestLocationUpdates(bestProvider, 0, 0, mLocationListener);
 
-        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, mLocationListener);
-
+        locationManager.requestLocationUpdates(bestProvider, 60000, 1000, mLocationListener);
 
         if(onReceiveLastLocationListener != null) {
             Location lastLoc = locationManager.getLastKnownLocation(bestProvider);

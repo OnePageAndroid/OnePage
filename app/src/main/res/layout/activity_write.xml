@@ -107,7 +107,7 @@
             android:textColor="#383838"
             android:textColorHint="#bebebe"
             android:textCursorDrawable="@drawable/cursor_drawable"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
     </FrameLayout>
 

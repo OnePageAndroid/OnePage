@@ -39,7 +39,7 @@
             android:padding="0dp"
             android:text=""
             android:textColor="#393939"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tv_date"
