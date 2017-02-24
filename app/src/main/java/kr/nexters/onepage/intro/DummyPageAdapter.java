@@ -12,13 +12,11 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kr.nexters.onepage.R;
-import lombok.Data;
 
 /**
  * Created by ohjaehwan on 2017. 2. 11..
  */
 
-@Data
 public class DummyPageAdapter extends RecyclerView.Adapter<DummyPageAdapter.DummyPageViewHolder> {
 
 
