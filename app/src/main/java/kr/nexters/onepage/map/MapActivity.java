@@ -199,8 +199,6 @@ public class MapActivity extends BaseActivity {
                             loc.setMarker(mGoogleMap.addMarker(landmarkOptions));
                         }
                     }
-                    Log.i(TAG, "count : " + locations.getLocations().size());
-                    Log.i(TAG, "location list : " + locations.toString());
                 }
             }
 
@@ -225,10 +223,7 @@ public class MapActivity extends BaseActivity {
                 } else {
                     ivMyPlace.setVisibility(View.INVISIBLE);
                 }
-
-                ivInfoBox.setOnClickListener(v -> {
-                    navigateToLandmark(loc.getLocationId());
-                });
+                locInfoClickEvent(loc.getLocationId());
 
                 LocationAPI.Factory.create().getTotalPageSize(loc.getLocationId()).enqueue(new Callback<Integer>() {
                     @Override
@@ -278,6 +273,15 @@ public class MapActivity extends BaseActivity {
         return false;
     }
 
+    private void locInfoClickEvent(Long locationId) {
+        ivInfoBox.setOnClickListener(v -> {
+            if(isCurrentLoc(locationId)) {
+                finish();
+                return;
+            }
+            navigateToLandmark(locationId);
+        });
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -289,10 +293,7 @@ public class MapActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //test
         lastCameraZoom = mGoogleMap.getCameraPosition().zoom;
         lastCameraLatLng = mGoogleMap.getCameraPosition().target;
-        Log.i(TAG, "last camera position : " + lastCameraLatLng.toString());
-        Log.i(TAG, "last camera zoom : " + String.valueOf(lastCameraZoom));
     }
 }

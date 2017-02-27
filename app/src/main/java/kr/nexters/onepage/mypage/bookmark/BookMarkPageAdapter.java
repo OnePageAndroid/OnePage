@@ -119,6 +119,8 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
     class PageViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_text)
         TextView tvText;
+        @BindView(R.id.tv_date)
+        TextView tvDate;
         @BindView(R.id.tv_page_current)
         TextView tvPageCurrent;
         @BindView(R.id.tv_page_total)
@@ -143,6 +145,7 @@ public class BookMarkPageAdapter extends RecyclerView.Adapter<BookMarkPageAdapte
         public void bind(Page page) {
             this.page = page;
             tvText.setText(ConvertUtil.replaceSpace(page.getContent()));
+            tvDate.setText(page.getCreatedAt().getDateString());
             tvLocation.setText(page.getLocationName());
             tvPageCurrent.setText(ConvertUtil.integerToCommaString(page.getPageNum()));
             tvPageTotal.setText(ConvertUtil.integerToCommaString(totalPageSize));
