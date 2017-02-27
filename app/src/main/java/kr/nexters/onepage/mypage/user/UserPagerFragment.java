@@ -64,7 +64,7 @@ public class UserPagerFragment extends BaseFragment {
         mainPager.setAdapter(mainAdapter);
 
         mainPager.addOnPageChangedListener((prePosotion, curPosition) -> {
-            if (mainAdapter.getTotalPageSize() > 3) {
+            if (mainAdapter.getTotalPageSize() > 4) {
                 if (!loading && curPosition >= mainAdapter.getItemCount() - 2) {
                     getPages(PAGE_SIZE, false);
                 } else if (!loading && curPosition <= 1) {
